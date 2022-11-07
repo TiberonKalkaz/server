@@ -57,6 +57,7 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 #include "packets/chat_message.h"
 #include "utils/battleutils.h"
 #include "utils/charutils.h"
+#include "utils/fellowutils.h"
 #include "utils/fishingutils.h"
 #include "utils/gardenutils.h"
 #include "utils/guildutils.h"
@@ -251,6 +252,8 @@ int32 do_init(int32 argc, char** argv)
     battleutils::LoadPetSkillsList();
     battleutils::LoadSkillChainDamageModifiers();
     petutils::LoadPetList();
+    fellowutils::LoadFellowList();
+    fellowutils::LoadFellowMessages();
     trustutils::LoadTrustList();
     mobutils::LoadCustomMods();
     jobpointutils::LoadGifts();

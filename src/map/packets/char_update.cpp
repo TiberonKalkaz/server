@@ -29,6 +29,7 @@
 #include "../ai/ai_container.h"
 #include "../ai/states/death_state.h"
 #include "../entities/charentity.h"
+#include "../entities/fellowentity.h"
 #include "../status_effect_container.h"
 #include "../utils/itemutils.h"
 #include "../vana_time.h"
@@ -70,6 +71,12 @@ CCharUpdatePacket::CCharUpdatePacket(CCharEntity* PChar)
     ref<uint8>(0x2C) = PChar->GetSpeed();
     ref<uint16>(0x2E) |= PChar->speedsub << 1; // Not sure about this, it was a work around when we set speedsub incorrectly..
     ref<uint8>(0x30) = PChar->isInEvent() ? (uint8)ANIMATION_EVENT : PChar->animation;
+
+    if (PChar->m_PFellow != nullptr)
+    {
+        ref<uint16>(0x48) = PChar->m_PFellow->targid;
+        ref<uint8>(0x38) |= 0x80; // initiate fellow menu system
+    }
 
     CItemLinkshell* linkshell = (CItemLinkshell*)PChar->getEquip(SLOT_LINK1);
 

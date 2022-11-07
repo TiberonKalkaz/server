@@ -89,6 +89,7 @@
 #include "../weapon_skill.h"
 #include "automatonentity.h"
 #include "charentity.h"
+#include "fellowentity.h"
 #include "mobentity.h"
 #include "trustentity.h"
 
@@ -222,6 +223,13 @@ CCharEntity::CCharEntity()
     petZoningInfo.petHP      = 0;
     petZoningInfo.petMP      = 0;
     petZoningInfo.petTP      = 0;
+
+    fellowZoningInfo.respawnFellow = false;
+    fellowZoningInfo.fellowID      = 0;
+    fellowZoningInfo.fellowHP      = 0;
+    fellowZoningInfo.fellowMP      = 0;
+
+    m_PFellow = nullptr;
 
     m_PlayTime    = 0;
     m_SaveTime    = 0;
@@ -452,6 +460,20 @@ void CCharEntity::resetPetZoningInfo()
     petZoningInfo.respawnPet = false;
     petZoningInfo.petType    = PET_TYPE::AVATAR;
 }
+
+
+void CCharEntity::setFellowZoningInfo()
+{
+    fellowZoningInfo.fellowHP = m_PFellow->health.hp;
+    fellowZoningInfo.fellowMP = m_PFellow->health.mp;
+}
+
+void CCharEntity::resetFellowZoningInfo()
+{
+    fellowZoningInfo.fellowHP      = 0;
+    fellowZoningInfo.fellowMP      = 0;
+    fellowZoningInfo.respawnFellow = false;
+}
 /************************************************************************
  *
  * Return the container with the specified ID.If the ID goes beyond, then *
@@ -655,6 +677,17 @@ void CCharEntity::ClearTrusts()
     PTrusts.clear();
 
     ReloadPartyInc();
+}
+
+void CCharEntity::RemoveFellow()
+{
+    if (m_PFellow == nullptr || !m_PFellow->PAI->IsSpawned())
+        return;
+
+    // loc.zone->PushPacket(this, CHAR_INRANGE_SELF, new CFellowDespawnPacket(this));
+    m_PFellow->PAI->Despawn();
+    m_PFellow = nullptr;
+    pushPacket(new CCharUpdatePacket(this));
 }
 
 void CCharEntity::RequestPersist(CHAR_PERSIST toPersist)
@@ -2861,3 +2894,4 @@ void CCharEntity::clearCharVarsWithPrefix(std::string const& prefix)
 
     sql->Query("DELETE FROM char_vars WHERE charid = %u AND varname LIKE '%s%%';", this->id, prefix.c_str());
 }
+

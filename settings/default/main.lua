@@ -243,4 +243,7 @@ xi.settings.main =
 
     -- Synergy
     ENABLE_SYNERGY = 0, -- Default to off as Synergy is not coded
+
+    -- Adventuring Fellows
+    ENABLE_ADVENTURING_FELLOWS   = 1, -- Enable or disable the ability to quest and call Adventuring Fellows
 }

@@ -58,6 +58,24 @@ end
 effectObject.onEffectTick = function(target, effect)
     local healtime = effect:getTickCount()
 
+    if target:getObjType() == xi.objType.FELLOW then
+        local master        = target:getMaster()
+        local ID            = require("scripts/zones/"..master:getZoneName().."/IDs")
+        local optionsMask   = master:getFellowValue("optionsMask")
+        local personality   = target:getLocalVar("personality")
+        local mpNotice      = target:getLocalVar("mpNotice")
+        local mpp           = target:getMP() / target:getMaxMP() * 100
+        local mpSignals     = false
+            if bit.band(optionsMask, bit.lshift(1,2)) == 4 then mpSignals = true end
+
+        if mpp >= 67 and mpNotice == 1 and mpSignals == true then
+            master:showText(target, ID.text.FELLOW_MESSAGE_OFFSET + 45 + personality)
+            target:setLocalVar("mpNotice", 0)
+        elseif mpp < 67 and mpNotice ~= 1 then
+            target:setLocalVar("mpNotice", 1)
+        end
+    end
+
     if healtime > 2 then
         -- curse II also known as "zombie"
         if not(target:hasStatusEffect(xi.effect.DISEASE)) and target:hasStatusEffect(xi.effect.PLAGUE) == false and target:hasStatusEffect(xi.effect.CURSE_II) == false then
