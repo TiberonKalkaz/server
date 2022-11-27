@@ -364,7 +364,7 @@ namespace charutils
         if (ret != SQL_ERROR && sql->NumRows() != 0 && sql->NextRow() == SQL_SUCCESS)
         {
             PChar->targid = 0x400;
-            PChar->SetName(sql->GetData(0));
+            PChar->SetName(sql->GetStringData(0));
 
             PChar->loc.destination = (uint16)sql->GetIntData(1);
             PChar->loc.prevzone    = (uint16)sql->GetIntData(2);
@@ -653,7 +653,7 @@ namespace charutils
         }
 
         fmtQuery = "SELECT nameflags, mjob, sjob, hp, mp, mhflag, title, bazaar_message, zoning, "
-                   "pet_id, pet_type, pet_hp, pet_mp "
+                   "pet_id, pet_type, pet_hp, pet_mp, pet_level "
                    "FROM char_stats WHERE charid = %u;";
 
         ret          = sql->Query(fmtQuery, PChar->id);
@@ -688,11 +688,17 @@ namespace charutils
             int16 petHP = sql->GetUIntData(11);
             if (petHP)
             {
-                PChar->petZoningInfo.petHP      = petHP;
-                PChar->petZoningInfo.petID      = sql->GetUIntData(9);
-                PChar->petZoningInfo.petMP      = sql->GetIntData(12);
-                PChar->petZoningInfo.petType    = static_cast<PET_TYPE>(sql->GetUIntData(10));
-                PChar->petZoningInfo.respawnPet = true;
+                PChar->petZoningInfo.petHP        = petHP;
+                PChar->petZoningInfo.petID        = sql->GetUIntData(9);
+                PChar->petZoningInfo.petMP        = sql->GetIntData(12);
+                PChar->petZoningInfo.petType      = static_cast<PET_TYPE>(sql->GetUIntData(10));
+                PChar->petZoningInfo.petLevel     = sql->GetUIntData(13);
+                PChar->petZoningInfo.respawnPet   = true;
+                PChar->petZoningInfo.jugSpawnTime = PChar->getCharVar("jugpet-spawn-time");
+                PChar->petZoningInfo.jugDuration  = PChar->getCharVar("jugpet-duration-seconds");
+
+                // clear the charvars used for jug state
+                PChar->clearCharVarsWithPrefix("jugpet-");
             }
         }
 
@@ -852,12 +858,14 @@ namespace charutils
         charutils::LoadInventory(PChar);
 
         CalculateStats(PChar);
-        blueutils::LoadSetSpells(PChar);
-        puppetutils::LoadAutomaton(PChar);
         BuildingCharSkillsTable(PChar);
         BuildingCharAbilityTable(PChar);
         BuildingCharTraitsTable(PChar);
         jobpointutils::RefreshGiftMods(PChar);
+
+        // Order matters as these use merits and JP gifts
+        blueutils::LoadSetSpells(PChar);
+        puppetutils::LoadAutomaton(PChar);
 
         PChar->animation = (HP == 0 ? ANIMATION_DEATH : ANIMATION_NONE);
 
@@ -881,7 +889,7 @@ namespace charutils
         std::string enabledContent = "\"\"";
 
         // Compile a string of all enabled expansions
-        for (auto&& expan : { "COP", "TOAU", "WOTG", "ACP", "AMK", "ASA", "ABYSSEA", "SOA" })
+        for (auto&& expan : { "COP", "TOAU", "WOTG", "ACP", "AMK", "ASA", "ABYSSEA", "SOA", "ROV" })
         {
             if (luautils::IsContentEnabled(expan))
             {
@@ -967,14 +975,14 @@ namespace charutils
                         {
                             static_cast<CItemLinkshell*>(PItem)->SetLSType((LSTYPE)(PItem->getID() - 0x200));
                         }
-                        int8 EncodedString[LinkshellStringLength];
-                        EncodeStringLinkshell(sql->GetData(5), EncodedString);
+                        char EncodedString[LinkshellStringLength] = {};
+                        EncodeStringLinkshell(sql->GetStringData(5).c_str(), EncodedString);
                         PItem->setSignature(EncodedString);
                     }
                     else if (PItem->getFlag() & (ITEM_FLAG_INSCRIBABLE))
                     {
-                        int8 EncodedString[SignatureStringLength];
-                        EncodeStringSignature(sql->GetData(5), EncodedString);
+                        char EncodedString[SignatureStringLength] = {};
+                        EncodeStringSignature(sql->GetStringData(5).c_str(), EncodedString);
                         PItem->setSignature(EncodedString);
                     }
 
@@ -1317,14 +1325,14 @@ namespace charutils
                                 "extra) "
                                 "VALUES(%u,%u,%u,%u,%u,'%s','%s')";
 
-            int8 signature[DecodeStringLength];
+            char signature[DecodeStringLength];
             if (PItem->isType(ITEM_LINKSHELL))
             {
-                DecodeStringLinkshell((int8*)PItem->getSignature(), signature);
+                DecodeStringLinkshell(PItem->getSignature().c_str(), signature);
             }
             else
             {
-                DecodeStringSignature((int8*)PItem->getSignature(), signature);
+                DecodeStringSignature(PItem->getSignature().c_str(), signature);
             }
 
             char extra[sizeof(PItem->m_extra) * 2 + 1];
@@ -2291,6 +2299,7 @@ namespace charutils
                 // Send update packets
                 PChar->pushPacket(new CInventoryItemPacket(nullptr, container, slotID));
                 PChar->pushPacket(new CInventoryItemPacket(PItem, LOC_RECYCLEBIN, NewSlotID));
+                PChar->pushPacket(new CMessageStandardPacket(nullptr, PItem->getID(), quantity, MsgStd::ThrowAway));
             }
             else
             {
@@ -2335,6 +2344,7 @@ namespace charutils
                 CItem* PUpdatedItem = RecycleBin->GetItem(i);
                 PChar->pushPacket(new CInventoryItemPacket(PUpdatedItem, LOC_RECYCLEBIN, i));
             }
+            PChar->pushPacket(new CMessageStandardPacket(nullptr, PItem->getID(), quantity, MsgStd::ThrowAway));
         }
         PChar->pushPacket(new CInventoryFinishPacket());
     }
@@ -2958,7 +2968,7 @@ namespace charutils
             }
             uint16 MaxMSkill  = battleutils::GetMaxSkill((SKILLTYPE)i, PChar->GetMJob(), PChar->GetMLevel());
             uint16 MaxSSkill  = battleutils::GetMaxSkill((SKILLTYPE)i, PChar->GetSJob(), PChar->GetSLevel());
-            uint16 skillBonus = 0;
+            int16  skillBonus = 0;
 
             // apply arts bonuses
             if ((i >= SKILL_DIVINE_MAGIC && i <= SKILL_ENFEEBLING_MAGIC && PChar->StatusEffectContainer->HasStatusEffect({ EFFECT_LIGHT_ARTS, EFFECT_ADDENDUM_WHITE })) ||
@@ -3051,7 +3061,7 @@ namespace charutils
             if (MaxMSkill != 0)
             {
                 auto cap{ PChar->RealSkills.skill[i] / 10 >= MaxMSkill };
-                PChar->WorkingSkills.skill[i] = std::max(0, cap ? skillBonus + MaxMSkill : skillBonus + PChar->RealSkills.skill[i] / 10);
+                PChar->WorkingSkills.skill[i] = std::max<uint16>(0, cap ? skillBonus + MaxMSkill : skillBonus + PChar->RealSkills.skill[i] / 10);
                 if (cap)
                 {
                     PChar->WorkingSkills.skill[i] |= 0x8000;
@@ -3060,7 +3070,7 @@ namespace charutils
             else if (MaxSSkill != 0)
             {
                 auto cap{ PChar->RealSkills.skill[i] / 10 >= MaxSSkill };
-                PChar->WorkingSkills.skill[i] = std::max(0, cap ? skillBonus + MaxSSkill : skillBonus + PChar->RealSkills.skill[i] / 10);
+                PChar->WorkingSkills.skill[i] = std::max<uint16>(0, cap ? skillBonus + MaxSSkill : skillBonus + PChar->RealSkills.skill[i] / 10);
                 if (cap)
                 {
                     PChar->WorkingSkills.skill[i] |= 0x8000;
@@ -3529,7 +3539,7 @@ namespace charutils
      *                                                                       *
      ************************************************************************/
 
-    int32 hasTrait(CCharEntity* PChar, uint8 TraitID)
+    int32 hasTrait(CCharEntity* PChar, uint16 TraitID)
     {
         if (PChar->objtype != TYPE_PC)
         {
@@ -3539,7 +3549,7 @@ namespace charutils
         return hasBit(TraitID, PChar->m_TraitList, sizeof(PChar->m_TraitList));
     }
 
-    int32 addTrait(CCharEntity* PChar, uint8 TraitID)
+    int32 addTrait(CCharEntity* PChar, uint16 TraitID)
     {
         if (PChar->objtype != TYPE_PC)
         {
@@ -3549,7 +3559,7 @@ namespace charutils
         return addBit(TraitID, PChar->m_TraitList, sizeof(PChar->m_TraitList));
     }
 
-    int32 delTrait(CCharEntity* PChar, uint8 TraitID)
+    int32 delTrait(CCharEntity* PChar, uint16 TraitID)
     {
         if (PChar->objtype != TYPE_PC)
         {
@@ -5449,11 +5459,16 @@ namespace charutils
 
         const char* Query = "UPDATE char_stats "
                             "SET hp = %u, mp = %u, nameflags = %u, mhflag = %u, mjob = %u, sjob = %u, "
-                            "pet_id = %u, pet_type = %u, pet_hp = %u, pet_mp = %u "
+                            "pet_id = %u, pet_type = %u, pet_hp = %u, pet_mp = %u, pet_level = %u "
                             "WHERE charid = %u;";
 
         sql->Query(Query, PChar->health.hp, PChar->health.mp, PChar->nameflags.flags, PChar->profile.mhflag, PChar->GetMJob(), PChar->GetSJob(),
-                   PChar->petZoningInfo.petID, static_cast<uint8>(PChar->petZoningInfo.petType), PChar->petZoningInfo.petHP, PChar->petZoningInfo.petMP, PChar->id);
+                   PChar->petZoningInfo.petID, static_cast<uint8>(PChar->petZoningInfo.petType), PChar->petZoningInfo.petHP, PChar->petZoningInfo.petMP, PChar->petZoningInfo.petLevel, PChar->id);
+
+        // These two are jug only variables. We should probably move pet char stats into its own table, but in the meantime
+        // we use charvars for jug specific things
+        PChar->setCharVar("jugpet-spawn-time", PChar->petZoningInfo.jugSpawnTime);
+        PChar->setCharVar("jugpet-duration-seconds", PChar->petZoningInfo.jugDuration);
 
         const char* Query2 = "UPDATE char_fellow "
                              "SET zone_hp = %u, zone_mp = %u "
@@ -5890,7 +5905,7 @@ namespace charutils
             CStatusEffect* dedication = PChar->StatusEffectContainer->GetStatusEffect(EFFECT_DEDICATION);
             int16          percentage = dedication->GetPower();
             int16          cap        = dedication->GetSubPower();
-            bonus += std::clamp<int32>((int32)((exp * percentage) / 100), 0, cap);
+            bonus += std::clamp<int32>((int32)std::round((exp * percentage) / 100.f), 0, cap);
             dedication->SetSubPower(cap -= bonus);
 
             if (cap <= 0)
@@ -6509,6 +6524,15 @@ namespace charutils
         else
         {
             SaveCharPosition(PChar);
+        }
+
+        if (PChar->shouldPetPersistThroughZoning())
+        {
+            PChar->setPetZoningInfo();
+        }
+        else
+        {
+            PChar->resetPetZoningInfo();
         }
 
         PChar->pushPacket(new CServerIPPacket(PChar, type, ipp));

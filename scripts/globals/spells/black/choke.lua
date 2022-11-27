@@ -14,7 +14,6 @@ spellObject.onMagicCastingCheck = function(caster, target, spell)
 end
 
 spellObject.onSpellCast = function(caster, target, spell)
-
     if target:getStatusEffect(xi.effect.FROST) ~= nil then
         spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT) -- no effect
     else
@@ -29,9 +28,10 @@ spellObject.onSpellCast = function(caster, target, spell)
         if resist <= 0.125 then
             spell:setMsg(xi.msg.basic.MAGIC_RESIST)
         else
-            if (target:getStatusEffect(xi.effect.RASP) ~= nil) then
+            if target:getStatusEffect(xi.effect.RASP) ~= nil then
                 target:delStatusEffect(xi.effect.RASP)
             end
+
             local sINT = caster:getStat(xi.mod.INT)
             local DOT = xi.magic.getElementalDebuffDOT(sINT)
             local effect = target:getStatusEffect(xi.effect.CHOKE)
@@ -41,12 +41,14 @@ spellObject.onSpellCast = function(caster, target, spell)
                     noeffect = true
                 end
             end
+
             if noeffect then
                 spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT) -- no effect
             else
                 if effect ~= nil then
                     target:delStatusEffect(xi.effect.CHOKE)
                 end
+
                 spell:setMsg(xi.msg.basic.MAGIC_ENFEEB)
                 local duration = math.floor(xi.settings.main.ELEMENTAL_DEBUFF_DURATION * resist)
                 duration = duration + caster:getMerit(xi.merit.ELEMENTAL_DEBUFF_DURATION)

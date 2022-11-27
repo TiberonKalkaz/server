@@ -38,11 +38,12 @@ spellObject.onSpellCast = function(caster, target, spell)
         elseif caster:hasStatusEffect(xi.effect.MARCATO) then
             power = power * 1.5
         end
+
         caster:delStatusEffect(xi.effect.MARCATO)
 
         duration = duration * (iBoost * 0.1 + caster:getMod(xi.mod.SONG_DURATION_BONUS) / 100 + 1)
 
-        if (caster:hasStatusEffect(xi.effect.TROUBADOUR)) then
+        if caster:hasStatusEffect(xi.effect.TROUBADOUR) then
             duration = duration * 2
         end
 

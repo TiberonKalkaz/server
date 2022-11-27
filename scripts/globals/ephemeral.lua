@@ -30,6 +30,7 @@ local getCrystalTotals = function(player)
     for _, v in pairs(crystalData) do
         params[v.eventparam] = bit.bor(params[v.eventparam], bit.lshift(player:getCurrency(v.name), v.offset))
     end
+
     return params
 end
 
@@ -101,8 +102,8 @@ xi.ephemeral.onEventFinish = function(player, option, wasTrade)
             local crystals = quantity % 12
             local clusters = math.floor(quantity / 12)
 
-             -- Player selected "as many as can fit"
-            if (option > 0x80000000) then
+            -- Player selected "as many as can fit"
+            if option > 0x80000000 then
                 -- Recalculate the quantity according to open inventory slots
                 local freeSlots = player:getFreeSlotsCount()
                 if freeSlots > 0 then -- If we don't have any free slots, don't bother. Just fail later.

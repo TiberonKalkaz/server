@@ -30,6 +30,7 @@ local function AddAllAttachments(player)
     for i = 1, #validAttachments do
         player:unlockAttachment(validAttachments[i])
     end
+
     player:PrintToPlayer(string.format("%s now has all attachments.", player:getName()))
 end
 
@@ -39,7 +40,7 @@ function onTrigger(player, target)
     else
         local targ = GetPlayerByName(target)
         if targ == nil then
-            player:PrintToPlayer(string.format( "Player named '%s' not found!", target ))
+            player:PrintToPlayer(string.format("Player named '%s' not found!", target))
         else
             AddAllAttachments(targ)
         end

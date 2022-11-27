@@ -1205,7 +1205,6 @@ INSERT INTO `mob_skill_lists` VALUES ('Yovra',271,1376);
 -- INSERT INTO `mob_skill_lists` VALUES ('Yovra',271,1377);
 INSERT INTO `mob_skill_lists` VALUES ('Zdei',272,1463);
 INSERT INTO `mob_skill_lists` VALUES ('Zdei',272,1464);
-INSERT INTO `mob_skill_lists` VALUES ('Zdei',272,1465);
 INSERT INTO `mob_skill_lists` VALUES ('Zdei',272,1466);
 INSERT INTO `mob_skill_lists` VALUES ('Zdei',272,1467);
 INSERT INTO `mob_skill_lists` VALUES ('Zdei',272,1468);
@@ -1419,18 +1418,30 @@ INSERT INTO `mob_skill_lists` VALUES ('Mindertaur',318,499); -- back_swish
 INSERT INTO `mob_skill_lists` VALUES ('Mindertaur',318,500); -- mow
 INSERT INTO `mob_skill_lists` VALUES ('Mindertaur',318,501); -- frightful_roar
 INSERT INTO `mob_skill_lists` VALUES ('Mindertaur',318,503); -- unblessed_armor
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Shiva',319,876);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Shiva',319,877);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ramuh',320,885);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ramuh',320,886);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Titan',321,849);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Titan',321,850);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ifrit',322,840);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ifrit',322,841);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Leviathan',323,858);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Leviathan',323,859);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Garuda',324,867);
-INSERT INTO `mob_skill_lists` VALUES ('Avatar-Garuda',324,868);
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Shiva',319,878); -- Waking the Beast, frost_armor
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Shiva',319,879); -- Waking the Beast, sleepga
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Shiva',319,882); -- Waking the Beast, rush
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Shiva',319,883); -- Waking the Beast, heavenly_strike
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ramuh',320,888); -- Waking the Beast, thunderspark
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ramuh',320,889); -- Waking the Beast, lightning_armor
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ramuh',320,891); -- Waking the Beast, chaotic_strike
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ramuh',320,892); -- Waking the Beast, thunderstorm
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Titan',321,852); -- Waking the Beast, megalith_throw
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Titan',321,853); -- Waking the Beast, earthern_ward
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Titan',321,856); -- Waking the Beast, geocrush
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Titan',321,857); -- Waking the Beast, earthen_fury
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ifrit',322,844); -- Waking the Beast, crimson_howl
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ifrit',322,846); -- Waking the Beast, flaming_crush
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ifrit',322,847); -- Waking the Beast, meteor_strike
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Ifrit',322,848); -- Waking the Beast, inferno
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Leviathan',323,861); -- Waking the Beast, spring_water
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Leviathan',323,862); -- Waking the Beast, slowga
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Leviathan',323,864); -- Waking the Beast, spinning_dive
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Leviathan',323,865); -- Waking the Beast, grand_fall
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Garuda',324,869); -- Waking the Beast, whispering_wind
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Garuda',324,871); -- Waking the Beast, aerial_armor
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Garuda',324,873); -- Waking the Beast, predator_claws
+INSERT INTO `mob_skill_lists` VALUES ('Avatar-Garuda',324,874); -- Waking the Beast, wind_blade
 INSERT INTO `mob_skill_lists` VALUES ('Avatar-Fenrir',325,833);
 INSERT INTO `mob_skill_lists` VALUES ('Avatar-Fenrir',325,835);
 INSERT INTO `mob_skill_lists` VALUES ('Avatar-Fenrir',325,836);
@@ -1834,7 +1845,6 @@ INSERT INTO `mob_skill_lists` VALUES ('VrtraWyrm',391,1316);
 INSERT INTO `mob_skill_lists` VALUES ('JormungandWyrm',392,1289);
 INSERT INTO `mob_skill_lists` VALUES ('JormungandWyrm',392,1290);
 INSERT INTO `mob_skill_lists` VALUES ('JormungandWyrm',392,1291);
-INSERT INTO `mob_skill_lists` VALUES ('JormungandWyrm',392,1292);
 INSERT INTO `mob_skill_lists` VALUES ('JormungandWyrm',392,1293);
 INSERT INTO `mob_skill_lists` VALUES ('JormungandWyrm',392,1294);
 INSERT INTO `mob_skill_lists` VALUES ('JormungandWyrm',392,1295);
@@ -1843,7 +1853,6 @@ INSERT INTO `mob_skill_lists` VALUES ('JormungandWyrm',392,1296);
 INSERT INTO `mob_skill_lists` VALUES ('TiamatWyrm',393,1279);
 INSERT INTO `mob_skill_lists` VALUES ('TiamatWyrm',393,1280);
 INSERT INTO `mob_skill_lists` VALUES ('TiamatWyrm',393,1281);
-INSERT INTO `mob_skill_lists` VALUES ('TiamatWyrm',393,1282);
 INSERT INTO `mob_skill_lists` VALUES ('TiamatWyrm',393,1283);
 INSERT INTO `mob_skill_lists` VALUES ('TiamatWyrm',393,1284);
 INSERT INTO `mob_skill_lists` VALUES ('TiamatWyrm',393,1285);
@@ -2315,6 +2324,12 @@ INSERT INTO `mob_skill_lists` VALUES ('Mammet',503,464); -- psychomancy
 INSERT INTO `mob_skill_lists` VALUES ('Mammet',503,471); -- mind wall
 INSERT INTO `mob_skill_lists` VALUES ('Mammet',503,487); -- transmorgification
 INSERT INTO `mob_skill_lists` VALUES ('Mammet',503,540); -- tremorous tread
+INSERT INTO `mob_skill_lists` VALUES ('Bullheaded_Grosvez', 504, 605); -- aerial wheel
+-- INSERT INTO `mob_skill_lists` VALUES ('Bullheaded_Grosvez', 504, 606); -- shoulder attack
+INSERT INTO `mob_skill_lists` VALUES ('Bullheaded_Grosvez', 504, 607); -- slam dunk
+INSERT INTO `mob_skill_lists` VALUES ('Bullheaded_Grosvez', 504, 608); -- arm block
+INSERT INTO `mob_skill_lists` VALUES ('Bullheaded_Grosvez', 504, 609); -- battle dance
+INSERT INTO `mob_skill_lists` VALUES ('Bullheaded_Grosvez', 504, 790); -- shoulder slam
 INSERT INTO `mob_skill_lists` VALUES ('Demonic_Tiphia',700,334);
 INSERT INTO `mob_skill_lists` VALUES ('Demonic_Tiphia',700,335);
 INSERT INTO `mob_skill_lists` VALUES ('Demonic_Tiphia',700,336);
@@ -2434,7 +2449,6 @@ INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega',727,1533); -- pile_pitch
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega',727,1534); -- guided_missile
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega',727,1535); -- hyper_pulse
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega',727,1536); -- target_analysis
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega',727,1537); -- discharger
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega',727,1538); -- ion_efflux
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega',727,1539); -- rear_lasers
 INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1259);
@@ -3988,6 +4002,21 @@ INSERT INTO `mob_skill_lists` VALUES ('Fantoccini_PUP',4045,1994); -- Wind Maneu
 INSERT INTO `mob_skill_lists` VALUES ('Fantoccini_PUP',4045,1995); -- Earth Maneuver
 INSERT INTO `mob_skill_lists` VALUES ('Fantoccini_PUP',4045,1996); -- Thunder Maneuver
 INSERT INTO `mob_skill_lists` VALUES ('Fantoccini_PUP',4045,1997); -- Water Maneuver
+
+INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,382);
+INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,383);
+INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,384);
+INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,385);
+INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,386);
+INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,387);
+INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,822);
+
+INSERT INTO `mob_skill_lists` VALUES ('JailerOfTemperance',4047,1463);
+INSERT INTO `mob_skill_lists` VALUES ('JailerOfTemperance',4047,1465);
+INSERT INTO `mob_skill_lists` VALUES ('JailerOfTemperance',4047,1466);
+INSERT INTO `mob_skill_lists` VALUES ('JailerOfTemperance',4047,1467);
+INSERT INTO `mob_skill_lists` VALUES ('JailerOfTemperance',4047,1468);
+INSERT INTO `mob_skill_lists` VALUES ('JailerOfTemperance',4047,1469);
 
 -- End of AirSkyBoat section
 

@@ -11,7 +11,10 @@ local abilityObject = {}
 abilityObject.onAbilityCheck = function(player, target, ability)
     --ranged weapon/ammo: You do not have an appropriate ranged weapon equipped.
     --no card: <name> cannot perform that action.
-    if player:getWeaponSkillType(xi.slot.RANGED) ~= xi.skill.MARKSMANSHIP or player:getWeaponSkillType(xi.slot.AMMO) ~= xi.skill.MARKSMANSHIP then
+    if
+        player:getWeaponSkillType(xi.slot.RANGED) ~= xi.skill.MARKSMANSHIP or
+        player:getWeaponSkillType(xi.slot.AMMO) ~= xi.skill.MARKSMANSHIP
+    then
         return 216, 0
     end
 
@@ -23,9 +26,13 @@ abilityObject.onAbilityCheck = function(player, target, ability)
 end
 
 abilityObject.onUseAbility = function(player, target, ability)
+    local params = {}
+    params.element = xi.magic.ele.EARTH
+    params.skillType = xi.skill.NONE
+    params.maccBonus = player:getStat(xi.mod.AGI) / 2 + player:getMerit(xi.merit.QUICK_DRAW_ACCURACY) + player:getMod(xi.mod.QUICK_DRAW_MACC)
+
     local duration = 60
-    local bonusAcc = player:getStat(xi.mod.AGI) / 2 + player:getMerit(xi.merit.QUICK_DRAW_ACCURACY) + player:getMod(xi.mod.QUICK_DRAW_MACC)
-    local resist = xi.magic.applyResistanceAbility(player, target, xi.magic.ele.LIGHT, xi.skill.NONE, bonusAcc)
+    local resist = xi.magic.applyAbilityResistance(player, target, params)
 
     if resist < 0.5 then
         ability:setMsg(xi.msg.basic.JA_MISS_2) -- resist message

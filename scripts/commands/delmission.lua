@@ -21,19 +21,21 @@ function onTrigger(player, logId, missionId, target)
     -- validate logId
     local logName
     local logInfo = logIdHelpers.getMissionLogInfo(logId)
-    if (logInfo == nil) then
+    if logInfo == nil then
         error(player, "Invalid logID.")
         return
     end
+
     logName = logInfo.full_name
     logId = logInfo.mission_log
 
     -- validate missionId
     local areaMissionIds = xi.mission.id[xi.mission.area[logId]]
-    if (missionId ~= nil) then
+    if missionId ~= nil then
         missionId = tonumber(missionId) or areaMissionIds[string.upper(missionId)] or _G[string.upper(missionId)]
     end
-    if (missionId == nil or missionId < 0) then
+
+    if missionId == nil or missionId < 0 then
         error(player, "Invalid missionID.")
         return
     end

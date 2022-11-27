@@ -11,9 +11,10 @@ local mobskillObject = {}
 
 mobskillObject.onMobSkillCheck = function(target, mob, skill)
     -- Only used if player with hate is in front.
-    if (target:isBehind(mob, 48)) then
+    if target:isBehind(mob, 48) then
         return 1
     end
+
     return 0
 end
 

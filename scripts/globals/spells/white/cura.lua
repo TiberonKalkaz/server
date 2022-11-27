@@ -30,14 +30,14 @@ spellObject.onSpellCast = function(caster, target, spell)
     local final = 0
 
     local minCure = 10
-    if xi.settings.main.USE_OLD_CURE_FORMULA == true then
+    if xi.settings.main.USE_OLD_CURE_FORMULA then
         power = xi.magic.getCurePowerOld(caster)
         divisor = 1
         constant = -10
-        if (power > 100) then
+        if power > 100 then
                 divisor = 57
                 constant = 29.125
-        elseif (power > 60) then
+        elseif power > 60 then
                 divisor = 2
                 constant = 5
         end
@@ -70,7 +70,7 @@ spellObject.onSpellCast = function(caster, target, spell)
         end
     end
 
-    if xi.settings.main.USE_OLD_CURE_FORMULA == true then
+    if xi.settings.main.USE_OLD_CURE_FORMULA then
         basecure = xi.magic.getBaseCureOld(power, divisor, constant)
     else
         basecure = xi.magic.getBaseCure(power, divisor, constant, basepower)
@@ -81,6 +81,7 @@ spellObject.onSpellCast = function(caster, target, spell)
         if caster:getID() == target:getID() then -- Let's use a local var to hold the power of Misery so the boost is applied to all targets,
             caster:setLocalVar("Misery_Power", caster:getMod(xi.mod.AFFLATUS_MISERY))
         end
+
         local misery = caster:getLocalVar("Misery_Power")
         --THIS IS LARELY SEMI-EDUCATED GUESSWORK. THERE IS NOT A
         --LOT OF CONCRETE INFO OUT THERE ON CURA THAT I COULD FIND

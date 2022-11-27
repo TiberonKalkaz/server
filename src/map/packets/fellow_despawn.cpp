@@ -56,5 +56,5 @@ CFellowDespawnPacket::CFellowDespawnPacket(CBaseEntity* PEntity)
     ref<uint8>(0x28)       = 0x48;
     ref<uint8>(0x2B)       = 0x02;
     memcpy(data + (0x30), &(PEntity->look), 20);
-    memcpy(data + (0x44), PEntity->GetName(), PEntity->name.size());
+    memcpy(data + (0x44), PEntity->GetName().c_str(), PEntity->name.size());
 }

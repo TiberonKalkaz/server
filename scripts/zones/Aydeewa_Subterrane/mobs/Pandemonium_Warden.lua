@@ -80,6 +80,7 @@ local function handlePet(mob, newPet, oldPet, target, modelId)
     if oldPet:isSpawned() then
         DespawnMob(oldPet:getID())
     end
+
     newPet:setModelId(modelId)
     newPet:spawn()
     newPet:setPos(mob:getXPos() + math.random(-2, 2), mob:getYPos(), mob:getZPos() + math.random(-2, 2))
@@ -102,8 +103,8 @@ entity.onMobFight = function(mob, target)
     end
 
     -- Check for phase change
-    if (phase < 21 and mobHPP <= triggerHPP[phase]) then
-        if (phase == 20) then -- Prepare for death
+    if phase < 21 and mobHPP <= triggerHPP[phase] then
+        if phase == 20 then -- Prepare for death
             mob:hideHP(false)
             mob:setUnkillable(false)
         end
@@ -127,7 +128,7 @@ entity.onMobFight = function(mob, target)
         mob:setLocalVar("phase", phase + 1)
 
     -- Or, check for Astral Flow
-    elseif (phase == 21 and astral < 9 and mobHPP <= (100 - 25 * astral)) then
+    elseif phase == 21 and astral < 9 and mobHPP <= (100 - 25 * astral) then
         for i = 1, 8 do
             local oldPet = pets[astral % 2][i]
             local newPet = pets[(astral - 1) % 2][i]
@@ -159,7 +160,7 @@ entity.onMobFight = function(mob, target)
     end
 
     -- Check for time limit, too
-    if (os.time() > depopTime and mob:actionQueueEmpty() == true) then
+    if os.time() > depopTime and mob:actionQueueEmpty() then
         for i = 0, 1 do
             for j = 1, 8 do
                 if pets[i][j]:isSpawned() then
@@ -167,6 +168,7 @@ entity.onMobFight = function(mob, target)
                 end
             end
         end
+
         DespawnMob(ID.mob.PANDEMONIUM_WARDEN)
     end
 end

@@ -18,11 +18,13 @@ itemObject.onItemUse = function(target)
         target:addStatusEffect(xi.effect.REGEN, 2, 3, 90)
         worked = true
     end
+
     if not target:hasStatusEffect(xi.effect.REFRESH) then
         target:addStatusEffect(xi.effect.REFRESH, 2, 3, 90)
         worked = true
     end
-    if (not worked) then
+
+    if not worked then
         target:messageBasic(xi.msg.basic.NO_EFFECT)
     end
 end

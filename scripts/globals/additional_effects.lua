@@ -80,19 +80,13 @@ end
 
 xi.additionalEffect.calcDamage = function(attacker, element, defender, damage)
     local params = {}
-
     params.bonusmab   = 0
     params.includemab = false
+
     damage = xi.magic.addBonusesAbility(attacker, element, defender, damage, params)
-    damage = damage * xi.magic.applyResistanceAddEffect(attacker, defender, element, 0)
+    damage = damage * xi.magic.applyResistanceAddEffect(attacker, defender, element, nil, 0)
     damage = xi.magic.adjustForTarget(defender, damage, element)
     damage = xi.magic.finalMagicNonSpellAdjustments(attacker, defender, element, damage)
-
-    --[[
-    This should rightly be modified by resistance checks, and while those DO they are presently not perfect.
-    If you want to force some randomness, un-comment the line below to artificially force 20% variance.
-    ]]
-    -- damage = damage * (math.random(90, 110) / 100)
 
     return damage
 end
@@ -133,6 +127,21 @@ xi.additionalEffect.attack = function(attacker, defender, baseAttackDamage, item
         BRIGAND = 13,
     }
 
+    if item:getID() == 18148 then
+        local dLvl = defender:getMainLvl() - attacker:getMainLvl()
+        if dLvl <= 0 then
+            chance = 99
+        elseif dLvl <= 5 then
+            chance = 99 - (1.5 * dLvl)
+        else
+            chance = 75 - (3 * (dLvl - 5))
+        end
+
+        if defender:isNM() then
+            chance = chance / 1.5
+        end
+    end
+
     -- If we're not going to proc, lets not execute all those checks!
     if math.random(1, 100) > chance then
         return 0, 0, 0
@@ -147,6 +156,7 @@ xi.additionalEffect.attack = function(attacker, defender, baseAttackDamage, item
 
         chance = xi.additionalEffect.levelCorrection(defender:getMainLvl(), attacker:getMainLvl(), chance)
     end
+
     --------------------------------------
 
     if addType == procType.DAMAGE then
@@ -161,9 +171,15 @@ xi.additionalEffect.attack = function(attacker, defender, baseAttackDamage, item
 
     elseif addType == procType.DEBUFF then
         if addStatus and addStatus > 0 then
-            local tick = xi.additionalEffect.statusAttack(addStatus, defender)
-            msgID      = xi.msg.basic.ADD_EFFECT_STATUS
-            defender:addStatusEffect(addStatus, power, tick, duration)
+            local tick   = xi.additionalEffect.statusAttack(addStatus, defender)
+            local resist = xi.magic.applyResistanceAddEffect(attacker, defender, element, addStatus, 0)
+            msgID        = xi.msg.basic.ADD_EFFECT_STATUS
+            if
+                resist >= 0.5 and
+                duration * resist > 0
+            then
+                defender:addStatusEffect(addStatus, power, tick, duration * resist)
+            end
             msgParam = addStatus
         end
 
@@ -181,8 +197,15 @@ xi.additionalEffect.attack = function(attacker, defender, baseAttackDamage, item
         attacker:addMP(magicPoints)
         msgParam = magicPoints
 
-    elseif addType == procType.HP_DRAIN or (addType == procType.HPMPTP_DRAIN and math.random(1, 3) == 1) then
+    elseif
+        addType == procType.HP_DRAIN or
+        (addType == procType.HPMPTP_DRAIN and math.random(1, 3) == 1)
+    then
         damage = xi.additionalEffect.calcDamage(attacker, element, defender, damage)
+
+        if defender:isUndead() then
+            return 0
+        end
 
         if damage > defender:getHP() then
             damage = defender:getHP()
@@ -193,7 +216,10 @@ xi.additionalEffect.attack = function(attacker, defender, baseAttackDamage, item
         defender:addHP(-damage)
         attacker:addHP(damage)
 
-    elseif addType == procType.MP_DRAIN or (addType == procType.HPMPTP_DRAIN and math.random(1, 3) == 2) then
+    elseif
+        addType == procType.MP_DRAIN or
+        (addType == procType.HPMPTP_DRAIN and math.random(1, 3) == 2)
+    then
         damage = xi.additionalEffect.calcDamage(attacker, element, defender, damage)
 
         if damage > defender:getMP() then
@@ -205,7 +231,10 @@ xi.additionalEffect.attack = function(attacker, defender, baseAttackDamage, item
         defender:addMP(-damage)
         attacker:addMP(damage)
 
-    elseif addType == procType.TP_DRAIN or (addType == procType.HPMPTP_DRAIN and math.random(1, 3) == 3) then
+    elseif
+        addType == procType.TP_DRAIN or
+        (addType == procType.HPMPTP_DRAIN and math.random(1, 3) == 3)
+    then
         damage = xi.additionalEffect.calcDamage(attacker, element, defender, damage)
 
         if damage > defender:getTP() then
@@ -229,7 +258,7 @@ xi.additionalEffect.attack = function(attacker, defender, baseAttackDamage, item
 
     elseif addType == procType.ABSORB then
         -- Ripping off Aura Steal here
-        local resist = xi.magic.applyResistanceAddEffect(attacker, defender, element, 0)
+        local resist = xi.magic.applyResistanceAddEffect(attacker, defender, element, nil, 0)
         if resist > 0.0625 then
             local stolen = attacker:stealStatusEffect(defender)
             msgID        = xi.msg.basic.STEAL_EFFECT
@@ -243,7 +272,10 @@ xi.additionalEffect.attack = function(attacker, defender, baseAttackDamage, item
             msgParam = 0
         elseif addStatus == xi.effect.BLINK then -- BLINK http://www.ffxiah.com/item/18830/gusterion
             -- Does not stack with or replace other shadows
-            if attacker:hasStatusEffect(xi.effect.BLINK) or attacker:hasStatusEffect(xi.effect.UTSUSEMI) then
+            if
+                attacker:hasStatusEffect(xi.effect.BLINK) or
+                attacker:hasStatusEffect(xi.effect.UTSUSEMI)
+            then
                 return 0, 0, 0
             else
                 attacker:addStatusEffect(xi.effect.BLINK, power, 0, duration)
@@ -274,8 +306,10 @@ xi.additionalEffect.attack = function(attacker, defender, baseAttackDamage, item
         end
 
     elseif addType == procType.BRIGAND then
-        if defender:getPool() == 531 and
-        attacker:getEquipID(xi.slot.MAIN) == xi.items.BUCCANEERS_KNIFE then
+        if
+            defender:getPool() == 531 and
+            attacker:getEquipID(xi.slot.MAIN) == xi.items.BUCCANEERS_KNIFE
+        then
             defender:setMod(xi.mod.DMG, 0)
             defender:setLocalVar("killable", 1)
             defender:setUnkillable(false)

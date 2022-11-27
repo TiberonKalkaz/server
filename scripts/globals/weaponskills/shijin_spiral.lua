@@ -18,7 +18,6 @@ require("scripts/globals/weaponskills")
 local weaponskillObject = {}
 
 weaponskillObject.onUseWeaponSkill = function(player, target, wsID, tp, primary, action, taChar)
-
     local params = {}
     params.numHits = 4
     -- This is a 5 hit ws but H2H ws are done in a different way, the off hand hit is been taking into account in another place
@@ -36,14 +35,14 @@ weaponskillObject.onUseWeaponSkill = function(player, target, wsID, tp, primary,
         params.dex_wsc = 0.7 + (player:getMerit(xi.merit.SHIJIN_SPIRAL) * 0.03)
     end
 
-    if (damage > 0) then
+    if damage > 0 then
         local duration = (tp / 1000) + 4
-        if (target:hasStatusEffect(xi.effect.PLAGUE) == false) then
+        if not target:hasStatusEffect(xi.effect.PLAGUE) then
             target:addStatusEffect(xi.effect.PLAGUE, 5, 0, duration)
         end
     end
-    return tpHits, extraHits, criticalHit, damage
 
+    return tpHits, extraHits, criticalHit, damage
 end
 
 return weaponskillObject

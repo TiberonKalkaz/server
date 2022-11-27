@@ -14,6 +14,8 @@ end
 
 spellObject.onSpellCast = function(caster, target, spell)
     local dmg = 10 + 0.575 * caster:getSkillLevel(xi.skill.DARK_MAGIC)
+    local mpDiff = caster:getMaxMP() - caster:getMP()
+
     --get resist multiplier (1x if no resist)
     local params = {}
     params.diff = caster:getStat(xi.mod.INT)-target:getStat(xi.mod.INT)
@@ -29,18 +31,18 @@ spellObject.onSpellCast = function(caster, target, spell)
     dmg = xi.magic.adjustForTarget(target, dmg, spell:getElement())
     --add in final adjustments
 
-    if (dmg < 0) then
+    if dmg < 0 then
         dmg = 0
     end
 
     dmg = dmg * xi.settings.main.DARK_POWER
 
-    if (target:isUndead()) then
+    if target:isUndead() or target:hasImmunity(xi.immunity.ASPIR) then
         spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT) -- No effect
         return dmg
     end
 
-    if (target:getMP() > dmg) then
+    if target:getMP() > dmg then
         caster:addMP(dmg)
         target:delMP(dmg)
     else
@@ -49,7 +51,9 @@ spellObject.onSpellCast = function(caster, target, spell)
         target:delMP(dmg)
     end
 
-    return dmg
+    spell:setMsg(xi.msg.basic.MAGIC_DRAIN_HP, math.min(dmg, mpDiff))
+
+    return math.min(dmg, mpDiff)
 end
 
 return spellObject

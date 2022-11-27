@@ -146,7 +146,7 @@ void CEntityUpdatePacket::updateWith(CBaseEntity* PEntity, ENTITYUPDATE type, ui
             {
                 // depending on size of name, this can be 0x20, 0x22, or 0x24
                 this->setSize(0x48);
-                std::memcpy(data + 0x34, PEntity->GetName(), std::min<size_t>(PEntity->name.size(), PacketNameLength));
+                std::memcpy(data + 0x34, PEntity->GetName().c_str(), std::min<size_t>(PEntity->GetName().size(), PacketNameLength));
             }
         }
         break;
@@ -187,7 +187,7 @@ void CEntityUpdatePacket::updateWith(CBaseEntity* PEntity, ENTITYUPDATE type, ui
                 this->setSize(0x48);
                 if (PMob->packetName.empty())
                 {
-                    std::memcpy(data + 0x34, PEntity->GetName(), std::min<size_t>(PEntity->name.size(), PacketNameLength));
+                    std::memcpy(data + 0x34, PEntity->GetName().c_str(), std::min<size_t>(PEntity->GetName().size(), PacketNameLength));
                 }
                 else
                 {
@@ -223,7 +223,7 @@ void CEntityUpdatePacket::updateWith(CBaseEntity* PEntity, ENTITYUPDATE type, ui
             ref<uint8>(0x28) |= 0x40;
             ref<uint8>(0x2A) = 0x00;
             ref<uint8>(0x2B) = 0x02;
-            memcpy(data + (0x44), PEntity->GetName(), PEntity->name.size());
+            memcpy(data + (0x44), PEntity->GetName().c_str(), PEntity->name.size());
         }
         break;
         default:
@@ -262,7 +262,7 @@ void CEntityUpdatePacket::updateWith(CBaseEntity* PEntity, ENTITYUPDATE type, ui
         {
             this->setSize(0x48);
             ref<uint16>(0x30) = PEntity->look.size;
-            std::memcpy(data + 0x34, PEntity->GetName(), (PEntity->name.size() > 12 ? 12 : PEntity->name.size()));
+            std::memcpy(data + 0x34, PEntity->GetName().c_str(), (PEntity->GetName().size() > 12 ? 12 : PEntity->GetName().size()));
             if (PEntity->manualConfig)
             {
                 this->setSize(0x40);

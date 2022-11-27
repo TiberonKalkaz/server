@@ -14,12 +14,12 @@ spellObject.onMagicCastingCheck = function(caster, target, spell)
 end
 
 spellObject.onSpellCast = function(caster, target, spell)
-
     --calculate raw damage (unknown function  -> only dark skill though) - using http://www.bluegartr.com/threads/44518-Drain-Calculations
     -- also have small constant to account for 0 dark skill
     local dmg = 10 + (1.035 * caster:getSkillLevel(xi.skill.DARK_MAGIC))
+    local hpDiff = caster:getMaxHP() - caster:getHP()
 
-    if (dmg > (caster:getSkillLevel(xi.skill.DARK_MAGIC) + 20)) then
+    if dmg > (caster:getSkillLevel(xi.skill.DARK_MAGIC) + 20) then
         dmg = (caster:getSkillLevel(xi.skill.DARK_MAGIC) + 20)
     end
 
@@ -38,11 +38,12 @@ spellObject.onSpellCast = function(caster, target, spell)
     dmg = xi.magic.adjustForTarget(target, dmg, spell:getElement())
     --add in final adjustments
 
-    if (dmg < 0) then
+    if dmg < 0 then
         dmg = 0
     end
 
-    if (target:isUndead()) then
+    if target:isUndead() then
+        dmg = 0
         spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT) -- No effect
         return dmg
     end
@@ -54,9 +55,11 @@ spellObject.onSpellCast = function(caster, target, spell)
 
     dmg = xi.magic.finalMagicAdjustments(caster, target, spell, dmg)
 
+    spell:setMsg(xi.msg.basic.MAGIC_DRAIN_HP, math.min(dmg, hpDiff))
+
     caster:addHP(dmg)
 
-    return dmg
+    return math.min(dmg, hpDiff)
 
 end
 

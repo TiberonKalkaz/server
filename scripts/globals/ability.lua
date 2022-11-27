@@ -723,7 +723,12 @@ xi.addType =
 function AbilityFinalAdjustments(dmg, mob, skill, target, skilltype, skillparam, shadowbehav) -- seems to only be used for Wyvern breaths
     -- physical attack missed, skip rest
     local msg = skill:getMsg()
-    if (msg == 158 or msg == 188 or msg == 31 or msg == 30) then
+    if
+        msg == xi.msg.JA_MISS or
+        msg == xi.msg.SKILL_MISS or
+        msg == xi.msg.SHADOW_ABSORB or
+        msg == xi.msg.ANTICIPATE
+    then
         return 0
     end
 
@@ -748,17 +753,25 @@ function AbilityFinalAdjustments(dmg, mob, skill, target, skilltype, skillparam,
     skill:setMsg(xi.msg.basic.USES_JA_TAKE_DAMAGE)
 
     --Handle shadows depending on shadow behaviour / skilltype
-    if (shadowbehav ~= xi.mobskills.shadowBehavior.WIPE_SHADOWS and shadowbehav ~= xi.mobskills.shadowBehavior.IGNORE_SHADOWS) then --remove 'shadowbehav' shadows.
+    if
+        shadowbehav ~= xi.mobskills.shadowBehavior.WIPE_SHADOWS and
+        shadowbehav ~= xi.mobskills.shadowBehavior.IGNORE_SHADOWS
+    then
+        --remove 'shadowbehav' shadows.
 
         dmg = utils.takeShadows(target, mob, dmg, shadowbehav)
 
         -- dealt zero damage, so shadows took hit
-        if (dmg == 0) then
+        if
+            (target:hasStatusEffect(xi.effect.COPY_IMAGE) or
+            target:hasStatusEffect(xi.effect.BLINK)) and
+            dmg == 0
+        then
             skill:setMsg(xi.msg.basic.SHADOW_ABSORB)
             return shadowbehav
         end
 
-    elseif (shadowbehav == xi.mobskills.shadowBehavior.WIPE_SHADOWS) then --take em all!
+    elseif shadowbehav == xi.mobskills.shadowBehavior.WIPE_SHADOWS then --take em all!
         target:delStatusEffect(xi.effect.COPY_IMAGE)
         target:delStatusEffect(xi.effect.BLINK)
         target:delStatusEffect(xi.effect.THIRD_EYE)
@@ -770,13 +783,13 @@ function AbilityFinalAdjustments(dmg, mob, skill, target, skilltype, skillparam,
         return 0
     end
 
-    if (skilltype == xi.attackType.PHYSICAL) then
+    if skilltype == xi.attackType.PHYSICAL then
         dmg = target:physicalDmgTaken(dmg, skillparam)
-    elseif (skilltype == xi.attackType.MAGICAL) then
+    elseif skilltype == xi.attackType.MAGICAL then
         dmg = target:magicDmgTaken(dmg, skillparam)
-    elseif (skilltype == xi.attackType.BREATH) then
+    elseif skilltype == xi.attackType.BREATH then
         dmg = target:breathDmgTaken(dmg)
-    elseif (skilltype == xi.attackType.RANGED) then
+    elseif skilltype == xi.attackType.RANGED then
         dmg = target:rangedDmgTaken(dmg)
     end
 
@@ -796,7 +809,7 @@ function AbilityFinalAdjustments(dmg, mob, skill, target, skilltype, skillparam,
 
     dmg = utils.stoneskin(target, dmg)
 
-    if (dmg > 0) then
+    if dmg > 0 then
         target:wakeUp()
         target:updateEnmityFromDamage(mob, dmg)
     end
@@ -815,6 +828,7 @@ function takeAbilityDamage(defender, attacker, params, primary, finaldmg, attack
             -- TODO: ability absorb messages (if there are any)
             -- action:messageID(defender:getID(), xi.msg.basic.WHATEVER)
         end
+
         action:param(defender:getID(), finaldmg)
     elseif shadowsAbsorbed > 0 then
         action:messageID(defender:getID(), xi.msg.basic.SHADOW_ABSORB)
@@ -822,10 +836,11 @@ function takeAbilityDamage(defender, attacker, params, primary, finaldmg, attack
     else
         -- no abilities that use ability message can miss (the rest use ws messages)
     end
+
     local targetTPMult = params.targetTPMult or 1
     finaldmg = defender:takeWeaponskillDamage(attacker, finaldmg, attackType, damageType, slot, primary, tpHitsLanded, (extraHitsLanded * 10) + bonusTP, targetTPMult)
     local enmityEntity = taChar or attacker
-    if (params.overrideCE and params.overrideVE) then
+    if params.overrideCE and params.overrideVE then
         defender:addEnmity(enmityEntity, params.overrideCE, params.overrideVE)
     else
         local enmityMult = params.enmityMult or 1

@@ -25,6 +25,7 @@ function onTrigger(player, logId, questId, target)
         error(player, "Invalid logID.")
         return
     end
+
     local logName = questLog.full_name
     logId = questLog.quest_log
 
@@ -33,6 +34,7 @@ function onTrigger(player, logId, questId, target)
     if questId ~= nil then
         questId = tonumber(questId) or areaQuestIds[string.upper(questId)]
     end
+
     if questId == nil or questId < 0 then
         error(player, "Invalid questID.")
         return
@@ -52,5 +54,5 @@ function onTrigger(player, logId, questId, target)
 
     -- complete quest
     targ:completeQuest(logId, questId)
-    player:PrintToPlayer( string.format( "Completed %s Quest with ID %u for %s", logName, questId, targ:getName() ) )
+    player:PrintToPlayer(string.format("Completed %s Quest with ID %u for %s", logName, questId, targ:getName()))
 end

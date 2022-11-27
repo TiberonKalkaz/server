@@ -692,9 +692,11 @@ uint16 CBattleEntity::CHR()
     return std::clamp(stats.CHR + m_modStat[Mod::CHR], 0, 999);
 }
 
-uint16 CBattleEntity::ATT(uint16 slot)
+uint16 CBattleEntity::ATT(uint16 slot, bool ignoreWeaponMods)
 {
     TracyZoneScoped;
+    XI_DEBUG_BREAK_IF(slot >= sizeof(m_Weapons) / sizeof(CItemEquipment*));
+
     // TODO: consider which weapon!
     int32 ATT    = 8 + m_modStat[Mod::ATT];
     auto* weapon = dynamic_cast<CItemWeapon*>(m_Weapons[slot]);
@@ -702,10 +704,6 @@ uint16 CBattleEntity::ATT(uint16 slot)
     {
         ATT += (STR() * 3) / 4;
     }
-    // else if (weapon && weapon->isHandToHand())
-    //{
-    //      ATT += (STR() * 5) / 8;
-    //  }
     else
     {
         ATT += STR() / 2;
@@ -722,6 +720,14 @@ uint16 CBattleEntity::ATT(uint16 slot)
         {
             ATT += GetSkill(weapon->getSkillType()) + weapon->getILvlSkill();
 
+            if (!ignoreWeaponMods)
+            {
+                if (weapon->getModifier(Mod::ATT_SLOT) > 0)
+                {
+                    ATT += weapon->getModifier(Mod::ATT_SLOT);
+                }
+            }
+
             // Smite applies when using 2H or H2H weapons
             if (weapon->isTwoHanded() || weapon->isHandToHand())
             {
@@ -733,32 +739,44 @@ uint16 CBattleEntity::ATT(uint16 slot)
     {
         ATT += this->GetSkill(SKILL_AUTOMATON_MELEE);
     }
+    else // Mob attack
+    {
+        ATT = (8 + m_modStat[Mod::ATT] + STR() / 2);
+    }
+
     return std::clamp(ATT + (ATT * m_modStat[Mod::ATTP] / 100) + std::min<int16>((ATT * m_modStat[Mod::FOOD_ATTP] / 100), m_modStat[Mod::FOOD_ATT_CAP]), 0, 65535);
 }
 
 uint16 CBattleEntity::RATT(uint8 skill, float distance, uint16 bonusSkill)
 {
     auto* PWeakness = StatusEffectContainer->GetStatusEffect(EFFECT_WEAKNESS);
+
     if (PWeakness && PWeakness->GetPower() >= 2)
     {
         return 0;
     }
-    int32 ATT = 8 + GetSkill(skill) + bonusSkill + m_modStat[Mod::RATT] + battleutils::GetRangedAttackBonuses(this) + STR() / 2;
+
+    int32 ATT = 8 + GetSkill(skill == 48 ? 0 : skill) + bonusSkill + m_modStat[Mod::RATT] + battleutils::GetRangedAttackBonuses(this) + STR() / 2;
+
     if ((this->objtype == TYPE_PC) || (this->objtype == TYPE_PET && this->PMaster->objtype == TYPE_PC && ((CPetEntity*)this)->getPetType() == PET_TYPE::AUTOMATON)) // PC or PC Automaton
     {
         ATT = int32((float)ATT * battleutils::GetRangedDistanceCorrection(this, distance));
     }
+
     return std::clamp(ATT + (ATT * m_modStat[Mod::RATTP] / 100) + std::min<int16>((ATT * m_modStat[Mod::FOOD_RATTP] / 100), m_modStat[Mod::FOOD_RATT_CAP]), 0, 65535);
 }
 
 uint16 CBattleEntity::GetBaseRATT(uint8 skill, uint16 bonusSkill)
 {
     auto* PWeakness = StatusEffectContainer->GetStatusEffect(EFFECT_WEAKNESS);
+
     if (PWeakness && PWeakness->GetPower() >= 2)
     {
         return 0;
     }
-    int32 ATT = 8 + GetSkill(skill) + bonusSkill + m_modStat[Mod::RATT] + battleutils::GetRangedAttackBonuses(this) + (STR() * 3) / 4;
+
+    int32 ATT = 8 + GetSkill(skill == 48 ? 0 : skill) + bonusSkill + m_modStat[Mod::RATT] + battleutils::GetRangedAttackBonuses(this) + (STR() * 3) / 4;
+
     return std::clamp(ATT + (ATT * m_modStat[Mod::RATTP] / 100) + std::min<int16>((ATT * m_modStat[Mod::FOOD_RATTP] / 100), m_modStat[Mod::FOOD_RATT_CAP]), 0, 65535);
 }
 
@@ -766,26 +784,32 @@ uint16 CBattleEntity::RACC(uint8 skill, float distance, uint16 bonusSkill)
 {
     TracyZoneScoped;
     auto* PWeakness = StatusEffectContainer->GetStatusEffect(EFFECT_WEAKNESS);
+
     if (PWeakness && PWeakness->GetPower() >= 2)
     {
         return 0;
     }
-    int    skill_level = GetSkill(skill) + bonusSkill;
-    uint16 acc         = skill_level;
+
+    int16 skill_level = GetSkill(skill == 48 ? 0 : skill) + bonusSkill;
+    int16 acc         = skill_level;
+
     if (skill_level > 200)
     {
-        acc = (uint16)(200 + (skill_level - 200) * 0.9);
+        acc = (int16)(200 + (skill_level - 200) * 0.9);
     }
+
     acc += getMod(Mod::RACC);
     acc += battleutils::GetRangedAccuracyBonuses(this);
     acc += AGI() / 2;
+
     if ((this->objtype == TYPE_PC) || (this->objtype == TYPE_PET && this->PMaster->objtype == TYPE_PC && ((CPetEntity*)this)->getPetType() == PET_TYPE::AUTOMATON)) // PC or PC Automaton
     {
         if (!this->StatusEffectContainer->HasStatusEffect(EFFECT_SHARPSHOT))
         {
-            acc = int32((float)acc * battleutils::GetRangedDistanceCorrection(this, distance));
+            acc = int16((float)acc * battleutils::GetRangedDistanceCorrection(this, distance));
         }
     }
+
     return std::clamp(acc + std::min<int16>(((100 + getMod(Mod::FOOD_RACCP) * acc) / 100), getMod(Mod::FOOD_RACC_CAP)), 0, 65535);
 }
 
@@ -793,19 +817,24 @@ uint16 CBattleEntity::GetBaseRACC(uint8 skill, uint16 bonusSkill)
 {
     TracyZoneScoped;
     auto* PWeakness = StatusEffectContainer->GetStatusEffect(EFFECT_WEAKNESS);
+
     if (PWeakness && PWeakness->GetPower() >= 2)
     {
         return 0;
     }
-    int    skill_level = GetSkill(skill) + bonusSkill;
-    uint16 acc         = skill_level;
+
+    int16 skill_level = GetSkill(skill == 48 ? 0 : skill) + bonusSkill;
+    int16 acc         = skill_level;
+
     if (skill_level > 200)
     {
-        acc = (uint16)(200 + (skill_level - 200) * 0.9);
+        acc = (int16)(200 + (skill_level - 200) * 0.9);
     }
+
     acc += getMod(Mod::RACC);
     acc += battleutils::GetRangedAccuracyBonuses(this);
     acc += AGI() / 2;
+
     return std::clamp(acc + std::min<int16>(((100 + getMod(Mod::FOOD_RACCP) * acc) / 100), getMod(Mod::FOOD_RACC_CAP)), 0, 65535);
 }
 
@@ -1041,7 +1070,7 @@ uint8 CBattleEntity::GetDeathType()
 
 void CBattleEntity::addModifier(Mod type, int16 amount)
 {
-    if (type == Mod::MOVE && this->objtype == TYPE_PC)
+    if (type == Mod::MOVE)
     {
         m_MSNonItemValues.push_back(amount);
         m_modStat[type] = CalculateMSFromSources();
@@ -2077,7 +2106,8 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
             else
             {
                 // Set this attack's critical flag.
-                attack.SetCritical(xirand::GetRandomNumber(100) < battleutils::GetCritHitRate(this, PTarget, !attack.IsFirstSwing()), SLOT_MAIN, attack.IsGuarded());
+                SLOTTYPE weaponSlot = (SLOTTYPE)attack.GetWeaponSlot();
+                attack.SetCritical(xirand::GetRandomNumber(100) < battleutils::GetCritHitRate(this, PTarget, !attack.IsFirstSwing(), weaponSlot), weaponSlot, attack.IsGuarded());
 
                 actionTarget.reaction = REACTION::HIT;
 
@@ -2128,7 +2158,7 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
                 }
 
                 actionTarget.param =
-                    battleutils::TakePhysicalDamage(this, PTarget, attack.GetAttackType(), attack.GetDamage(), attack.IsBlocked(), attack.GetWeaponSlot(), 1,
+                    battleutils::TakePhysicalDamage(this, PTarget, attack.GetAttackType(), attack.GetDamage(), attack.IsBlocked(), weaponSlot, 1,
                                                     attackRound.GetTAEntity(), true, true, attack.IsCountered(), attack.IsCovered(), POriginalTarget);
                 if (actionTarget.param < 0)
                 {

@@ -14,25 +14,23 @@ require("scripts/globals/mobskills")
 local mobskillObject = {}
 
 mobskillObject.onMobSkillCheck = function(target, mob, skill)
-    if(mob:getFamily() == 91) then
+    if mob:getFamily() == 91 then
         local mobSkin = mob:getModelId()
-        if (mobSkin == 1680) then
+
+        if mobSkin == 1680 then
             return 0
         else
             return 1
         end
-    elseif mob:getAnimationSub() == 1 or mob:getMainJob() == xi.job.MNK or mob:getMainJob() == xi.job.PUP then
-        return 0
-    else
-        return 1
     end
+
+    return 0
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-
     local numhits = 1
     local accmod = 2
-    local dmgmod = 3
+    local dmgmod = 1
     local info = xi.mobskills.mobPhysicalMove(mob, target, skill, numhits, accmod, dmgmod, xi.mobskills.magicalTpBonus.NO_EFFECT)
     local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.PHYSICAL, xi.damageType.BLUNT, info.hitslanded)
     target:takeDamage(dmg, mob, xi.attackType.PHYSICAL, xi.damageType.BLUNT)

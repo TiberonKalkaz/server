@@ -70,6 +70,7 @@ global_objects=(
     Event
     Battlefield
     BattlefieldMission
+    BattlefieldQuest
     Limbus
 
     removeSleepEffects
@@ -111,10 +112,6 @@ global_objects=(
 
     doAutoRangedWeaponskill
     doAutoPhysicalWeaponskill
-
-    FormMagicBurst
-    MobFormMagicBurst
-    doesElementMatchWeaponskill
 
     AbilityFinalAdjustments
 

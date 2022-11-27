@@ -165,12 +165,14 @@ xi.settings.main =
     NM_LOTTERY_COOLDOWN = 1.0,
 
 	-- GARRISON SETTINGS
-    GARRISON_LOCKOUT             = 1800, -- Time in seconds before a new garrison can be started (default: 1800)
-    GARRISON_TIME_LIMIT          = 1800, -- Time in seconds before lose ongoing garrison (default: 1800)
-    GARRISON_ONCE_PER_WEEK       = 0,    -- Set to 1 to bypass the limit of one garrison per Conquest Tally Week.
-    GARRISON_PARTY_LIMIT         = 18,   -- Set to max party members you want to do garrison (default: 18).
-    GARRISON_NATION_BYPASS       = 0,    -- Set to 1 to bypass the nation requirement.
-    GARRISON_RANK                = 2,    -- Set to minumum Nation Rank to start Garrison (default: 2).
+    ENABLE_GARRISON              = false,  -- If true, enables garrison functionality
+    DEBUG_GARRISON               = false,  -- If true, garrison will print out debug messages in logs as well as players as smes.
+    GARRISON_LOCKOUT             = 1800,   -- Time in seconds before a new garrison can be started (default: 1800)
+    GARRISON_TIME_LIMIT          = 1800,   -- Time in seconds before lose ongoing garrison (default: 1800)
+    GARRISON_ONCE_PER_WEEK       = false,  -- Set to false to bypass the limit of one garrison per Conquest Tally Week.
+    GARRISON_PARTY_LIMIT         = 18,     -- Set to max party members you want to do garrison (default: 18).
+    GARRISON_NATION_BYPASS       = false,  -- Set to true to bypass the nation requirement.
+    GARRISON_RANK                = 2,      -- Set to minumum Nation Rank to start Garrison (default: 2).
 
     -- DYNAMIS SETTINGS
     BETWEEN_2DYNA_WAIT_TIME     = 72,       -- Hours before player can re-enter Dynamis. Default is 1 Earthday (24 hours).
@@ -238,7 +240,7 @@ xi.settings.main =
     HOMEPOINT_TELEPORT           = 0,    -- Enables the homepoint teleport system
     EQUIP_FROM_OTHER_CONTAINERS  = false, -- true/false. Allows equipping items from Mog Satchel, Sack, and Case. Only possible with the use of client addons.
     ENM_COOLDOWN                 = 120,  -- Number of hours before a player can obtain same KI for ENMs (default: 5 days)
-    FORCE_SPAWN_QM_RESET_TIME    = 300,  -- Number of seconds the ??? remains hidden for after the despawning of the mob it force spawns.
+    FORCE_SPAWN_QM_RESET_TIME    = 900,  -- Number of seconds the ??? remains hidden for after the despawning of the mob it force spawns.
     GOBBIE_BOX_MIN_AGE           = 45,   -- Minimum character age in days before a character can sign up for Gobbie Mystery Box
 
     -- Synergy
@@ -246,4 +248,7 @@ xi.settings.main =
 
     -- Adventuring Fellows
     ENABLE_ADVENTURING_FELLOWS   = 1, -- Enable or disable the ability to quest and call Adventuring Fellows
+
+    -- NM Persistence
+    NM_PERSISTENCE = 1, -- When set to 1, timed NM spawns will be persistent through server crashing
 }

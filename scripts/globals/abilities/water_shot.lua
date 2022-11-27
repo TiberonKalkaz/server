@@ -13,7 +13,10 @@ local abilityObject = {}
 abilityObject.onAbilityCheck = function(player, target, ability)
     --ranged weapon/ammo: You do not have an appropriate ranged weapon equipped.
     --no card: <name> cannot perform that action.
-    if player:getWeaponSkillType(xi.slot.RANGED) ~= xi.skill.MARKSMANSHIP or player:getWeaponSkillType(xi.slot.AMMO) ~= xi.skill.MARKSMANSHIP then
+    if
+        player:getWeaponSkillType(xi.slot.RANGED) ~= xi.skill.MARKSMANSHIP or
+        player:getWeaponSkillType(xi.slot.AMMO) ~= xi.skill.MARKSMANSHIP
+    then
         return 216, 0
     end
 
@@ -27,11 +30,14 @@ end
 abilityObject.onUseAbility = function(player, target, ability, action)
     local params = {}
     params.includemab = true
+    params.element = xi.magic.ele.WATER
+    params.skillType = xi.skill.NONE
+    params.maccBonus = player:getStat(xi.mod.AGI) / 2 + player:getMerit(xi.merit.QUICK_DRAW_ACCURACY) + player:getMod(xi.mod.QUICK_DRAW_MACC)
+
     local dmg = (2 * (player:getRangedDmg() + player:getAmmoDmg()) + player:getMod(xi.mod.QUICK_DRAW_DMG)) * (1 + player:getMod(xi.mod.QUICK_DRAW_DMG_PERCENT) / 100)
     dmg = dmg + 2 * player:getJobPointLevel(xi.jp.QUICK_DRAW_EFFECT)
     dmg  = xi.magic.addBonusesAbility(player, xi.magic.ele.WATER, target, dmg, params)
-    local bonusAcc = player:getStat(xi.mod.AGI) / 2 + player:getMerit(xi.merit.QUICK_DRAW_ACCURACY) + player:getMod(xi.mod.QUICK_DRAW_MACC)
-    dmg = dmg * xi.magic.applyResistanceAbility(player, target, xi.magic.ele.WATER, xi.skill.NONE, bonusAcc)
+    dmg = dmg * xi.magic.applyAbilityResistance(player, target, params)
     dmg = xi.magic.adjustForTarget(target, dmg, xi.magic.ele.WATER)
 
     params.targetTPMult = 0 -- Quick Draw does not feed TP

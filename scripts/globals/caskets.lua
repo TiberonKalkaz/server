@@ -61,14 +61,14 @@ local casketInfo =
         193, 194, 195, 196, 197, 198, 204, 205, 207, 208, 212, 213
     },
     splitZones = set{
-       xi.zone.ZERUHN_MINES,
-       xi.zone.KORROLOKA_TUNNEL,
-       xi.zone.DANGRUF_WADI,
-       xi.zone.KING_RANPERRES_TOMB,
-       xi.zone.ORDELLES_CAVES,
-       xi.zone.OUTER_HORUTOTO_RUINS,
-       xi.zone.GUSGEN_MINES,
-       xi.zone.MAZE_OF_SHAKHRAMI
+        xi.zone.ZERUHN_MINES,
+        xi.zone.KORROLOKA_TUNNEL,
+        xi.zone.DANGRUF_WADI,
+        xi.zone.KING_RANPERRES_TOMB,
+        xi.zone.ORDELLES_CAVES,
+        xi.zone.OUTER_HORUTOTO_RUINS,
+        xi.zone.GUSGEN_MINES,
+        xi.zone.MAZE_OF_SHAKHRAMI
     },
     cs =
     {
@@ -92,8 +92,8 @@ local casketInfo =
 -- Desc: Helper function for making it easier to read time between spawns.
 -----------------------------------
 local function convertTime(rawTime)
-   local rawSeconds = tonumber(rawTime)
-   local timeTable = { 0, 0, 0 }
+    local rawSeconds = tonumber(rawTime)
+    local timeTable = { 0, 0, 0 }
 
     timeTable[1] = string.format("%02.f", math.floor(rawSeconds / 3600))
     timeTable[2] = string.format("%02.f", math.floor(rawSeconds / 60 - (timeTable[1] * 60)))
@@ -122,7 +122,11 @@ local function timeElapsedCheck(npc)
 
     timeTable = convertTime(lastSpawned)
 
-    if tonumber(timeTable[1]) >= 01 or tonumber(timeTable[1]) < 01 and tonumber(timeTable[2]) >= 05 then
+    if
+        tonumber(timeTable[1]) >= 01 or
+        tonumber(timeTable[1]) < 01 and
+        tonumber(timeTable[2]) >= 05
+    then
         return true
     end
 
@@ -140,6 +144,7 @@ local function getCasketID(mob)
     if #caskets == 0 then
         return 0
     end
+
     -- Get the ID of the first entry and use that as our base ID to offset against
     local baseChestId = caskets[1]:getID()
     local chestId     = 0
@@ -293,6 +298,7 @@ local function multipleItemCheck(itemId)
             return true
         end
     end
+
     return false
 end
 
@@ -438,16 +444,18 @@ local function getDrops(npc, dropType, zoneId)
             for k, v in pairs(tempDrops) do
                 rand = rand - v[1]
                 if rand <= 0 then
-                   temp = v[2]
-                   break
+                    temp = v[2]
+                    break
                 end
             end
+
             if temp == 0 or temp == nil then
                 temps[i] = 4112 -- default to potion
             else
                 temps[i] = temp
             end
         end
+
         setTempItems(npc, temps[1], temps[2], temps[3])
     -----------------------------------
     -- Item drops
@@ -482,10 +490,11 @@ local function getDrops(npc, dropType, zoneId)
             for k, v in pairs(drops) do
                 rand = rand - v[1]
                 if rand <= 0 then
-                   item = v[2]
-                   break
+                    item = v[2]
+                    break
                 end
             end
+
             if item == 0 or item == nil then
                 items[i] = 4112 -- default to potion
             else
@@ -739,7 +748,10 @@ xi.caskets.onTrade = function(player, npc, trade)
     end
 
     if locked == 1 then
-        if player:getMainJob() == xi.job.THF and npcUtil.tradeHasExactly(trade, 1022) then
+        if
+            player:getMainJob() == xi.job.THF and
+            npcUtil.tradeHasExactly(trade, 1022)
+        then
             local splitNumbers = {}
             local tradeAttempt = math.random()
             local firstAttempt = npc:getLocalVar("[caskets]HINT_TRADE")
@@ -774,10 +786,12 @@ xi.caskets.onTrade = function(player, npc, trade)
                     lowNum  = 80 + math.random(1, 9)
                     highNum = 99
                 end
+
                 player:messageSpecial(baseMessage + casketInfo.messageOffset.COMBINATION_GREATER_LESS, lowNum, highNum, 0, 0)
             else
                 player:messageSpecial(baseMessage + casketInfo.messageOffset.UNABLE_TO_GET_HINT, 0, 0, 0, 0)
             end
+
             player:confirmTrade()
         end
     end
