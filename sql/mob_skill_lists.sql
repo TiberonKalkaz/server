@@ -173,8 +173,8 @@ INSERT INTO `mob_skill_lists` VALUES ('Bhoot',52,477);
 INSERT INTO `mob_skill_lists` VALUES ('Bhoot',52,1794);
 INSERT INTO `mob_skill_lists` VALUES ('Likho',53,551);
 INSERT INTO `mob_skill_lists` VALUES ('Likho',53,555);
-INSERT INTO `mob_skill_lists` VALUES ('Omega',54,1235); -- hyper pulse
-INSERT INTO `mob_skill_lists` VALUES ('Omega',54,1237); -- guided missle
+INSERT INTO `mob_skill_lists` VALUES ('Omega',54,1237); -- hyper pulse
+INSERT INTO `mob_skill_lists` VALUES ('Omega',54,1236); -- guided missle
 INSERT INTO `mob_skill_lists` VALUES ('Omega',54,1238); -- target analysis
 INSERT INTO `mob_skill_lists` VALUES ('Omega',54,1240); -- ion efflux
 INSERT INTO `mob_skill_lists` VALUES ('Omega',54,1241); -- rear lasers
@@ -514,7 +514,6 @@ INSERT INTO `mob_skill_lists` VALUES ('Gnole',132,2175);
 INSERT INTO `mob_skill_lists` VALUES ('Gnole',132,2176);
 INSERT INTO `mob_skill_lists` VALUES ('Goblin',133,590);
 INSERT INTO `mob_skill_lists` VALUES ('Goblin',133,591);
-INSERT INTO `mob_skill_lists` VALUES ('Goblin',133,592);
 INSERT INTO `mob_skill_lists` VALUES ('God',134,1491);
 INSERT INTO `mob_skill_lists` VALUES ('God',134,1492);
 INSERT INTO `mob_skill_lists` VALUES ('God',134,1493);
@@ -674,9 +673,9 @@ INSERT INTO `mob_skill_lists` VALUES ('Khimaira',168,2026);
 INSERT INTO `mob_skill_lists` VALUES ('Khimaira',168,2027);
 INSERT INTO `mob_skill_lists` VALUES ('Khimaira',168,2028);
 -- INSERT INTO `mob_skill_lists` VALUES ('Khimaira',168,2698);
-INSERT INTO `mob_skill_lists` VALUES ('Kindred_ROZ',169,559); -- Demonic Howl
-INSERT INTO `mob_skill_lists` VALUES ('Kindred_ROZ',169,560); -- Soul Drain
-INSERT INTO `mob_skill_lists` VALUES ('Kindred_ROZ',169,563); -- Hecatomb Wave
+INSERT INTO `mob_skill_lists` VALUES ('Kindred_ROZ',169,559); -- Soul Drain
+INSERT INTO `mob_skill_lists` VALUES ('Kindred_ROZ',169,560); -- Hecatomb Wave
+INSERT INTO `mob_skill_lists` VALUES ('Kindred_ROZ',169,563); -- Demonic Howl
 INSERT INTO `mob_skill_lists` VALUES ('Ladybug_Day',170,2178);
 INSERT INTO `mob_skill_lists` VALUES ('Ladybug_Day',170,2179);
 INSERT INTO `mob_skill_lists` VALUES ('Ladybug_Day',170,2180);
@@ -1492,9 +1491,14 @@ INSERT INTO `mob_skill_lists` VALUES ('WarlordRojgnojOrc',334,607);
 INSERT INTO `mob_skill_lists` VALUES ('WarlordRojgnojOrc',334,608);
 INSERT INTO `mob_skill_lists` VALUES ('WarlordRojgnojOrc',334,609);
 INSERT INTO `mob_skill_lists` VALUES ('WarlordRojgnojOrc',334,1066);
-INSERT INTO `mob_skill_lists` VALUES ('Maat',335,1028);
-INSERT INTO `mob_skill_lists` VALUES ('Maat',335,1033);
-INSERT INTO `mob_skill_lists` VALUES ('Maat',335,1034);
+INSERT INTO `mob_skill_lists` VALUES ('Maat',335,1027); -- combo
+INSERT INTO `mob_skill_lists` VALUES ('Maat',335,1028); -- tackle
+INSERT INTO `mob_skill_lists` VALUES ('Maat',335,1029); -- one-inch_punch
+INSERT INTO `mob_skill_lists` VALUES ('Maat',335,1031); -- spinning_attack
+INSERT INTO `mob_skill_lists` VALUES ('Maat',335,1032); -- howling_fist
+INSERT INTO `mob_skill_lists` VALUES ('Maat',335,1033); -- dragon_kick
+INSERT INTO `mob_skill_lists` VALUES ('Maat',335,1034); -- asuran_fists
+INSERT INTO `mob_skill_lists` VALUES ('Maat',335,1036); -- maats_bash
 INSERT INTO `mob_skill_lists` VALUES ('ZM4-Tonberry',336,783);
 INSERT INTO `mob_skill_lists` VALUES ('ZM4-Tonberry',336,784);
 INSERT INTO `mob_skill_lists` VALUES ('ZM4-Tonberry',336,785);
@@ -2330,6 +2334,9 @@ INSERT INTO `mob_skill_lists` VALUES ('Bullheaded_Grosvez', 504, 607); -- slam d
 INSERT INTO `mob_skill_lists` VALUES ('Bullheaded_Grosvez', 504, 608); -- arm block
 INSERT INTO `mob_skill_lists` VALUES ('Bullheaded_Grosvez', 504, 609); -- battle dance
 INSERT INTO `mob_skill_lists` VALUES ('Bullheaded_Grosvez', 504, 790); -- shoulder slam
+-- Values: 505 - 698 Available
+INSERT INTO `mob_skill_lists` VALUES ('Wreaker',699,1248); -- Trinary Absorption
+INSERT INTO `mob_skill_lists` VALUES ('Wreaker',699,1252); -- Shadow Spread
 INSERT INTO `mob_skill_lists` VALUES ('Demonic_Tiphia',700,334);
 INSERT INTO `mob_skill_lists` VALUES ('Demonic_Tiphia',700,335);
 INSERT INTO `mob_skill_lists` VALUES ('Demonic_Tiphia',700,336);
@@ -2451,33 +2458,12 @@ INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega',727,1535); -- hyper_pulse
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega',727,1536); -- target_analysis
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega',727,1538); -- ion_efflux
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega',727,1539); -- rear_lasers
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1259);
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1260);
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1261);
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1262);
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1263);
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1264);
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1265);
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1266);
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1267);
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1268);
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1269);
-INSERT INTO `mob_skill_lists` VALUES ('Ultima',728,1270);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1259);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1260);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1261);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1262);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1263);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1264);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1265);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1266);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1267);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1268);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1269);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1521);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1522);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1523);
-INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima',729,1540);
+INSERT INTO `mob_skill_lists` VALUES ('Ultima_Phase1',728,1259); -- wire_cutter
+INSERT INTO `mob_skill_lists` VALUES ('Ultima_Phase1',728,1269); -- chemical_bomb
+INSERT INTO `mob_skill_lists` VALUES ('Ultima_Phase1',728,1270); -- particle_shield
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase1',729,1260); -- antimatter
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase1',729,1259); -- wire_cutter
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase1',729,1269); -- chemical_bomb
 INSERT INTO `mob_skill_lists` VALUES ('Tiamat-Flying-Attack',730,1278);
 INSERT INTO `mob_skill_lists` VALUES ('Ouryu-Flying-Attack',731,1298);
 INSERT INTO `mob_skill_lists` VALUES ('Jormungand-Flying-Attack',732,1288);
@@ -2486,6 +2472,7 @@ INSERT INTO `mob_skill_lists` VALUES ('Jug_Hare', 733, 673);
 INSERT INTO `mob_skill_lists` VALUES ('Jug_Hare', 733, 674);
 INSERT INTO `mob_skill_lists` VALUES ('Jug_Hare', 733, 735);
 INSERT INTO `mob_skill_lists` VALUES ('Jug_Mandragora', 734, 675);
+INSERT INTO `mob_skill_lists` VALUES ('Jug_Mandragora', 734, 676);
 INSERT INTO `mob_skill_lists` VALUES ('Jug_Mandragora', 734, 677);
 INSERT INTO `mob_skill_lists` VALUES ('Jug_Mandragora', 734, 678);
 INSERT INTO `mob_skill_lists` VALUES ('Jug_Mandragora', 734, 679);
@@ -3625,24 +3612,24 @@ INSERT INTO `mob_skill_lists` VALUES ('TRUST_Adelheid',1083,3469); -- Twirling D
 -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Morimar',1105,0);
 -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Darrcuiln',1106,0);
 -- TODO: Verify these
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAHM',1107,3706);       -- Cross Reaver
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAHM',1107,3708);       -- Swift Blade
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAHM',1107,3709);       -- Chant du Cygne
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAEV',1108,3710);       -- Arrogance Incarnate
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAEV',1108,3711);       -- Vorpal Blade
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAEV',1108,3712);       -- Dominion Slash
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAEV',1108,3713);       -- Chant du Cygne
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAMR',1109,3715);       -- Rampage
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAMR',1109,3716);       -- Calamity
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAMR',1109,3717);       -- Havoc Spiral
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAMR',1109,3718);       -- Cloudsplitter
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AATT',1110,3720);       -- Amon Drive
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AATT',1110,3721);       -- Guillotine
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAGK',1111,3722);       -- Tachi: Yukikaze
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAGK',1111,3723);       -- Tachi: Gekko
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAGK',1111,3724);       -- Dragonfall
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAGK',1111,3725);       -- Tachi: Kasha
-INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAGK',1111,3726);       -- Tachi: Fudo
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAHM',1107,3706); -- Cross Reaver
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAHM',1107,3708); -- Swift Blade
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAHM',1107,3709); -- Chant du Cygne
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAEV',1108,3710); -- Arrogance Incarnate
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAEV',1108,3711); -- Vorpal Blade
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAEV',1108,3712); -- Dominion Slash
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAEV',1108,3713); -- Chant du Cygne
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAMR',1109,3715); -- Rampage
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAMR',1109,3716); -- Calamity
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAMR',1109,3717); -- Havoc Spiral
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAMR',1109,3718); -- Cloudsplitter
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AATT',1110,3720); -- Amon Drive
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AATT',1110,3721); -- Guillotine
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAGK',1111,3722); -- Tachi: Yukikaze
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAGK',1111,3723); -- Tachi: Gekko
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAGK',1111,3724); -- Dragonfall
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAGK',1111,3725); -- Tachi: Kasha
+INSERT INTO `mob_skill_lists` VALUES ('TRUST_AAGK',1111,3726); -- Tachi: Fudo
 -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Iroha',1112,0);
 -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Ygnas',1113,0);
 -- INSERT INTO `mob_skill_lists` VALUES ('TRUST_Monberaux',1114,0);
@@ -3837,7 +3824,7 @@ INSERT INTO `mob_skill_lists` VALUES ('Swamfisk',1197,452); -- Screwdriver
 INSERT INTO `mob_skill_lists` VALUES ('Swamfisk',1197,453); -- Water Wall
 INSERT INTO `mob_skill_lists` VALUES ('Barbastelle',1198,392); -- Ultrasonics
 
-INSERT INTO `mob_skill_lists` VALUES ('Omega_Critical',1187,1236); -- pile pitch
+INSERT INTO `mob_skill_lists` VALUES ('Omega_Critical',1187,1235); -- pile pitch
 INSERT INTO `mob_skill_lists` VALUES ('Omega_Critical',1187,1239); -- discharger
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega_Standing',1188,1525); -- guided_missile_ii
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega_Standing',1188,1528); -- floodlight
@@ -3845,6 +3832,29 @@ INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega_Standing',1188,1529); -- hype
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega_Standing',1188,1530); -- stun_cannon
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega_Final',1189,1526); -- colossal_blow
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega_Final',1189,1527); -- laser_shower
+
+INSERT INTO `mob_skill_lists` VALUES ('Ultima_Phase2',1190,1268); -- nuclear_waste
+INSERT INTO `mob_skill_lists` VALUES ('Ultima_Phase3',1191,1261); -- equalizer
+INSERT INTO `mob_skill_lists` VALUES ('Ultima_Phase3',1191,1269); -- chemical_bomb
+INSERT INTO `mob_skill_lists` VALUES ('Ultima_Phase3',1191,1270); -- particle_shield
+INSERT INTO `mob_skill_lists` VALUES ('Ultima_Phase4',1192,1260); -- antimatter
+INSERT INTO `mob_skill_lists` VALUES ('Ultima_Phase4',1192,1270); -- particle_shield
+
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase2',1193,1260); -- antimatter
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase2',1193,1259); -- wire_cutter
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase2',1193,1268); -- nuclear_waste
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase2',1193,1269); -- chemical_bomb
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase3',1194,1260); -- antimatter
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase3',1194,1261); -- equalizer
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase3',1194,1268); -- nuclear_waste
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase4',1195,1260); -- antimatter
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase4',1195,1261); -- equalizer
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase4',1195,1521); -- armor_buster
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase4',1195,1522); -- energy_screen
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase4',1195,1523); -- mana_screen
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase5',1196,1521); -- armor_buster
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase5',1196,1522); -- energy_screen
+INSERT INTO `mob_skill_lists` VALUES ('Proto-Ultima_Phase5',1196,1523); -- mana_screen
 
 -- Next available ID: 1190
 
@@ -4009,7 +4019,7 @@ INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,384);
 INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,385);
 INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,386);
 INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,387);
-INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,822);
+INSERT INTO `mob_skill_lists` VALUES ('Boggelman',4046,1363);
 
 INSERT INTO `mob_skill_lists` VALUES ('JailerOfTemperance',4047,1463);
 INSERT INTO `mob_skill_lists` VALUES ('JailerOfTemperance',4047,1465);

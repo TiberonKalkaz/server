@@ -40,8 +40,8 @@ local battlefields =
         { 4,  676,    0 },   -- Totentanz (ENM)
         { 5,  677,    0 },   -- Tango with a Tracker (Quest)
         { 6,  678,    0 },   -- Requiem of Sin (Quest)
-     -- { 7,  679, 3454 },   -- Antagonistic Ambuscade (HKC30)
-     -- { 8,    ?,    0 },   -- *Head Wind (HTMBF)
+    --  { 7,  679, 3454 },   -- Antagonistic Ambuscade (HKC30)
+    --  { 8,    ?,    0 },   -- *Head Wind (HTMBF)
     },
 
     [xi.zone.THE_SHROUDED_MAW] =
@@ -59,35 +59,35 @@ local battlefields =
         { 2,  738,    0 },   -- Bionic Bug (ENM)
         { 3,  739,    0 },   -- Pulling the Strings (ENM)
         { 4,  740,    0 },   -- Automaton Assault (ENM)
-     -- { 5,  741, 3455 },   -- The Mobline Comedy (HKC50)
+    --  { 5,  741, 3455 },   -- The Mobline Comedy (HKC50)
     },
 
     [xi.zone.SPIRE_OF_HOLLA] =
     {
         { 0,  768,    0 },   -- Ancient Flames Beckon (PM1-3)
         { 1,  769,    0 },   -- Simulant (ENM)
-     -- { 2,  770, 3351 },   -- Empty Hopes (KC30)
+    --  { 2,  770, 3351 },   -- Empty Hopes (KC30)
     },
 
     [xi.zone.SPIRE_OF_DEM] =
     {
         { 0,  800,    0 },   -- Ancient Flames Beckon (PM1-3)
         { 1,  801,    0 },   -- You Are What You Eat (ENM)
-     -- { 2,  802, 3351 },   -- Empty Dreams (KC30)
+    --  { 2,  802, 3351 },   -- Empty Dreams (KC30)
     },
 
     [xi.zone.SPIRE_OF_MEA] =
     {
         { 0,  832,    0 },   -- Ancient Flames Beckon (PM1-3)
         { 1,  833,    0 },   -- Playing Host (ENM)
-     -- { 2,  834, 3351 },   -- Empty Desires (KC30)
+    --  { 2,  834, 3351 },   -- Empty Desires (KC30)
     },
 
     [xi.zone.SPIRE_OF_VAHZL] =
     {
         { 0,  864,    0 },   -- Desires of Emptiness (PM5-2)
         { 1,  865,    0 },   -- Pulling the Plug (ENM)
-     -- { 2,  866, 3352 },   -- Empty Aspirations (KC50)
+    --  { 2,  866, 3352 },   -- Empty Aspirations (KC50)
     },
 
     [xi.zone.RIVERNE_SITE_B01] =
@@ -110,8 +110,8 @@ local battlefields =
         { 4,  964,    0 },   -- Bugard in the Clouds (ENM)
         { 5,  965,    0 },   -- Beloved of the Atlantes (ENM)
         { 6,  966,    0 },   -- Uninvited Guests (Quest)
-     -- { 7,  967, 3455 },   -- Nest of Nightmares (HKC50)
-     -- { 8,    ?,    0 },   -- *The Savage (HTMBF)
+    --  { 7,  967, 3455 },   -- Nest of Nightmares (HKC50)
+    --  { 8,    ?,    0 },   -- *The Savage (HTMBF)
     },
 
     [xi.zone.SEALIONS_DEN] =
@@ -284,8 +284,8 @@ local battlefields =
         { 16,   80, 1175 },   -- Copycat (KS30)
         { 17,   81, 1178 },   -- Operation Desert Swarm (KS30)
         { 18,   82, 1180 },   -- Prehistoric Pigeons (KS30)
-     -- { 19,   83, 3351 },   -- The Palborough Project (KC30)
-     -- { 20,   84, 3352 },   -- Shell Shocked (KC50)
+    --  { 19,   83, 3351 },   -- The Palborough Project (KC30)
+    --  { 20,   84, 3352 },   -- Shell Shocked (KC50)
         { 21,   85,    0 },   -- Beyond Infinity (Quest)
     --  { 22,    ?, 4062 },   -- *The Worm's Tail (SKC10)
     --  { 23,    ?, 4063 },   -- *Grimshell Shocktroopers (SKC20)
@@ -316,8 +316,8 @@ local battlefields =
         { 15,  111, 1175 },   -- Seasons Greetings (KS30)
         { 16,  112, 1178 },   -- Royale Ramble (KS30)
         { 17,  113, 1180 },   -- Moa Constrictors (KS30)
-     -- { 18,  114, 3351 },   -- The V Formation (KC30)
-     -- { 19,  115, 3352 },   -- Avian Apostates (KC50)
+    --  { 18,  114, 3351 },   -- The V Formation (KC30)
+    --  { 19,  115, 3352 },   -- Avian Apostates (KC50)
         { 20,  116,    0 },   -- Beyond Infinity (Quest)
     --  { 21,    ?, 4062 },   -- *Steamed Sprouts (SKC10)
     --  { 22,    ?, 4063 },   -- *Divine Punishers (SKC20)
@@ -370,9 +370,9 @@ local battlefields =
         {  5,  197, 1175 },   -- Cactuar Suave (KS30)
         {  6,  198, 1178 },   -- Eye of the Storm (KS30)
         {  7,  199, 1180 },   -- The Scarlet King (KS30)
-     -- {  8,  200,    0 },   -- Roar! A Cat Burglar Bares Her Fangs (MKD10)
-     -- {  9,  201, 3352 },   -- Dragon Scales (KC50)
-     -- { 10,    ?, 4063 },   -- *Legion XI Comitatensis (SKC20)
+    --  {  8,  200,    0 },   -- Roar! A Cat Burglar Bares Her Fangs (MKD10)
+    --  {  9,  201, 3352 },   -- Dragon Scales (KC50)
+    --  { 10,    ?, 4063 },   -- *Legion XI Comitatensis (SKC20)
     },
 
     [xi.zone.FULL_MOON_FOUNTAIN] =
@@ -380,9 +380,9 @@ local battlefields =
         { 0,  224,    0 },   -- The Moonlit Path (Quest)
         { 1,  225,    0 },   -- Moon Reading (Windy 9-2)
         { 2,  226,    0 },   -- Waking the Beast (Quest)
-     -- { 3,  227,    0 },   -- Battaru Royale (ASA10)
-     -- { 4,    ?,    0 },   -- *The Moonlit Path (HTMBF)
-     -- { 5,    ?,    0 },   -- *Waking the Beast (HTMBF)
+    --  { 3,  227,    0 },   -- Battaru Royale (ASA10)
+    --  { 4,    ?,    0 },   -- *The Moonlit Path (HTMBF)
+    --  { 5,    ?,    0 },   -- *Waking the Beast (HTMBF)
     },
 
     [xi.zone.STELLAR_FULCRUM] =
@@ -478,7 +478,7 @@ local battlefields =
         { 14,  526, 1177 },   -- Idol Thoughts (BS50)
         { 15,  527, 1177 },   -- An Awful Autopsy (BS50)
         { 16,  528, 1130 },   -- Celery (BS60)
-     -- { 17,  529,    0 },   -- Mirror Images (Quest)
+    --  { 17,  529,    0 },   -- Mirror Images (Quest)
         { 18,  530, 2556 },   -- A Furious Finale (DNC LB5)
     --  { 19,  531,    0 },   -- Clash of the Comrades (Quest)
     --  { 20,  532,    0 },   -- Those Who Lurk in Shadows (ACP7)
@@ -917,12 +917,26 @@ local function checkReqs(player, npc, bfid, registrant)
                 player:hasKeyItem(xi.ki.DOMINAS_CERULEAN_SEAL)
         end,
 
+        [640] = function() -- PM5-3 U3: Flames for the Dead
+            return promathiaMission == xi.mission.id.cop.THREE_PATHS and
+                player:getMissionStatus(xi.mission.log_id.COP, xi.mission.status.COP.ULMIA) == 8 and
+                npcId == getEntranceOffset(0)
+        end,
+
         [641] = function() -- ENM: Follow the White Rabbit
             return player:hasKeyItem(xi.ki.ZEPHYR_FAN) and npcId == getEntranceOffset(2)
         end,
 
         [642] = function() -- ENM: When Hell Freezes Over
             return player:hasKeyItem(xi.ki.ZEPHYR_FAN) and npcId == getEntranceOffset(4)
+        end,
+
+        [643] = function() -- ENM: Brothers
+            return player:hasKeyItem(xi.ki.ZEPHYR_FAN) and npcId == getEntranceOffset(6)
+        end,
+
+        [644] = function() -- ENM: Holy Cow
+            return player:hasKeyItem(xi.ki.ZEPHYR_FAN) and npcId == getEntranceOffset(8)
         end,
 
         [672] = function() -- PM5-3 U2: Head Wind
@@ -1029,7 +1043,7 @@ local function checkReqs(player, npc, bfid, registrant)
 
         [896] = function() -- Quest: Storms of Fate
             return player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.STORMS_OF_FATE) == QUEST_ACCEPTED and
-                player:getCharVar("Quest[3][86]Status") >= 2
+                player:getCharVar("Quest[3][86]Status") == 2
         end,
 
         [897] = function() -- Quest: The Wyrmking Descends
@@ -1124,86 +1138,6 @@ local function checkReqs(player, npc, bfid, registrant)
             return toauMission == xi.mission.id.toau.PUPPET_IN_PERIL and toauStatus == 1
         end,
 
-        [1290] = function() -- NW Apollyon
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.RED_CARD) and
-                npcId == getEntranceOffset(0)
-        end,
-
-        [1291] = function() -- SW Apollyon
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.RED_CARD) and
-                npcId == getEntranceOffset(0)
-        end,
-
-        [1292] = function() -- NE Apollyon
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.BLACK_CARD) and
-                npcId == getEntranceOffset(1)
-        end,
-
-        [1293] = function() -- SE Apollyon
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.BLACK_CARD) and
-                npcId == getEntranceOffset(1)
-        end,
-
-        [1294] = function() -- CS Apollyon
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-            (
-                (player:hasKeyItem(xi.ki.RED_CARD) and npcId == getEntranceOffset(0)) or
-                (player:hasKeyItem(xi.ki.BLACK_CARD) and npcId == getEntranceOffset(1))
-            )
-        end,
-
-        [1296] = function() -- Central Apollyon
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                (
-                    (player:hasKeyItem(xi.ki.RED_CARD) and npcId == getEntranceOffset(0)) or
-                    (player:hasKeyItem(xi.ki.BLACK_CARD) and npcId == getEntranceOffset(1))
-                )
-        end,
-
-        [1298] = function() -- Temenos Western Tower
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.WHITE_CARD)
-        end,
-
-        [1299] = function() -- Temenos Northern Tower
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.WHITE_CARD)
-        end,
-
-        [1300] = function() -- Temenos Eastern Tower
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.WHITE_CARD)
-        end,
-
-        [1301] = function() -- Central Temenos Basement
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.WHITE_CARD)
-        end,
-
-        [1303] = function() -- Central Temenos 1st Floor
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.WHITE_CARD)
-        end,
-
-        [1304] = function() -- Central Temenos 2nd Floor
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.WHITE_CARD)
-        end,
-
-        [1305] = function() -- Central Temenos 3rd Floor
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.WHITE_CARD)
-        end,
-
-        [1306] = function() -- Central Temenos 4th Floor
-            return player:hasKeyItem(xi.ki.COSMO_CLEANSE) and
-                player:hasKeyItem(xi.ki.WHITE_CARD)
-        end,
-
         [2721] = function() -- WOTG07: Purple, The New Black
             return player:getCurrentMission(xi.mission.log_id.WOTG) == xi.mission.id.wotg.PURPLE_THE_NEW_BLACK and
                 player:getMissionStatus(xi.mission.log_id.WOTG) == 1
@@ -1247,15 +1181,30 @@ local function checkReqs(player, npc, bfid, registrant)
         end,
 
         [640] = function() -- PM5-3 U3: Flames for the Dead
-            return npc:getXPos() > -721 and npc:getXPos() < 719
+            return (player:hasCompletedMission(xi.mission.log_id.COP, xi.mission.id.cop.THREE_PATHS) or
+            player:getMissionStatus(xi.mission.log_id.COP, xi.mission.status.COP.ULMIA) >= 8) and
+            npcId == getEntranceOffset(0)
         end,
 
         [641] = function() -- ENM: Follow the White Rabbit
-            return player:hasKeyItem(xi.ki.ZEPHYR_FAN)
+            return player:hasKeyItem(xi.ki.ZEPHYR_FAN) and npcId == getEntranceOffset(2)
         end,
 
         [642] = function() -- ENM: When Hell Freezes Over
-            return player:hasKeyItem(xi.ki.ZEPHYR_FAN)
+            return player:hasKeyItem(xi.ki.ZEPHYR_FAN) and npcId == getEntranceOffset(4)
+        end,
+
+        [643] = function() -- ENM: Brothers
+            return player:hasKeyItem(xi.ki.ZEPHYR_FAN) and npcId == getEntranceOffset(6)
+        end,
+
+        [644] = function() -- ENM: Holy Cow
+            return player:hasKeyItem(xi.ki.ZEPHYR_FAN) and npcId == getEntranceOffset(8)
+        end,
+
+        [672] = function() -- PM5-3 U2: Head Wind
+            return player:hasCompletedMission(xi.mission.log_id.COP, xi.mission.id.cop.THREE_PATHS) or
+                player:getMissionStatus(xi.mission.log_id.COP, xi.mission.status.COP.ULMIA) >= 7
         end,
 
         [673] = function() -- ENM: Like the Wind
@@ -1274,8 +1223,27 @@ local function checkReqs(player, npc, bfid, registrant)
             return player:hasKeyItem(xi.ki.MIASMA_FILTER)
         end,
 
+        [677] = function() -- Quest: Tango with a Tracker
+            return player:hasKeyItem(xi.ki.LETTER_FROM_SHIKAREE_X)
+        end,
+
+        [678] = function() -- Quest: Requiem of Sin
+            return player:hasKeyItem(xi.ki.LETTER_FROM_SHIKAREE_Y) or
+                player:hasKeyItem(xi.ki.LETTER_FROM_THE_MITHRAN_TRACKERS)
+        end,
+
         [705] = function() -- ENM: Test Your Mite
             return player:hasKeyItem(xi.ki.ASTRAL_COVENANT)
+        end,
+
+        [736] = function() -- PM5-3 L3: A Century of Hardship
+            return player:hasCompletedMission(xi.mission.log_id.COP, xi.mission.id.cop.THREE_PATHS) or
+                player:getMissionStatus(xi.mission.log_id.COP, xi.mission.status.COP.LOUVERANCE) >= 8
+        end,
+
+        [737] = function() -- Quest: Return to the Depths
+            return player:getCharVar("Quest[1][78]prog") >= 9 or
+                player:hasCompletedQuest(xi.quest.log_id.BASTOK, xi.quest.id.bastok.RETURN_TO_THE_DEPTHS)
         end,
 
         [738] = function() -- ENM: Bionic Bug
@@ -1304,6 +1272,11 @@ local function checkReqs(player, npc, bfid, registrant)
 
         [865] = function() -- ENM: Pulling the Plug
             return player:hasKeyItem(xi.ki.CENSER_OF_ACRIMONY)
+        end,
+
+        [896] = function() -- Quest: Storms of Fate
+            return player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.STORMS_OF_FATE) == QUEST_COMPLETED or
+                player:getCharVar("Quest[3][86]Status") > 2
         end,
 
         [897] = function() -- Quest: The Wyrmking Descends
@@ -1344,10 +1317,7 @@ local function checkReqs(player, npc, bfid, registrant)
 
         [1057] = function() -- Quest: Apocalypse Nigh
             return player:hasCompletedQuest(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.APOCALYPSE_NIGH) or
-                (
-                    player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.APOCALYPSE_NIGH) == QUEST_ACCEPTED and
-                    player:getCharVar('ApocalypseNigh') == 4
-                )
+                player:getCharVar('ApocalypseNigh') >= 3
         end,
 
         [1290] = function() -- NW Apollyon
@@ -1554,6 +1524,34 @@ local function checkSkip(player, bfid)
                 )
         end,
 
+        [226] = function() -- Quest: Waking the Beast (Fullmoon Fountain)
+            return player:hasCompletedQuest(xi.quest.log_id.OTHER_AREAS, xi.quest.id.otherAreas.WAKING_THE_BEAST)
+        end,
+
+        [419] = function() -- Quest: Waking the Beast (Cloister of Gales)
+            return player:hasCompletedQuest(xi.quest.log_id.OTHER_AREAS, xi.quest.id.otherAreas.WAKING_THE_BEAST)
+        end,
+
+        [451] = function() -- Quest: Waking the Beast (Cloister of Storms)
+            return player:hasCompletedQuest(xi.quest.log_id.OTHER_AREAS, xi.quest.id.otherAreas.WAKING_THE_BEAST)
+        end,
+
+        [483] = function() -- Quest: Waking the Beast (Cloister of Frost)
+            return player:hasCompletedQuest(xi.quest.log_id.OTHER_AREAS, xi.quest.id.otherAreas.WAKING_THE_BEAST)
+        end,
+
+        [546] = function() -- Quest: Waking the Beast (Cloister of Flames)
+            return player:hasCompletedQuest(xi.quest.log_id.OTHER_AREAS, xi.quest.id.otherAreas.WAKING_THE_BEAST)
+        end,
+
+        [579] = function() -- Quest: Waking the Beast (Cloister of Tremors)
+            return player:hasCompletedQuest(xi.quest.log_id.OTHER_AREAS, xi.quest.id.otherAreas.WAKING_THE_BEAST)
+        end,
+
+        [610] = function() -- Quest: Waking the Beast (Cloister of Tides)
+            return player:hasCompletedQuest(xi.quest.log_id.OTHER_AREAS, xi.quest.id.otherAreas.WAKING_THE_BEAST)
+        end,
+
         [256] = function() -- ZM8: Return to Delkfutt's Tower
             return player:hasCompletedMission(xi.mission.log_id.ZILART, xi.mission.id.zilart.RETURN_TO_DELKFUTTS_TOWER)
         end,
@@ -1628,6 +1626,14 @@ local function checkSkip(player, bfid)
                 player:hasKeyItem(xi.ki.WHISPER_OF_TIDES)
         end,
 
+        [640] = function() -- PM5-3 U3: Flames for the Dead
+            return player:hasCompletedMission(xi.mission.log_id.COP, xi.mission.id.cop.THREE_PATHS) or
+                (
+                    promathiaMission == xi.mission.id.cop.THREE_PATHS and
+                    player:getMissionStatus(xi.mission.log_id.COP, xi.mission.status.COP.ULMIA) > 8
+                )
+        end,
+
         [672] = function() -- PM5-3 U2: Head Wind
             return player:hasCompletedMission(xi.mission.log_id.COP, xi.mission.id.cop.THREE_PATHS) or
                 (
@@ -1637,12 +1643,11 @@ local function checkSkip(player, bfid)
         end,
 
         [677] = function() -- Quest: Tango with a Tracker
-            return player:hasKeyItem(xi.ki.LETTER_FROM_SHIKAREE_X)
+            return player:hasCompletedQuest(xi.quest.log_id.OTHER_AREAS, xi.quest.id.otherAreas.TANGO_WITH_A_TRACKER)
         end,
 
         [678] = function() -- Quest: Requiem of Sin
-            return player:hasKeyItem(xi.ki.LETTER_FROM_SHIKAREE_Y) or
-                player:hasKeyItem(xi.ki.LETTER_FROM_MITHRAN_TRACKERS)
+            return player:hasCompletedQuest(xi.quest.log_id.OTHER_AREAS, xi.quest.id.otherAreas.REQUIEM_OF_SIN)
         end,
 
         [704] = function() -- PM3-5: Darkness Named
@@ -1690,13 +1695,8 @@ local function checkSkip(player, bfid)
         end,
 
         [896] = function() -- Quest: Storms of Fate
-            local stormsOfFateStatus = player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.STORMS_OF_FATE)
-
-            return stormsOfFateStatus == QUEST_COMPLETED or
-                (
-                    stormsOfFateStatus == QUEST_ACCEPTED and
-                    player:getCharVar("Quest[3][86]Status") > 2
-                )
+            return player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.STORMS_OF_FATE) == QUEST_COMPLETED or
+                player:getCharVar("Quest[3][86]Status") > 2
         end,
 
         [960] = function() -- PM2-5: Ancient Vows
@@ -1731,8 +1731,12 @@ local function checkSkip(player, bfid)
                 )
         end,
 
-        [1057] = function() -- Apocalypse Nigh
-            return player:getCharVar("Quest[3][89]Prog") > 3
+        [1057] = function() -- Quest: Apocalypse Nigh
+            return player:hasCompletedQuest(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.APOCALYPSE_NIGH) or
+                (
+                    player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.APOCALYPSE_NIGH) == QUEST_ACCEPTED and
+                    player:getCharVar('ApocalypseNigh') > 3
+                )
         end,
 
         [2721] = function() -- WOTG07: Purple, The New Black
@@ -2001,29 +2005,6 @@ xi.bcnm.onEventUpdate = function(player, csid, option, extras)
         local clearTime = 1
         local name      = "Meme"
         local partySize = 1
-
-        switch (battlefieldId): caseof
-        {
-            [1301] = function() -- Central_Temenos_Basement
-                area = 8
-            end,
-
-            [1303] = function() -- Central_Temenos_1st_Floor
-                area = 7
-            end,
-
-            [1304] = function() -- Central_Temenos_2nd_Floor
-                area = 6
-            end,
-
-            [1305] = function() -- Central_Temenos_3rd_Floor
-                area = 5
-            end,
-
-            [1306] = function() -- Central_Temenos_4th_Floor
-                area = 4
-            end,
-        }
 
         local result = xi.battlefield.returnCode.REQS_NOT_MET
         result       = player:registerBattlefield(id, area)

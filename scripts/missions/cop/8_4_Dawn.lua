@@ -149,8 +149,7 @@ mission.sections =
                     player:setPos(539, 0, -593, 192)
                     player:addTitle(xi.title.AVERTER_OF_THE_APOCALYPSE)
                     if not player:hasKeyItem(xi.ki.TEAR_OF_ALTANA) then
-                        mission:keyItem(xi.ki.TEAR_OF_ALTANA)
-                        mission:messageSpecial(zones[player:getZoneID()].text.KEYITEM_OBTAINED, xi.ki.TEAR_OF_ALTANA)
+                        npcUtil.giveKeyItem(player, xi.ki.TEAR_OF_ALTANA)
                     end
                     if mission:getVar(player, 'Status') < 3 then
                         mission:setVar(player, 'Wait', getMidnight())
@@ -247,9 +246,9 @@ mission.sections =
                 end,
             },
 
-            onRegionEnter =
+            onTriggerAreaEnter =
             {
-                [1] = function(player, region)
+                [1] = function(player, triggerArea)
                     if
                         mission:getVar(player, 'Status') == 4 and
                         mission:getVar(player, 'Wait') < os.time() and
@@ -359,9 +358,9 @@ mission.sections =
 
         [xi.zone.RULUDE_GARDENS] =
         {
-            onRegionEnter =
+            onTriggerAreaEnter =
             {
-                [1] = function(player, region)
+                [1] = function(player, triggerArea)
                     if mission:getVar(player, 'Status') == 4 and checkAdditionalCS(player) == 5 then
                         return mission:progressEvent(122)
                     end
@@ -437,9 +436,9 @@ mission.sections =
 
         [xi.zone.LUFAISE_MEADOWS] =
         {
-            onRegionEnter =
+            onTriggerAreaEnter =
             {
-                [1] = function(player, region)
+                [1] = function(player, triggerArea)
                     if mission:getVar(player, 'Status') == 7 then
                         return mission:progressEvent(116)
                     end

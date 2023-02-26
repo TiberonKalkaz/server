@@ -13,11 +13,14 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local typeEffect = xi.effect.SLOW
+    if target:hasStatusEffect(xi.effect.HASTE) then
+        skill:setMsg(xi.msg.basic.SKILL_NO_EFFECT)
+        return
+    else
+        skill:setMsg(xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.SLOW, 5000, 0, 240))
+    end
 
-    skill:setMsg(xi.mobskills.mobStatusEffectMove(mob, target, typeEffect, 1250, 0, 240))
-
-    return typeEffect
+    return xi.effect.SLOW
 end
 
 return mobskillObject

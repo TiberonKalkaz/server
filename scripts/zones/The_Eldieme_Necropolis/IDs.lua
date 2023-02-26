@@ -80,11 +80,13 @@ zones[xi.zone.THE_ELDIEME_NECROPOLIS] =
         APPARATUS_ELEMENTAL = 17576271,
         NAMORODO            = 17576272,
         SKULL_OFFSET        = 17575937,
+        ANEMONE_ONE         = 17576008,
+        ANEMONE_TWO         = 17576067,
     },
     npc =
     {
         GATE_OFFSET        = 17576306,
-        BRAZIER_OFFSET     = 17576343,
+        BRAZIER            = DYNAMIC_LOOKUP,
         TREASURE_CHEST     = 17576356,
         TREASURE_COFFER    = 17576357,
         SARCOPHAGUS_OFFSET = 17576394,

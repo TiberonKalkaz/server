@@ -57,7 +57,7 @@ xi.summon.getAvatardINT = function(avatarInt, targetInt, avatar)
     local dINT = math.floor(avatarInt - targetInt)
 
     if dINT >= 0 then
-        dINT = dINT * 1.5
+        dINT = math.floor(dINT * 1.5)
     end
     -- There is no upper limit of dstat, but there is a lower limit of -65
     return utils.clamp(dINT, -65, 100)
@@ -181,17 +181,12 @@ xi.summon.avatarPhysicalMove = function(avatar, target, skill, wsParams, tp)
 
         local wsMods = math.floor(math.floor(str + dex + vit + agi + int + mnd + chr) * calcParams.alpha) -- This calculates WSC, must floor twice in and then out
         local baseDmg = math.floor(10 + 0.5 * avatar:getMainLvl()) -- This calculates base damage of avatars
+
         -- If Carbuncle
-        if avatar:getModelId() == 791 then
-            baseDmg = 3 + 0.5 * avatar:getMainLvl()
+        if avatar:getModelId() == 16 then
+            baseDmg = math.floor(3 + 0.5 * avatar:getMainLvl())
         end
 
-        -- -- Calculating with the known era pdif ratio for weaponskills.
-        -- if mtp100 == nil or mtp200 == nil or mtp300 == nil then -- Nil gate for xi.weaponskills.cMeleeRatio, will default mtp for each level to 1.
-        --     mtp100 = 1.0
-        --     mtp200 = 1.0
-        --     mtp300 = 1.0
-        -- end
         local pDifTable = {}
         -- Calculate pDIF
         if wsParams.melee == true then
@@ -202,12 +197,6 @@ xi.summon.avatarPhysicalMove = function(avatar, target, skill, wsParams, tp)
 
         local pDif = pDifTable[1]
         local pDifCrit = pDifTable[2]
-
-        -- Need to cap at 2 if it a too weak mob
-        if avatar:checkDifficulty(target) == 0 then
-            pDif = utils.clamp(pDif, 0, 2)
-            pDifCrit = utils.clamp(pDifCrit, 0, 2)
-        end
 
         --Everything past this point is randomly computed per hit
         numHitsProcessed = 0
@@ -232,12 +221,6 @@ xi.summon.avatarPhysicalMove = function(avatar, target, skill, wsParams, tp)
             pDifTable = xi.weaponskills.cMeleeRatio(avatar, target, wsParams, 0, calcParams.tp, xi.slot.MAIN)
             pDif = pDifTable[1]
             pDifCrit = pDifTable[2]
-
-            -- Need to cap at 2 if it a too weak mob
-            if avatar:checkDifficulty(target) == 0 then
-                pDif = utils.clamp(pDif, 0, 2)
-                pDifCrit = utils.clamp(pDifCrit, 0, 2)
-            end
 
             if isCrit then
                 pDif = pDifCrit
@@ -432,6 +415,10 @@ xi.summon.avatarMagicSkill = function(avatar, target, skill, wsParams)
     calcParams.tp = avatar:getTP() + wsParams.tpBonus
     calcParams.alpha = xi.weaponskills.getAlpha(avatar:getMainLvl())
 
+    if wsParams.breathe then
+        calcParams.fINT =  0
+    end
+
     -- -- Magic-based WSes never miss, so we don't need to worry about calculating a miss, only if a shadow absorbed it.
     -- if not shadowAbsorb(target) then
     -- Begin Checks for bonus wsc bonuses. See the following for details:
@@ -452,7 +439,7 @@ xi.summon.avatarMagicSkill = function(avatar, target, skill, wsParams)
 
     -- Applying fTP multiplier
     local ftp = xi.summon.fTP(calcParams.tp, wsParams.ftp000,  wsParams.ftp150,  wsParams.ftp300, xi.attackType.MAGICAL)
-    local dmg = baseDmg * ftp + calcParams.fINT -- ((Lvl+2 + WSC) x fTP * dstat)
+    local dmg = baseDmg * ftp + calcParams.fINT -- ((Lvl+2 + WSC) x fTP + dstat)
 
     if wsParams.omen == nil then
         wsParams.omen = 1
@@ -463,7 +450,12 @@ xi.summon.avatarMagicSkill = function(avatar, target, skill, wsParams)
     -- Calculate magical bonuses and reductions
     dmg = xi.magic.addBonusesAbility(avatar, wsParams.element, target, dmg, wsParams) -- mab * day/weather bonus
     dmg = dmg * xi.magic.applyAbilityResistance(avatar, target, wsParams) -- * resist
-    dmg = target:magicDmgTaken(dmg, wsParams.element) -- Take damage
+
+    if wsParams.breathe then -- Nether Blast Only until Odin
+        dmg = target:breathDmgTaken(dmg, target) -- Take damage
+    else
+        dmg = target:magicDmgTaken(dmg, wsParams.element) -- Take damage
+    end
 
     if dmg < 0 then
         dmg = 0

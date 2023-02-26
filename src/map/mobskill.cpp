@@ -39,13 +39,14 @@ CMobSkill::CMobSkill(uint16 id)
     m_secondarySkillchain = 0;
     m_tertiarySkillchain  = 0;
     m_TP                  = 0;
+    m_HP                  = 0;
     m_HPP                 = 0;
     m_knockback           = 0;
 }
 
 bool CMobSkill::hasMissMsg() const
 {
-    return m_Message == 158 || m_Message == 188 || m_Message == 31 || m_Message == 30;
+    return m_Message == 158 || m_Message == 188 || m_Message == 31 || m_Message == 30 || m_Message == 354;
 }
 
 bool CMobSkill::isAoE() const
@@ -134,6 +135,12 @@ void CMobSkill::setFlag(uint8 flag)
 void CMobSkill::setTP(int16 tp)
 {
     m_TP = tp;
+}
+
+// Stores the Monsters HP as it was at the start of mobskill
+void CMobSkill::setHP(int32 hp)
+{
+    m_HP = hp;
 }
 
 // Stores the Monsters HP% as it was at the start of mobskill
@@ -249,6 +256,12 @@ uint16 CMobSkill::getPetAnimationID() const
 int16 CMobSkill::getTP() const
 {
     return m_TP;
+}
+
+// Retrieves the Monsters HP as it was at the start of mobskill
+int32 CMobSkill::getHP() const
+{
+    return m_HP;
 }
 
 // Retrieves the Monsters HP% as it was at the start of mobskill

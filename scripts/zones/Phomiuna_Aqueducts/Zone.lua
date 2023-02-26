@@ -8,16 +8,17 @@ require('scripts/globals/status')
 local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
+    -- NM Persistence
+    xi.mob.nmTODPersistCache(zone, ID.mob.TRES_DUENDES)
     -- Mahisha and Eba share a respawn, random to see who spawns
-    if math.random(1,2) == 1 then -- Spawn Eba
-        DisallowRespawn(ID.mob.MAHISHA, true)
-        GetMobByID(ID.mob.EBA):setRespawnTime(math.random(300, 1200)) -- 5 to 20 minutes
-    else -- Spawn Mahisha
-        DisallowRespawn(ID.mob.EBA, true)
-        GetMobByID(ID.mob.MAHISHA):setRespawnTime(math.random(300, 1200)) -- 5 to 20 minutes
+    if GetServerVariable("EBA_MAHISHA") == 1 then
+        xi.mob.nmTODPersistCache(zone, ID.mob.MAHISHA)
+    else
+        xi.mob.nmTODPersistCache(zone, ID.mob.EBA)
     end
 
-    GetMobByID(ID.mob.TRES_DUENDES):setLocalVar("cooldown", os.time() + math.random(900, 1800))
+    -- FFXI wiki has some info stating ~10mins realtime for Phomiuna Aqueducts
+    GetNPCByID(ID.npc.QM_TAVNAZIAN_COOKBOOK):addPeriodicTrigger(0, 250, 0)
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype)

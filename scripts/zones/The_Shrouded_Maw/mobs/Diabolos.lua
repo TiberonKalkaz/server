@@ -11,11 +11,6 @@ local entity = {}
 -- 1) Make the diremites in the pit all aggro said player that falls into region. Should have a respawn time of 10 seconds.
 -- 2) Diremites also shouldnt follow you back to the fight area if you make it there. Should despawn and respawn instantly if all players
 --    make it back to the Diabolos floor area.
--- 3) ANIMATION Packet ids for instance 2 and 3 are wrong (needs guesswork). Sounds working.
---    Update 2018-01-02 these no longer seem to work for any instance. neither animation nor sound.
-
--- TODO: Diabolos Prime
--- Note: Diabolos Prime fight drops all tiles at once.
 
 entity.onMobSpawn = function(mob)
     local dBase = ID.mob.DIABOLOS_OFFSET
@@ -28,6 +23,8 @@ entity.onMobSpawn = function(mob)
         mob:addMod(xi.mod.ATTP, -15)
         mob:addMod(xi.mod.DEFP, -15)
         mob:addMod(xi.mod.MDEF, -40)
+        -- If this is CoP mission Diabolos then no 2hr
+        xi.mix.jobSpecial.config(mob, { specials = { }, })
     else
     -- If this is Diabolos Prime, give him Ruinous Omen
         xi.mix.jobSpecial.config(mob, {
@@ -42,14 +39,16 @@ entity.onMobSpawn = function(mob)
     local triggerVal = math.random(1, 28) + math.random(1, 28) + 18
 
     -- If this is prime, adjust the "base" to be the prime set
-    if mob:getID() >= dPrimeBase then dBase = dPrimeBase end  -- Prime "block" of mobs is offset 27 from CoP mobs
+    -- Prime "block" of mobs is offset 27 from CoP mobs
+    if mob:getID() >= dPrimeBase then
+        dBase = dPrimeBase
+    end
 
     local area = utils.clamp((mob:getID() - dBase) / 7 + 1, 1, 3)
 
     mob:setLocalVar("TileTriggerHPP", triggerVal) -- Starting point for tile drops
     mob:setLocalVar("Area", area)
     mob:setMobMod(xi.mobMod.DRAW_IN, 1)
-
 end
 
 entity.onMobFight = function(mob, target)
@@ -82,7 +81,7 @@ entity.onMobFight = function(mob, target)
                 SendEntityVisualPacket(tileId, animationSet[area + 1], 4)     -- Animation for floor dropping
                 SendEntityVisualPacket(tileId, "s123", 4)          -- Tile dropping sound
 
-                tile:timer(2750, function(t)                 -- 2.7s second delay (ish)
+                tile:timer(3100, function(t)                 -- 3.1s second delay (ish)
                     t:updateToEntireZone(xi.status.NORMAL, xi.anim.OPEN_DOOR)       -- Floor opens
                 end)
             end

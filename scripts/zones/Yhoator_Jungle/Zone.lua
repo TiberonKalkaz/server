@@ -13,30 +13,31 @@ require('scripts/missions/amk/helpers')
 -----------------------------------
 local zoneObject = {}
 
+local function updateRainHarvesting(status)
+    for point = 1, #ID.npc.HARVESTING do
+        GetNPCByID(ID.npc.HARVESTING[point]):setStatus(status)
+    end
+end
+
 zoneObject.onChocoboDig = function(player, precheck)
     return xi.chocoboDig.start(player, precheck)
 end
 
 zoneObject.onInitialize = function(zone)
-    UpdateNMSpawnPoint(ID.mob.WOODLAND_SAGE)
-    GetMobByID(ID.mob.WOODLAND_SAGE):setRespawnTime(math.random(900, 10800))
+    -- NM Persistence
+    xi.mob.nmTODPersistCache(zone, ID.mob.WOODLAND_SAGE)
+    xi.mob.nmTODPersistCache(zone, ID.mob.BRIGHT_HANDED_KUNBERRY)
 
     if xi.settings.main.ENABLE_WOTG == 1 then
-        UpdateNMSpawnPoint(ID.mob.POWDERER_PENNY)
-        GetMobByID(ID.mob.POWDERER_PENNY):setRespawnTime(math.random(5400, 7200))
+        xi.mob.nmTODPersistCache(zone, ID.mob.POWDERER_PENNY)
     end
-
-    UpdateNMSpawnPoint(ID.mob.BISQUE_HEELED_SUNBERRY)
-    GetMobByID(ID.mob.BISQUE_HEELED_SUNBERRY):setRespawnTime(math.random(900, 10800))
-
-    UpdateNMSpawnPoint(ID.mob.BRIGHT_HANDED_KUNBERRY)
-    GetMobByID(ID.mob.BRIGHT_HANDED_KUNBERRY):setRespawnTime(math.random(900, 10800))
 
     xi.conq.setRegionalConquestOverseers(zone:getRegionID())
 
-    xi.helm.initZone(zone, xi.helm.type.HARVESTING)
-    xi.helm.initZone(zone, xi.helm.type.LOGGING)
     xi.chocobo.initZone(zone)
+    xi.helm.initZone(zone, xi.helm.type.LOGGING)
+    xi.helm.initZone(zone, xi.helm.type.HARVESTING)
+    updateRainHarvesting(xi.status.DISAPPEAR)
 
     xi.bmt.updatePeddlestox(xi.zone.YUHTUNGA_JUNGLE, ID.npc.PEDDLESTOX)
 end
@@ -50,6 +51,14 @@ end
 
 zoneObject.onConquestUpdate = function(zone, updatetype)
     xi.conq.onConquestUpdate(zone, updatetype)
+end
+
+zoneObject.onZoneWeatherChange = function(weatherType)
+    if weatherType == xi.weather.RAIN or weatherType == xi.weather.SQUALL then
+        updateRainHarvesting(xi.status.NORMAL)
+    else
+        updateRainHarvesting(xi.status.DISAPPEAR)
+    end
 end
 
 zoneObject.onZoneIn = function(player, prevZone)
@@ -84,7 +93,7 @@ zoneObject.onZoneOut = function(player)
     end
 end
 
-zoneObject.onEventUpdate = function( player, csid, option)
+zoneObject.onEventUpdate = function(player, csid, option)
     if csid == 2 then
         quests.rainbow.onEventUpdate(player)
     end

@@ -1207,7 +1207,7 @@ namespace battleutils
 
             uint8 enspell = (uint8)PAttacker->getMod(Mod::ENSPELL);
 
-            if (enspell == ENSPELL_BLOOD_WEAPON)
+            if (enspell == ENSPELL_BLOOD_WEAPON && PDefender->m_EcoSystem != ECOSYSTEM::UNDEAD)
             {
                 Action->additionalEffect = SUBEFFECT_HP_DRAIN;
                 Action->addEffectMessage = 161;
@@ -1540,6 +1540,11 @@ namespace battleutils
 
             acc = std::max({ archery_acc, marksmanship_acc, throwing_acc });
         }
+        else
+        {
+            acc = PAttacker->RACC(SKILL_AUTOMATON_RANGED, distance(PAttacker->loc.p, PDefender->loc.p));
+        }
+
         // Check for Yonin evasion bonus while in front of target
         if (PDefender->StatusEffectContainer->HasStatusEffect(EFFECT_YONIN) && infront(PDefender->loc.p, PAttacker->loc.p, 64))
         {
@@ -1649,29 +1654,29 @@ namespace battleutils
 
     int16 CalculateBaseTP(int delay)
     {
-        int16 x = 1;
+        float x = 1.0f;
         if (delay <= 180)
         {
-            x = (int16)(5.0 + ((delay - 180) * 1.5f) / 180);
+            x = 5.0f + ((delay - 180) * 1.5f) / 180.f;
         }
         else if (delay <= 450)
         {
-            x = (int16)(5.0 + ((delay - 180) * 6.5f) / 270);
+            x = 5.0f + ((delay - 180) * 6.5f) / 270.f;
         }
         else if (delay <= 480)
         {
-            x = (int16)(11.5 + ((delay - 450) * 1.5f) / 30);
+            x = 11.5f + ((delay - 450) * 1.5f) / 30.f;
         }
         else if (delay <= 530)
         {
-            x = (int16)(13.0 + ((delay - 480) * 1.5f) / 50);
+            x = 13.0f + ((delay - 480) * 1.5f) / 50.f;
         }
         else
         {
-            x = (int16)(14.5 + ((delay - 530) * 3.5f) / 470);
+            x = 14.5f + ((delay - 530) * 3.5f) / 470.f;
         }
 
-        return x * 10;
+        return (int16)(x * 10.0f);
     }
 
     bool TryInterruptSpell(CBattleEntity* PAttacker, CBattleEntity* PDefender, CSpell* PSpell)
@@ -1917,7 +1922,7 @@ namespace battleutils
     {
         CItemWeapon* PWeapon = GetEntityWeapon(PDefender, SLOT_MAIN);
         if (((PDefender->objtype == TYPE_PC && PWeapon != nullptr && PWeapon->getID() != 0 && PWeapon->getID() != 65535 && PWeapon->getSkillType() != SKILL_HAND_TO_HAND) ||
-             (PDefender->objtype == TYPE_MOB && PDefender->m_EcoSystem == ECOSYSTEM::BEASTMAN && PDefender->GetMJob() != JOB_MNK)) &&
+             (PDefender->objtype == TYPE_MOB && PDefender->m_EcoSystem == ECOSYSTEM::BEASTMAN && PDefender->GetMJob() != JOB_MNK && PDefender->isInDynamis())) &&
             PDefender->PAI->IsEngaged())
         {
             // http://wiki.ffxiclopedia.org/wiki/Talk:Parrying_Skill
@@ -2246,8 +2251,11 @@ namespace battleutils
             if ((slot == SLOT_RANGED || slot == SLOT_AMMO) && PAttacker->objtype == TYPE_PC)
             {
                 int16 delay = PAttacker->GetRangedWeaponDelay(true);
+                auto  PChar = static_cast<CCharEntity*>(PAttacker);
 
-                baseTp = CalculateBaseTP((delay * 120) / 1000);
+                auto skill = slot == SLOT_RANGED ? ((CItemWeapon*)PChar->getEquip(SLOT_RANGED))->getSkillType() : ((CItemWeapon*)PChar->getEquip(SLOT_AMMO))->getSkillType();
+
+                baseTp = slot == SLOT_RANGED && skill == SKILL_THROWING ? CalculateBaseTP((int16)(delay * 38.0f / 1000.0f)) : CalculateBaseTP((delay * 120) / 1000);
             }
             else
             {
@@ -2260,12 +2268,7 @@ namespace battleutils
                     delay = delay / 2;
                 }
 
-                float ratio = 1.0f;
-
-                if (weapon && weapon->getSkillType() == SKILL_HAND_TO_HAND)
-                {
-                    ratio = 2.0f;
-                }
+                float ratio = weapon && weapon->getSkillType() == SKILL_HAND_TO_HAND ? 2.0f : 1.0f;
 
                 baseTp = CalculateBaseTP((int16)(delay * 60.0f / 1000.0f / ratio));
             }
@@ -2324,7 +2327,7 @@ namespace battleutils
      ************************************************************************/
 
     int32 TakeWeaponskillDamage(CCharEntity* PAttacker, CBattleEntity* PDefender, int32 damage, ATTACK_TYPE attackType, DAMAGE_TYPE damageType, uint8 slot,
-                                bool primary, float tpMultiplier, uint16 bonusTP, float targetTPMultiplier)
+                                bool primary, float tpMultiplier, uint16 bonusTP, float targetTPMultiplier, bool isMagicWS)
     {
         auto* weapon   = GetEntityWeapon(PAttacker, (SLOTTYPE)slot);
         bool  isRanged = (slot == SLOT_AMMO || slot == SLOT_RANGED);
@@ -2391,34 +2394,7 @@ namespace battleutils
             // try to interrupt spell
             PDefender->TryHitInterrupt(PAttacker);
 
-            int16 baseTp = 0;
-
-            if (isRanged)
-            {
-                int16 delay = PAttacker->GetRangedWeaponDelay(true);
-                baseTp      = CalculateBaseTP((delay * 120) / 1000);
-            }
-            else
-            {
-                int16 delay = PAttacker->GetWeaponDelay(true);
-
-                auto* sub_weapon = dynamic_cast<CItemWeapon*>(PAttacker->m_Weapons[SLOT_SUB]);
-
-                if (sub_weapon && sub_weapon->getDmgType() > DAMAGE_TYPE::NONE && sub_weapon->getDmgType() < DAMAGE_TYPE::HTH &&
-                    weapon->getSkillType() != SKILL_HAND_TO_HAND)
-                {
-                    delay /= 2;
-                }
-
-                float ratio = 1.0f;
-
-                if (weapon && weapon->getSkillType() == SKILL_HAND_TO_HAND)
-                {
-                    ratio = 2.0f;
-                }
-
-                baseTp = (int16)(CalculateBaseTP((delay * 60) / 1000) / ratio);
-            }
+            int16 baseTp = CalculateReturnedTPWS(PAttacker, isRanged, weapon);
 
             // add tp to attacker
             if (primary)
@@ -2450,6 +2426,33 @@ namespace battleutils
         }
         else if (PDefender->objtype == TYPE_MOB)
         {
+            if (isMagicWS)
+            {
+                int16 baseTp = CalculateReturnedTPWS(PAttacker, isRanged, weapon);
+
+                standbyTp = bonusTP + ((int16)((tpMultiplier * baseTp) *
+                                               (1.0f + 0.01f * (float)((PAttacker->getMod(Mod::STORETP) + getStoreTPbonusFromMerit(PAttacker))))));
+
+                // account for attacker's subtle blow which reduces the baseTP gain for the defender
+                float sBlow1    = std::clamp((float)PAttacker->getMod(Mod::SUBTLE_BLOW), -50.0f, 50.0f);
+                float sBlow2    = std::clamp((float)PAttacker->getMod(Mod::SUBTLE_BLOW_II), -50.0f, 50.0f);
+                float sBlowMult = (100.0f - std::clamp(sBlow1 + sBlow2, -75.0f, 75.0f)) / 100.0f;
+                // mobs hit get basetp+30 whereas pcs hit get basetp/3
+                if (PDefender->objtype == TYPE_PC)
+                {
+                    PDefender->addTP((int16)(tpMultiplier * targetTPMultiplier *
+                                             ((baseTp / 3) * sBlowMult *
+                                              (1.0f + 0.01f * (float)((PDefender->getMod(Mod::STORETP) +
+                                                                       getStoreTPbonusFromMerit(PAttacker))))))); // yup store tp counts on hits taken too!
+                }
+                else
+                {
+                    PDefender->addTP((int16)(tpMultiplier * targetTPMultiplier *
+                                             ((baseTp + 30) * sBlowMult *
+                                              (1.0f + 0.01f * (float)PDefender->getMod(Mod::STORETP))))); // subtle blow also reduces the "+30" on mob tp gain
+                }
+            }
+
             ((CMobEntity*)PDefender)->PEnmityContainer->UpdateEnmityFromDamage(PAttacker, 0);
         }
 
@@ -2755,7 +2758,7 @@ namespace battleutils
                 }
             }
 
-            critHitRate = std::clamp(critHitRate, 0, 100);
+            critHitRate = std::clamp(critHitRate, 1, 100);
         }
         return (uint8)critHitRate;
     }
@@ -2767,13 +2770,6 @@ namespace battleutils
         int32 defenderAgi = PDefender->AGI();
         int32 dDex        = attackerDex - defenderAgi;
         int32 dDexAbs     = std::abs(dDex);
-        int32 sign        = 1;
-
-        if (dDex < 0)
-        {
-            // Target has higher AGI so this will be a decrease to crit rate
-            sign = -1;
-        }
 
         // Default to +0 crit rate for a delta of 0-6
         int32 critRate = 0;
@@ -2803,7 +2799,7 @@ namespace battleutils
         }
 
         // Crit rate delta from stats caps at +-15
-        return std::min(critRate, 15) * sign;
+        return std::min(critRate, 15);
     }
 
     /************************************************************************
@@ -2841,7 +2837,7 @@ namespace battleutils
         critHitRate += GetAGICritBonus(PAttacker, PDefender);
         critHitRate += PAttacker->getMod(Mod::CRITHITRATE);
         critHitRate += PDefender->getMod(Mod::ENEMYCRITRATE);
-        critHitRate = std::clamp(critHitRate, 0, 100);
+        critHitRate = std::clamp(critHitRate, 1, 100);
 
         return (uint8)critHitRate;
     }
@@ -2853,20 +2849,13 @@ namespace battleutils
         int32 defenderAgi = PDefender->AGI();
         int32 dAGI        = attackerAgi - defenderAgi;
         int32 dAgiAbs     = std::abs(dAGI);
-        int32 sign        = 1;
-
-        if (dAGI < 0)
-        {
-            // Target has higher AGI so this will be a decrease to crit rate
-            sign = -1;
-        }
 
         // Default to +0 crit rate
         int32 critRate = 0;
 
         critRate = dAgiAbs / 10;
 
-        return std::min(critRate, 15) * sign;
+        return std::min(critRate, 15);
     }
 
     /************************************************************************
@@ -2958,7 +2947,12 @@ namespace battleutils
             {
                 if (attackerLvl > defenderLvl)
                 {
-                    cRatio = cRatio + correction; // Match other format
+                    cRatio = cRatio + correction; // Sets level correction for all mobs and pets
+
+                    if ((attackerType == TYPE_PET) && (charutils::CheckMob(attackerLvl, defenderLvl) == EMobDifficulty::TooWeak)) // Checks if the mob is too weak and if its a pet
+                    {
+                        cRatio = std::clamp(cRatio, 0.f, 2.f);
+                    }
                 }
             }
         }
@@ -3164,6 +3158,20 @@ namespace battleutils
         int32 rank = 0;
         int32 fstr = 0;
         float dif  = (float)(PAttacker->STR() - PDefender->VIT());
+
+        if (PAttacker->objtype == TYPE_MOB || PAttacker->objtype == TYPE_PET)
+        {
+            fstr = (PAttacker->STR() - PDefender->VIT() + 4) / 4;
+
+            // Level -1 mobs are coded as level 1, but they have an fSTR of 1 always
+            if (PAttacker->objtype == TYPE_MOB && PAttacker->GetMLevel() == 1)
+            {
+                return 1;
+            }
+
+            return std::clamp(fstr, -20, 24);
+        }
+
         if (dif >= 12)
         {
             fstr = static_cast<int32>((dif + 4) / 2);
@@ -3229,27 +3237,6 @@ namespace battleutils
             if (fstr <= (-rank))
             {
                 return (-rank);
-            }
-
-            // https://www.bluegartr.com/threads/114636-Monster-Avatar-Pet-damage
-            // fSTR has no upper cap for Avatars, this is likely true for monsters and all pets.
-            // Since I can only confirm Avatars and this has a much larger impact on balance I will
-            // Only change this logic for Avatars pending further testing.
-
-            ENTITYTYPE attackerType = PAttacker->objtype;
-            bool       isAvatar     = false;
-
-            if (attackerType == TYPE_PET)
-            {
-                if (CPetEntity* petEntity = dynamic_cast<CPetEntity*>(PAttacker))
-                {
-                    isAvatar = petEntity->getPetType() == PET_TYPE::AVATAR;
-                }
-            }
-
-            if (isAvatar)
-            {
-                return fstr;
             }
 
             if ((fstr > (-rank)) && (fstr <= rank + 8))
@@ -3519,23 +3506,6 @@ namespace battleutils
             num += 1;
         }
 
-        // hasso occasionally triggers Zanshin after landing a normal attack, only active while Samurai is set as Main
-        if (PEntity->GetMJob() == JOB_SAM)
-        {
-            if (PEntity->StatusEffectContainer->HasStatusEffect(EFFECT_HASSO))
-            {
-                uint16 zanshin = PEntity->getMod(Mod::ZANSHIN);
-                if (PEntity->objtype == TYPE_PC)
-                {
-                    zanshin += ((CCharEntity*)PEntity)->PMeritPoints->GetMeritValue(MERIT_ZASHIN_ATTACK_RATE, (CCharEntity*)PEntity);
-                }
-
-                if (xirand::GetRandomNumber(100) < (zanshin / 4))
-                {
-                    num++;
-                }
-            }
-        }
         return std::min<uint8>(num, 8);
     }
 
@@ -5055,14 +5025,6 @@ namespace battleutils
     {
         // Gear with Charm + does not affect the success rate of Charm, but increases the duration of the Charm.
         // Each +1 to Charm increases the duration of charm by 5%; +20 Charm doubles the duration of charm.
-
-        // Too Weak          30 Minutes
-        // Easy Prey         20 Minutes
-        // Decent Challenge  10 Minutes
-        // Even Match        3.0 Minutes
-        // Tough             1.5 Minutes
-        // VT                1 minute    guess
-        // IT                30 seconds  guess
         uint32 CharmTime = 0;
 
         // player charming mob
@@ -5077,54 +5039,76 @@ namespace battleutils
             }
 
             // mob is charmable
-            const EMobDifficulty mobCheck = charutils::CheckMob(PCharmer->GetMLevel(), PVictim->GetMLevel());
-            switch (mobCheck)
+            uint16 baseCharmDuration = floor(1.25f * PCharmer->stats.CHR + 150);
+
+            int8 dLvl = PCharmer->GetMLevel() - PVictim->GetMLevel();
+
+            // dLvl -6 or lower
+            float dLvlCharmMod = 1 / 24.f;
+
+            // dLvl 9 or higher
+            if (dLvl >= 9)
             {
-                case EMobDifficulty::TooWeak:
-                    CharmTime = 1800000;
-                    break;
+                dLvlCharmMod = 6.0f;
+            }
 
-                case EMobDifficulty::IncrediblyEasyPrey:
-                case EMobDifficulty::EasyPrey:
-                    CharmTime = 1200000;
+            // -6 < dLvl < 9
+            switch (dLvl)
+            {
+                case -5:
+                    dLvlCharmMod = 1 / 12.f;
                     break;
-
-                case EMobDifficulty::DecentChallenge:
-                    CharmTime = 600000;
+                case -4:
+                    dLvlCharmMod = 1 / 8.f;
                     break;
-
-                case EMobDifficulty::EvenMatch:
-                    CharmTime = 180000;
+                case -3:
+                    dLvlCharmMod = 1 / 6.f;
                     break;
-
-                case EMobDifficulty::Tough:
-                    CharmTime = 90000;
+                case -2:
+                    dLvlCharmMod = 1 / 3.f;
                     break;
-
-                case EMobDifficulty::VeryTough:
-                    CharmTime = 45000;
+                case -1:
+                    dLvlCharmMod = 2 / 3.f;
                     break;
-
-                case EMobDifficulty::IncrediblyTough:
-                    CharmTime = 22500;
+                case 0:
+                    dLvlCharmMod = 1.0f;
                     break;
-
+                case 1:
+                    dLvlCharmMod = 1.4f;
+                    break;
+                case 2:
+                    dLvlCharmMod = 1.8f;
+                    break;
+                case 3:
+                    dLvlCharmMod = 2.2f;
+                    break;
+                case 4:
+                    dLvlCharmMod = 2.6f;
+                    break;
+                case 5:
+                    dLvlCharmMod = 3.0f;
+                    break;
+                case 6:
+                    dLvlCharmMod = 3.4f;
+                    break;
+                case 7:
+                    dLvlCharmMod = 4.0f;
+                    break;
+                case 8:
+                    dLvlCharmMod = 5.0f;
+                    break;
                 default:
-                    // no-op
                     break;
             }
+
+            // Pre-Gear Charm Duration = Base Charm Duration x % Change
+            CharmTime = baseCharmDuration * dLvlCharmMod;
 
             // apply charm time extension from gear
             uint16 charmModValue = (PCharmer->getMod(Mod::CHARM_TIME));
             // adds 5% increase
-            uint32 extraCharmTime = (uint32)(CharmTime * (charmModValue * 0.5f) / 10.f);
+            uint32 extraCharmTime = (uint32)(CharmTime * (charmModValue * 0.05f));
             CharmTime += extraCharmTime;
-
-            // randomize charm time if > EM
-            if (mobCheck > EMobDifficulty::EvenMatch)
-            {
-                CharmTime = (uint32)(CharmTime * xirand::GetRandomNumber(0.75f, 1.25f));
-            }
 
             if (!TryCharm(PCharmer, PVictim))
             {
@@ -5132,7 +5116,7 @@ namespace battleutils
             }
         }
 
-        applyCharm(PCharmer, PVictim, std::chrono::milliseconds(CharmTime));
+        applyCharm(PCharmer, PVictim, std::chrono::seconds(CharmTime));
     }
 
     void applyCharm(CBattleEntity* PCharmer, CBattleEntity* PVictim, duration charmTime)
@@ -5402,7 +5386,10 @@ namespace battleutils
         damage       = (int32)(damage * resist);
 
         resist = 1.0f + PDefender->getMod(Mod::DMGBREATH) / 10000.f + PDefender->getMod(Mod::DMG) / 10000.f;
-        resist = std::clamp(resist, 0.5f, 1.5f); // assuming if its floored at .5f its capped at 1.5f but who's stacking +dmgtaken equip anyway???
+        resist = std::max(resist, 0.5f); // assuming if its floored at .5f its capped at 1.5f but who's stacking +dmgtaken equip anyway???
+
+        resist += PDefender->getMod(Mod::UDMG) + PDefender->getMod(Mod::UDMGBREATH) / 10000.f;
+        resist = std::max(resist, 0.f);
         damage = (int32)(damage * resist);
 
         if (xirand::GetRandomNumber(100) < PDefender->getMod(Mod::ABSORB_DMG_CHANCE))
@@ -5452,6 +5439,9 @@ namespace battleutils
 
         resist += PDefender->getMod(Mod::DMGMAGIC_II) / 10000.f;
         resist = std::max(resist, 0.125f); // Total cap with MDT-% II included is 87.5%
+
+        resist += PDefender->getMod(Mod::UDMG) + PDefender->getMod(Mod::UDMGMAGIC) / 10000.f;
+        resist = std::max(resist, 0.f);
         damage = (int32)(damage * resist);
 
         if (damage > 0 && PDefender->objtype == TYPE_PET && PDefender->getMod(Mod::AUTO_STEAM_JACKET) > 1)
@@ -5499,6 +5489,10 @@ namespace battleutils
         resist = 1.f + PDefender->getMod(Mod::DMGPHYS) / 10000.f + PDefender->getMod(Mod::DMG) / 10000.f;
         resist = std::max(resist, 0.5f);                        // PDT caps at -50%
         resist += PDefender->getMod(Mod::DMGPHYS_II) / 10000.f; // Add Burtgang reduction after 50% cap. Extends cap to -68%
+        resist = std::max(resist, 0.32f);                       // Total cap with MDT-% II included is 87.5%
+
+        resist += PDefender->getMod(Mod::UDMG) + PDefender->getMod(Mod::UDMGPHYS) / 10000.f;
+        resist = std::max(resist, 0.f);
         damage = (int32)(damage * resist);
 
         if (damage > 0 && PDefender->objtype == TYPE_PET && PDefender->getMod(Mod::AUTO_STEAM_JACKET) > 0)
@@ -5545,6 +5539,9 @@ namespace battleutils
 
         resist = 1.0f + PDefender->getMod(Mod::DMGRANGE) / 10000.f + PDefender->getMod(Mod::DMG) / 10000.f;
         resist = std::max(resist, 0.5f);
+
+        resist += PDefender->getMod(Mod::UDMG) + PDefender->getMod(Mod::UDMGRANGE) / 10000.f;
+        resist = std::max(resist, 0.f);
         damage = (int32)(damage * resist);
 
         if (damage > 0 && PDefender->objtype == TYPE_PET && PDefender->getMod(Mod::AUTO_STEAM_JACKET) > 0)
@@ -6087,7 +6084,7 @@ namespace battleutils
         // Snap nearEntity to a guaranteed valid position
         if (PMob->loc.zone->m_navMesh)
         {
-            PMob->loc.zone->m_navMesh->snapToValidPosition(nearEntity);
+            PMob->loc.zone->m_navMesh->snapToValidPosition(nearEntity, pos.y, true);
         }
 
         // Move the target a little higher, just in case
@@ -7339,4 +7336,34 @@ namespace battleutils
         return 1.0;
     }
 
+    int16 CalculateReturnedTPWS(CBattleEntity* PAttacker, bool isRanged, CItemWeapon* weapon)
+    {
+        int16 baseTp = 0;
+
+        if (isRanged)
+        {
+            auto  slot  = weapon->getSlotType();
+            auto  skill = weapon->getSkillType();
+            int16 delay = PAttacker->GetRangedWeaponDelay(true);
+
+            baseTp = slot == SLOT_RANGED && skill == SKILL_THROWING ? CalculateBaseTP((int16)(delay * 38.0f / 1000.0f)) : CalculateBaseTP((delay * 120) / 1000);
+        }
+        else
+        {
+            int16 delay      = PAttacker->GetWeaponDelay(true);
+            auto* sub_weapon = dynamic_cast<CItemWeapon*>(PAttacker->m_Weapons[SLOT_SUB]);
+
+            if (sub_weapon && sub_weapon->getDmgType() > DAMAGE_TYPE::NONE && sub_weapon->getDmgType() < DAMAGE_TYPE::HTH &&
+                weapon->getSkillType() != SKILL_HAND_TO_HAND)
+            {
+                delay /= 2;
+            }
+
+            float ratio = weapon && weapon->getSkillType() == SKILL_HAND_TO_HAND ? 2.0f : 1.0f;
+
+            baseTp = (int16)(CalculateBaseTP((delay * 60) / 1000) / ratio);
+        }
+
+        return baseTp;
+    }
 }; // namespace battleutils

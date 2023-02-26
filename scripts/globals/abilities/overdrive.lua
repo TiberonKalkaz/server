@@ -5,20 +5,17 @@
 -- Recast Time: 1:00:00
 -- Duration: 1:00
 -----------------------------------
-require("scripts/globals/settings")
-require("scripts/globals/status")
-require("scripts/globals/pets")
 require("scripts/globals/msg")
+require("scripts/globals/pets")
+require("scripts/globals/status")
 -----------------------------------
 local abilityObject = {}
 
 abilityObject.onAbilityCheck = function(player, target, ability)
-    if not player:getPet() then
+    local pet = player:getPet()
+    if not pet then
         return xi.msg.basic.REQUIRES_A_PET, 0
-    elseif
-        not player:getPetID() or
-        not (player:getPetID() >= 69 and player:getPetID() <= 72)
-    then
+    elseif not pet:isAutomaton() then
         return xi.msg.basic.NO_EFFECT_ON_PET, 0
     else
         ability:setRecast(ability:getRecast() - player:getMod(xi.mod.ONE_HOUR_RECAST))
@@ -28,6 +25,7 @@ end
 
 abilityObject.onUseAbility = function(player, target, ability)
     player:addStatusEffect(xi.effect.OVERDRIVE, 0, 0, 60)
+
     return xi.effect.OVERDRIVE
 end
 

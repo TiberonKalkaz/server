@@ -34,6 +34,10 @@ zoneObject.onInitialize = function(zone)
     zone:registerTriggerArea(33, -297, 6, 415, -295, 8, 417)   -- E-7 (Map 6)
     zone:registerTriggerArea(34, -137, 6, -177, -135, 8, -175) -- G-7 (Map 8)
 
+    -- NM Persistence
+    xi.mob.nmTODPersistCache(zone, ID.mob.ANTICAN_CONSUL)
+    xi.mob.nmTODPersistCache(zone, ID.mob.PROCONSUL_XII)
+
     xi.treasure.initZone(zone)
 
     npcUtil.UpdateNPCSpawnPoint(ID.npc.ANTICAN_TAG_QM, 60, 120, ID.npc.ANTICAN_TAG_POSITIONS, "[POP]Antican_Tag")
@@ -76,23 +80,23 @@ zoneObject.onTriggerAreaEnter = function(player, triggerArea)
     if triggerAreaID >= 30 then
         switch (triggerAreaID): caseof
         {
-            [30] = function (x)
+            [30] = function()
                 player:setPos(496, -6, -816)
             end,
 
-            [31] = function (x)
+            [31] = function()
                 player:setPos(816, -6, -743)
             end,
 
-            [32] = function (x)
+            [32] = function()
                 player:setPos(216, 9, -16)
             end,
 
-            [33] = function (x)
+            [33] = function()
                 player:setPos(-296, 9, 416)
             end,
 
-            [34] = function (x)
+            [34] = function()
                 player:setPos(-136, 9, -176)
             end,
         }

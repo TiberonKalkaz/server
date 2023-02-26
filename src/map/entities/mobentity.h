@@ -179,6 +179,8 @@ public:
     virtual void Spawn() override;
     virtual void FadeOut() override;
 
+    virtual bool CanMove();
+
     bool   m_AllowRespawn; // if true, allow respawn
     uint32 m_RespawnTime;  // respawn time
     uint32 m_DropItemTime; // time until monster death animation
@@ -254,6 +256,10 @@ public:
     uint8 m_unk0; // possibly campaign related (entity 0x24)
     uint8 m_unk1; // (entity_update 0x25)
     uint8 m_unk2; // (entity_update 0x26)
+
+    uint16 m_pathFindDisengage;
+
+    uint16 m_defaultAttack;
 
     bool m_CallForHelpBlocked;
 

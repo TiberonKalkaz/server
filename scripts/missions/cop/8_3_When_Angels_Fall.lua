@@ -98,7 +98,11 @@ mission.sections =
             ['_0z0'] = -- BCNM Entrance
             {
                 onTrigger = function(player, npc)
-                    if mission:getVar(player, 'Status') == 3 then
+                    if
+                        mission:getVar(player, 'Status') == 3 and
+                        player:hasKeyItem(xi.ki.BRAND_OF_TWILIGHT) and
+                        player:hasKeyItem(xi.ki.BRAND_OF_DAWN)
+                    then
                         return mission:progressEvent(203)
                     elseif mission:getVar(player, 'Status') == 5 then
                         return mission:progressEvent(205)
@@ -109,7 +113,7 @@ mission.sections =
             ['_0zv'] = -- Particle Gate (Brand of Twilight)
             {
                 onTrigger = function(player, npc)
-                    if not player:hasKeyItem(xi.ki.BRAND_OF_TWILIGHT) and mission:getVar(player, 'Status') >= 3 then
+                    if not player:hasKeyItem(xi.ki.BRAND_OF_TWILIGHT) and mission:getVar(player, 'Status') >= 3 and mission:getVar(player, 'Status') <= 4 then
                         return mission:progressEvent(111)
                     else
                         return mission:messageSpecial(zones[npc:getZoneID()].text.NO_NEED_INVESTIGATE)
@@ -120,7 +124,7 @@ mission.sections =
             ['_0zu'] = -- Particle Gate (Brand of Dawn)
             {
                 onTrigger = function(player, npc)
-                    if not player:hasKeyItem(xi.ki.BRAND_OF_DAWN) and mission:getVar(player, 'Status') >= 3 then
+                    if not player:hasKeyItem(xi.ki.BRAND_OF_DAWN) and mission:getVar(player, 'Status') >= 3 and mission:getVar(player, 'Status') <= 4 then
                         return mission:progressEvent(110)
                     else
                         return mission:messageSpecial(zones[npc:getZoneID()].text.NO_NEED_INVESTIGATE)

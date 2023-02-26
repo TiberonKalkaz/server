@@ -118,7 +118,7 @@ local pathNodes =
 }
 
 entity.onMobSpawn = function(mob)
-    mob:setSpeed(250)
+    mob:setSpeed(70)
     mob:pathThrough(pathNodes, bit.bor(xi.path.flag.PATROL, xi.path.flag.RUN))
 end
 
@@ -131,8 +131,9 @@ entity.onMobFight = function(mob)
 end
 
 entity.onMobDisengage = function(mob)
-    mob:setSpeed(250)
+    mob:setSpeed(70)
     mob:setAnimationSub(5)
+    mob:pathThrough(pathNodes, bit.bor(xi.path.flag.PATROL, xi.path.flag.RUN))
 end
 
 entity.onMobDeath = function(mob, player, optParams)
@@ -140,8 +141,7 @@ entity.onMobDeath = function(mob, player, optParams)
 end
 
 entity.onMobDespawn = function(mob)
-    UpdateNMSpawnPoint(mob:getID())
-    mob:setRespawnTime(math.random(172800, 259200)) -- 2 to 3 days
+    xi.mob.nmTODPersist(mob, math.random(172800, 259200)) -- 2 to 3 days
 end
 
 return entity

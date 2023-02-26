@@ -112,6 +112,7 @@ namespace charutils
     uint8  AddItem(CCharEntity* PChar, uint8 LocationID, CItem* PItem, bool silence = false);
     uint8  AddItem(CCharEntity* PChar, uint8 LocationID, uint16 itemID, uint32 quantity = 1, bool silence = false);
     uint8  MoveItem(CCharEntity* PChar, uint8 LocationID, uint8 SlotID, uint8 NewSlotID);
+    bool   ValidateUpdateItem(CCharEntity* PChar, uint8 locationID, uint8 slotID, int32 quantity, bool force = false);
     uint32 UpdateItem(CCharEntity* PChar, uint8 LocationID, uint8 slotID, int32 quantity, bool force = false);
     void   DropItem(CCharEntity* PChar, uint8 container, uint8 slotID, int32 quantity, uint16 ItemID);
     void   CheckValidEquipment(CCharEntity* PChar);
@@ -125,7 +126,7 @@ namespace charutils
     bool   EquipArmor(CCharEntity* PChar, uint8 slotID, uint8 equipSlotID, uint8 containerID);
     void   CheckUnarmedWeapon(CCharEntity* PChar);
     void   SetStyleLock(CCharEntity* PChar, bool isStyleLocked);
-    void   UpdateWeaponStyle(CCharEntity* PChar, uint8 equipSlotID, CItemWeapon* PItem);
+    void   UpdateWeaponStyle(CCharEntity* PChar, uint8 equipSlotID, CItemEquipment* PItem);
     void   UpdateArmorStyle(CCharEntity* PChar, uint8 equipSlotID);
     void   AddItemToRecycleBin(CCharEntity* PChar, uint32 container, uint8 slotID, uint8 quantity);
     void   EmptyRecycleBin(CCharEntity* PChar);
@@ -272,6 +273,7 @@ namespace charutils
     bool hasEntitySpawned(CCharEntity* PChar, CBaseEntity* entity);
 
     uint32 getCharIdFromName(std::string const& name);
+    void   releaseEvent(CCharEntity* PChar, bool skipMessage = false);
 }; // namespace charutils
 
 #endif // _CHARUTILS_H

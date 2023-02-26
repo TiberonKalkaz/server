@@ -3,6 +3,7 @@
 -----------------------------------
 local ID = require('scripts/zones/Southern_San_dOria/IDs')
 require('scripts/globals/events/harvest_festivals')
+require('scripts/globals/events/starlight_celebrations')
 require('scripts/quests/flyers_for_regine')
 require('scripts/globals/conquest')
 require('scripts/globals/cutscenes')
@@ -16,23 +17,12 @@ zoneObject.onInitialize = function(zone)
     zone:registerTriggerArea(1, -292, -10, 90 , -258, 10, 105)
     quests.ffr.initZone(zone) -- register trigger areas 2 through 6
     applyHalloweenNpcCostumes(zone:getID())
+    xi.events.starlightCelebration.applyStarlightDecorations(zone:getID())
     xi.chocobo.initZone(zone)
     xi.conquest.toggleRegionalNPCs(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)
-    local cs = { -1 }
-
-    -- FIRST LOGIN (START CS)
-    if player:getPlaytime(false) == 0 then
-        if xi.settings.main.NEW_CHARACTER_CUTSCENE == 1 then
-            cs = { 503, -1, xi.cutscenes.params.NO_OTHER_ENTITY } -- (cs, textTable, Flags)
-        end
-
-        player:setPos(-96, 1, -40, 224)
-        player:setHomePoint()
-    end
-
     -- MOG HOUSE EXIT
     if
         player:getXPos() == 0 and
@@ -42,7 +32,7 @@ zoneObject.onZoneIn = function(player, prevZone)
         player:setPos(161, -2, 161, 94)
     end
 
-    return cs
+    xi.moghouse.exitJobChange(player, prevZone)
 end
 
 zoneObject.onConquestUpdate = function(zone, updatetype)
@@ -63,6 +53,8 @@ zoneObject.onEventFinish = function(player, csid, option)
     if csid == 503 then
         player:messageSpecial(ID.text.ITEM_OBTAINED, 536)
     end
+
+    xi.moghouse.exitJobChangeFinish(player, csid, option)
 end
 
 return zoneObject

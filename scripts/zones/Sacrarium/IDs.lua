@@ -27,6 +27,8 @@ zones[xi.zone.SACRARIUM] =
         CANNOT_OPEN_SIDE              = 7229, -- The gate cannot be opened from this side.
         CANNOT_TRADE_NOW              = 7230, -- You cannot trade right now.
         STURDY_GATE                   = 7231, -- A sturdy iron gate. It is secured with two locks--a main lock and a sublock.
+        HOLDING_THE_LOCK              = 7233, -- player is holding the lock open...
+        HAND_GROWN_NUMB               = 7234, -- player's hand has grown numb!
         CORAL_KEY_BREAKS              = 7235, -- The <item> breaks!
         EVIL_PRESENCE                 = 7269, -- You sense an evil presence!
         DRAWER_OPEN                   = 7270, -- You open the drawer.
@@ -55,11 +57,12 @@ zones[xi.zone.SACRARIUM] =
     },
     npc =
     {
-        STALE_DRAFT_OFFSET  = 16892097,
-        LABYRINTH_OFFSET    = 16892110,
-        SMALL_KEYHOLE       = 16892142,
-        QM_MARISELLE_OFFSET = 16892155, -- qm_professor_mariselle in npc_list.sql
-        TREASURE_CHEST      = 16892183,
+        STALE_DRAFT_OFFSET    = 16892097,
+        LABYRINTH_OFFSET      = 16892110,
+        SMALL_KEYHOLE         = 16892142,
+        QM_MARISELLE_OFFSET   = 16892155, -- qm_professor_mariselle in npc_list.sql
+        TREASURE_CHEST        = 16892183,
+        QM_TAVNAZIAN_COOKBOOK = 16892184,
     },
 }
 

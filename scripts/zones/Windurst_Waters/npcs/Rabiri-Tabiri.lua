@@ -3,7 +3,9 @@
 --  NPC: Rabiri-Tabiri
 -- Working 100%
 -----------------------------------
+local ID = require("scripts/zones/Windurst_Waters/IDs")
 require("scripts/globals/pathfind")
+require("scripts/globals/events/starlight_celebrations")
 -----------------------------------
 local entity = {}
 
@@ -21,6 +23,11 @@ entity.onSpawn = function(npc)
 end
 
 entity.onTrade = function(player, npc, trade)
+    if xi.events.starlightCelebration.isStarlightEnabled() ~= 0 then
+        if xi.events.starlightCelebration.onStarlightSmilebringersTrade(player, trade, npc) then
+            return
+        end
+    end
 end
 
 entity.onTrigger = function(player, npc)

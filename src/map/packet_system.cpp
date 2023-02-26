@@ -331,6 +331,11 @@ void SmallPacket0x00A(map_session_data_t* const PSession, CCharEntity* const PCh
         charutils::SaveZonesVisited(PChar);
         charutils::SavePlayTime(PChar);
 
+        if (PChar->getCharVar("Monstrosity") != 0)
+        {
+            PChar->m_Monstrosity = PChar->getCharVar("Monstrosity");
+        }
+
         if (PChar->m_moghouseID != 0)
         {
             PChar->m_charHistory.mhEntrances++;
@@ -736,6 +741,14 @@ void SmallPacket0x015(map_session_data_t* const PSession, CCharEntity* const PCh
             {
                 PChar->PWideScanTarget = nullptr;
             }
+        }
+
+        if (std::chrono::system_clock::now() > PChar->m_nextDataSave)
+        {
+            charutils::SaveCharStats(PChar);
+            charutils::SaveCharPosition(PChar);
+            PChar->StatusEffectContainer->SaveStatusEffects(false, true);
+            PChar->m_nextDataSave = std::chrono::system_clock::now() + std::chrono::seconds(settings::get<uint16>("main.PLAYER_DATA_SAVE") > 0 ? settings::get<uint16>("main.PLAYER_DATA_SAVE") : 120);
         }
     }
 }
@@ -1817,6 +1830,11 @@ void SmallPacket0x034(map_session_data_t* const PSession, CCharEntity* const PCh
             PChar->UContainer->UnLock();
             PTarget->UContainer->UnLock();
         }
+        else
+        {
+            ShowError("SmallPacket0x034: Player %s trying to trade invalid item. [Item: %i | Trade Slot: %i | Inv Slot: %i | Quantity: %i] ",
+                      PChar->GetName(), itemID, tradeSlotID, invSlotID, quantity);
+        }
     }
 }
 
@@ -2511,6 +2529,13 @@ void SmallPacket0x04D(map_session_data_t* const PSession, CCharEntity* const PCh
 
                     char extra[sizeof(PItem->m_extra) * 2 + 1];
                     sql->EscapeStringLen(extra, (const char*)PItem->m_extra, sizeof(PItem->m_extra));
+
+                    // Before inserting to DBox, check we CAN actually remove this item (locked, etc..)
+                    if (!charutils::ValidateUpdateItem(PChar, LOC_INVENTORY, invslot, -(int32)quantity))
+                    {
+                        delete PUBoxItem;
+                        return;
+                    }
 
                     ret = sql->Query(
                         "INSERT INTO delivery_box(charid, charname, box, slot, itemid, itemsubid, quantity, extra, senderid, sender) VALUES(%u, "
@@ -3228,16 +3253,41 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
                     return;
                 }
 
-                const char* fmtQuery = "INSERT INTO auction_house(itemid, stack, seller, seller_name, date, price) VALUES(%u,%u,%u,'%s',%u,%u)";
+                // Order here matters. We first make sure we CAN remove the item from the player's inventory,
+                // and then we put the item up for sale. Otherwise the item could go on sale without it being removed
+                // from the player's inventory.
 
-                if (sql->Query(fmtQuery, PItem->getID(), quantity == 0, PChar->id, PChar->GetName(), (uint32)time(nullptr), price) == SQL_ERROR)
+                // 1. Check we can afford AH fee. This needs to be done before updating item so we are sure
+                // we can perform the whole operation.
+                if (!charutils::ValidateUpdateItem(PChar, LOC_INVENTORY, 0, -(int32)auctionFee))
                 {
-                    ShowError("SmallPacket0x04E::AuctionHouse: Cannot insert item %s to database", PItem->getName());
+                    return;
+                }
+
+                // 2. Remove item from inventory. Cache name because this method may actually delete the item pointer
+                auto deductQuantity = -(int32)(quantity != 0 ? 1 : PItem->getStackSize());
+                auto itemName       = PItem->getName();
+                auto itemId         = charutils::UpdateItem(PChar, LOC_INVENTORY, slot, deductQuantity);
+                if (itemId == 0)
+                {
+                    return;
+                }
+
+                // 3. Deduct AH fee
+                auto gilItemId = charutils::UpdateItem(PChar, LOC_INVENTORY, 0, -(int32)auctionFee);
+                if (gilItemId == 0)
+                {
+                    return;
+                }
+
+                // 4. List the item into the auction house
+                const char* fmtQuery = "INSERT INTO auction_house(itemid, stack, seller, seller_name, date, price) VALUES(%u,%u,%u,'%s',%u,%u)";
+                if (sql->Query(fmtQuery, itemId, quantity == 0, PChar->id, PChar->GetName(), (uint32)time(nullptr), price) == SQL_ERROR)
+                {
+                    ShowError("SmallPacket0x04E::AuctionHouse: Cannot insert item %s to database", itemName);
                     PChar->pushPacket(new CAuctionHousePacket(action, 197, 0, 0, quantity)); // failed to place up
                     return;
                 }
-                charutils::UpdateItem(PChar, LOC_INVENTORY, slot, -(int32)(quantity != 0 ? 1 : PItem->getStackSize()));
-                charutils::UpdateItem(PChar, LOC_INVENTORY, 0, -(int32)auctionFee); // Deduct AH fee
 
                 PChar->pushPacket(new CAuctionHousePacket(action, 1, 0, 0, quantity));       // Merchandise put up on auction msg
                 PChar->pushPacket(new CAuctionHousePacket(0x0C, (uint8)ah_listings, PChar)); // Inform history of slot
@@ -3274,7 +3324,7 @@ void SmallPacket0x04E(map_session_data_t* const PSession, CCharEntity* const PCh
                     if (gil != nullptr && gil->isType(ITEM_CURRENCY) && gil->getQuantity() >= price)
                     {
                         const char* fmtQuery = "UPDATE auction_house SET buyer_name = '%s', sale = %u, sell_date = %u WHERE itemid = %u AND buyer_name IS NULL "
-                                               "AND stack = %u AND price <= %u ORDER BY price LIMIT 1";
+                                               "AND stack = %u AND price <= %u ORDER BY price, date LIMIT 1";
 
                         if (sql->Query(fmtQuery, PChar->GetName(), price, (uint32)time(nullptr), itemid, quantity == 0, price) != SQL_ERROR &&
                             sql->AffectedRows() != 0)
@@ -3448,7 +3498,7 @@ void SmallPacket0x052(map_session_data_t* const PSession, CCharEntity* const PCh
     // in this list the slot of whats being updated is old value, replace with new in 116
     // Should Push 0x116 (size 68) in responce
     // 0x04 is start, contains 16 4 byte parts repersently each slot in order
-    PChar->pushPacket(new CAddtoEquipSet(data));
+    PChar->pushPacket(new CAddtoEquipSet(PChar, data));
 }
 
 /************************************************************************
@@ -3480,42 +3530,69 @@ void SmallPacket0x053(map_session_data_t* const PSession, CCharEntity* const PCh
     {
         charutils::SetStyleLock(PChar, true);
 
-        for (int i = 0x08; i < 0x08 + (0x08 * count); i += 0x08)
+        // Build new lockstyle
+        for (int i = 0; i < count; i++)
         {
-            uint8  equipSlotId = data.ref<uint8>(i + 0x01);
-            uint16 itemId      = data.ref<uint16>(i + 0x04);
+            uint8  equipSlotId = data.ref<uint8>(0x09 + 0x08 * i);
+            uint16 itemId      = data.ref<uint16>(0x0C + 0x08 * i);
 
-            if (equipSlotId > SLOT_BACK || equipSlotId == SLOT_RANGED || equipSlotId == SLOT_AMMO)
+            // Skip non-visible items
+            if (equipSlotId > SLOT_FEET)
             {
                 continue;
             }
 
-            auto* PItem = itemutils::GetItem(itemId);
+            CItemEquipment* PItem = dynamic_cast<CItemEquipment*>(itemutils::GetItemPointer(itemId));
             if (PItem == nullptr || !(PItem->isType(ITEM_WEAPON) || PItem->isType(ITEM_EQUIPMENT)))
             {
                 itemId = 0;
             }
-            else if (!(((CItemEquipment*)PItem)->getEquipSlotId() & (1 << equipSlotId)))
+            else if ((PItem->getEquipSlotId() & (1 << equipSlotId)) == 0) // item doesnt fit in slot
             {
                 itemId = 0;
             }
 
             PChar->styleItems[equipSlotId] = itemId;
+        }
 
-            switch (equipSlotId)
+        // Check if we need to remove conflicting slots. Essentially, packet injection shenanigan detector.
+        for (int i = 0; i < 10; i++)
+        {
+            CItemEquipment* PItemEquipment = dynamic_cast<CItemEquipment*>(itemutils::GetItemPointer(PChar->styleItems[i]));
+
+            if (PItemEquipment)
+            {
+                auto removeSlotID = PItemEquipment->getRemoveSlotId();
+
+                for (uint8 x = 0; x < sizeof(removeSlotID) * 8; ++x)
+                {
+                    if (removeSlotID & (1 << x))
+                    {
+                        PChar->styleItems[x] = 0;
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < 10; i++)
+        {
+            // variable initialized here due to case/switch optimization throwing warnings inside the case
+            CItemEquipment* PItem = PChar->getEquip((SLOTTYPE)i);
+
+            switch (i)
             {
                 case SLOT_MAIN:
                 case SLOT_SUB:
                 case SLOT_RANGED:
                 case SLOT_AMMO:
-                    charutils::UpdateWeaponStyle(PChar, equipSlotId, (CItemWeapon*)PChar->getEquip((SLOTTYPE)equipSlotId));
+                    charutils::UpdateWeaponStyle(PChar, i, PItem);
                     break;
                 case SLOT_HEAD:
                 case SLOT_BODY:
                 case SLOT_HANDS:
                 case SLOT_LEGS:
                 case SLOT_FEET:
-                    charutils::UpdateArmorStyle(PChar, equipSlotId);
+                    charutils::UpdateArmorStyle(PChar, i);
                     break;
             }
         }
@@ -3574,7 +3651,7 @@ void SmallPacket0x059(map_session_data_t* const PSession, CCharEntity* const PCh
     TracyZoneScoped;
     if (PChar->animation == ANIMATION_SYNTH)
     {
-        synthutils::sendSynthDone(PChar);
+        synthutils::sendSynthDone(PChar, false);
     }
 }
 
@@ -3803,6 +3880,7 @@ void SmallPacket0x05E(map_session_data_t* const PSession, CCharEntity* const PCh
     uint8  requestedZone = data.ref<uint8>(0x17);
 
     uint16 startingZone = PChar->getZone();
+    auto   startingPos  = PChar->loc.p;
 
     PChar->ClearTrusts();
 
@@ -3887,7 +3965,7 @@ void SmallPacket0x05E(map_session_data_t* const PSession, CCharEntity* const PCh
 
                 PChar->loc.p.rotation += 128;
 
-                PChar->pushPacket(new CMessageSystemPacket(0, 0, 2));
+                PChar->pushPacket(new CMessageSystemPacket(0, 0, 2)); // You could not enter the next area.
                 PChar->pushPacket(new CCSPositionPacket(PChar));
 
                 PChar->status = STATUS_TYPE::NORMAL;
@@ -3896,14 +3974,44 @@ void SmallPacket0x05E(map_session_data_t* const PSession, CCharEntity* const PCh
             else
             {
                 // Ensure the destination exists
-                CZone* PDestination = zoneutils::GetZone(PZoneLine->m_toZone);
-                if (PDestination && PDestination->GetIP() == 0)
+                // clang-format off
+                CZone*  PDestination   = zoneutils::GetZone(PZoneLine->m_toZone);
+                ZONEID  CharZone       = (ZONEID)PChar->getZone();
+                bool    IsInHomeNation = PChar->profile.nation == NATION_BASTOK ? CharZone >= ZONE_BASTOK_MINES && CharZone <= ZONE_PORT_BASTOK : false ||
+                                          PChar->profile.nation == NATION_WINDURST ? CharZone >= ZONE_WINDURST_WATERS && CharZone <= ZONE_WINDURST_WOODS : false ||
+                                           PChar->profile.nation == NATION_SANDORIA ? CharZone >= ZONE_SOUTHERN_SANDORIA && CharZone <= ZONE_PORT_SANDORIA : false;
+                bool    IsRentedCity   = PChar->getCharVar("[Moghouse]Rent-a-room") == static_cast<int32>(zoneutils::GetZone(CharZone)->GetRegionID());
+                bool    RentExempt     = (CharZone >= ZONE_SOUTHERN_SAN_DORIA_S && CharZone <= ZONE_WINDURST_WATERS_S) ||
+                                          (CharZone >= ZONE_WESTERN_ADOULIN && CharZone <= ZONE_EASTERN_ADOULIN);
+                // clang-format on
+
+                if ((PZoneLine->m_toZoneType == ZONE_TYPE::CITY && PZoneLine->m_toZone == 0 && !RentExempt) &&
+                    (settings::get<bool>("map.RENT_A_ROOM") || settings::get<bool>("map.ERA_RENT_A_ROOM")) &&
+                    (settings::get<bool>("map.RENT_A_ROOM") && settings::get<bool>("map.ERA_RENT_A_ROOM") ? !IsRentedCity : !IsInHomeNation && !IsRentedCity))
+                {
+                    PChar->loc.p.rotation += 128;
+                    PChar->pushPacket(new CMessageSystemPacket(0, 0, 2));
+                    PChar->pushPacket(new CCSPositionPacket(PChar));
+                    PChar->status = STATUS_TYPE::NORMAL;
+                    return;
+                }
+                else if (settings::get<bool>("main.ERA_CHOCOBO_ZONE_DISMOUNT") && PChar->isMounted() && PDestination && !PDestination->CanUseMisc(MISC_MOUNT))
+                {
+                    PChar->loc.p.rotation += 128;
+
+                    PChar->pushPacket(new CMessageSystemPacket(0, 0, 2));
+                    PChar->pushPacket(new CCSPositionPacket(PChar));
+
+                    PChar->status = STATUS_TYPE::NORMAL;
+                    return;
+                }
+                else if (PDestination && PDestination->GetIP() == 0)
                 {
                     ShowDebug("SmallPacket0x5E: Zone %u closed to chars", PZoneLine->m_toZone);
 
                     PChar->loc.p.rotation += 128;
 
-                    PChar->pushPacket(new CMessageSystemPacket(0, 0, 2));
+                    PChar->pushPacket(new CMessageSystemPacket(0, 0, 2)); // You could not enter the next area.
                     PChar->pushPacket(new CCSPositionPacket(PChar));
 
                     PChar->status = STATUS_TYPE::NORMAL;
@@ -3934,7 +4042,23 @@ void SmallPacket0x05E(map_session_data_t* const PSession, CCharEntity* const PCh
         return;
     }
 
-    uint64 ipp = zoneutils::GetZoneIPP(PChar->loc.destination == 0 ? PChar->getZone() : PChar->loc.destination);
+    auto   destination = PChar->loc.destination == 0 ? PChar->getZone() : PChar->loc.destination;
+    uint64 ipp         = zoneutils::GetZoneIPP(destination);
+    if (ipp == 0)
+    {
+        ShowWarning(fmt::format("Char {} requested zone ({}) returned IPP of 0", PChar->name, destination));
+        PChar->loc.destination = startingZone;
+        PChar->loc.p           = startingPos;
+
+        PChar->loc.p.rotation += 128;
+
+        PChar->pushPacket(new CMessageSystemPacket(0, 0, 2)); // You could not enter the next area.
+        PChar->pushPacket(new CCSPositionPacket(PChar));
+
+        PChar->status = STATUS_TYPE::NORMAL;
+
+        return;
+    }
 
     charutils::SendToZone(PChar, 2, ipp);
 }
@@ -5924,7 +6048,15 @@ void SmallPacket0x0DC(map_session_data_t* const PSession, CCharEntity* const PCh
     {
         case NFLAG_INVITE:
             // /invite [on|off]
-            PChar->nameflags.flags ^= FLAG_INVITE;
+            if (PChar->PParty)
+            {
+                // Can't put flag up while in a party
+                PChar->nameflags.flags &= ~FLAG_INVITE;
+            }
+            else
+            {
+                PChar->nameflags.flags ^= FLAG_INVITE;
+            }
             break;
         case NFLAG_AWAY:
             // /away | /online
@@ -5938,17 +6070,27 @@ void SmallPacket0x0DC(map_session_data_t* const PSession, CCharEntity* const PCh
             }
             break;
         case NFLAG_ANON:
+        {
             // /anon [on|off]
-            PChar->nameflags.flags ^= FLAG_ANON;
-            if (PChar->nameflags.flags & FLAG_ANON)
+            auto flags = PChar->nameflags.flags;
+            auto param = data.ref<uint8>(0x10);
+            if (param == 1)
             {
-                PChar->pushPacket(new CMessageSystemPacket(0, 0, 175));
+                PChar->nameflags.flags |= FLAG_ANON;
+                PChar->menuConfigFlags.flags |= NFLAG_ANON;
             }
-            else
+            else if (param == 2)
             {
-                PChar->pushPacket(new CMessageSystemPacket(0, 0, 176));
+                PChar->nameflags.flags &= ~FLAG_ANON;
+                PChar->menuConfigFlags.flags &= ~NFLAG_ANON;
+            }
+
+            if (flags != PChar->nameflags.flags)
+            {
+                PChar->pushPacket(new CMessageSystemPacket(0, 0, param == 1 ? 175 : 176));
             }
             break;
+        }
         case NFLAG_AUTOTARGET:
             // /autotarget [on|off]
             if (data.ref<uint8>(0x10) == 1)
@@ -6363,11 +6505,16 @@ void SmallPacket0x0E7(map_session_data_t* const PSession, CCharEntity* const PCh
     {
         uint8 ExitType = (data.ref<uint8>(0x06) == 1 ? 7 : 35);
 
-        if (PChar->PPet == nullptr || (PChar->PPet->m_EcoSystem != ECOSYSTEM::AVATAR && PChar->PPet->m_EcoSystem != ECOSYSTEM::ELEMENTAL))
+        if (PChar->PPet && (PChar->PPet->m_EcoSystem == ECOSYSTEM::AVATAR || PChar->PPet->m_EcoSystem == ECOSYSTEM::ELEMENTAL))
+        {
+            PChar->pushPacket(new CMessageBasicPacket(PChar, PChar, 0, 0, 345));
+            return;
+        }
+        else
         {
             PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_HEALING, 0, 0, settings::get<uint8>("map.HEALING_TICK_DELAY"), 0));
+            PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_LEAVEGAME, 0, ExitType, 5, 0));
         }
-        PChar->StatusEffectContainer->AddStatusEffect(new CStatusEffect(EFFECT_LEAVEGAME, 0, ExitType, 5, 0));
     }
     else if (PChar->animation == ANIMATION_HEALING)
     {
@@ -7136,6 +7283,8 @@ void SmallPacket0x100(map_session_data_t* const PSession, CCharEntity* const PCh
         charutils::BuildingCharAbilityTable(PChar);
         charutils::BuildingCharWeaponSkills(PChar);
         charutils::LoadJobChangeGear(PChar);
+        charutils::SaveCharEquip(PChar);
+        charutils::SaveCharLook(PChar);
 
         PChar->StatusEffectContainer->DelStatusEffectsByFlag(EFFECTFLAG_DISPELABLE | EFFECTFLAG_ROLL | EFFECTFLAG_ON_JOBCHANGE);
 
@@ -7150,6 +7299,7 @@ void SmallPacket0x100(map_session_data_t* const PSession, CCharEntity* const PCh
 
         charutils::SaveCharStats(PChar);
 
+        PChar->setVolatileCharVar("[Moghouse]Exit_Job_Change", 1);
         PChar->pushPacket(new CCharJobsPacket(PChar));
         PChar->pushPacket(new CCharUpdatePacket(PChar));
         PChar->pushPacket(new CCharStatsPacket(PChar));

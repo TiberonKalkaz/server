@@ -3,6 +3,7 @@
 -----------------------------------
 local ID = require('scripts/zones/Lower_Jeuno/IDs')
 local lowerJeunoGlobal = require('scripts/zones/Lower_Jeuno/globals')
+require('scripts/globals/events/starlight_celebrations')
 require('scripts/globals/conquest')
 require('scripts/globals/keyitems')
 require('scripts/globals/missions')
@@ -29,8 +30,8 @@ zoneObject.onZoneIn = function(player, prevZone)
         (month == 12 and day >= 5) or
         (month == 1 and day <= 5)
     then
-        player:ChangeMusic(0, 239)
-        player:ChangeMusic(1, 239)
+        player:changeMusic(0, 239)
+        player:changeMusic(1, 239)
         -- No need for an 'else' to change it back outside these dates as a re-zone will handle that.
     end
 
@@ -42,6 +43,8 @@ zoneObject.onZoneIn = function(player, prevZone)
     then
         player:setPos(41.2, -5, 84, 85)
     end
+
+    xi.moghouse.exitJobChange(player, prevZone)
 
     return cs
 end
@@ -89,13 +92,14 @@ zoneObject.onGameHour = function(zone)
     elseif vanadielHour == 1 then
         if playerOnQuestId == 0 then
             local npc = GetNPCByID(ID.npc.VHANA_EHGAKLYWHA)
+            local startPath = lowerJeunoGlobal.lampPath[1]
             npc:clearPath()
             npc:setStatus(0)
+            npc:setLocalVar("path", 1)
             npc:initNpcAi()
-            npc:setPos(xi.path.first(lowerJeunoGlobal.lampPath))
-            npc:pathThrough(lowerJeunoGlobal.lampPath, bit.bor(xi.path.flag.PATROL, xi.path.flag.WALLHACK))
+            npc:setPos(xi.path.first(startPath))
+            npc:pathThrough(startPath, bit.bor(xi.path.flag.COORDS, xi.path.flag.WALLHACK))
         end
-
     end
 end
 
@@ -103,6 +107,7 @@ zoneObject.onEventUpdate = function(player, csid, option)
 end
 
 zoneObject.onEventFinish = function(player, csid, option)
+    xi.moghouse.exitJobChangeFinish(player, csid, option)
 end
 
 return zoneObject

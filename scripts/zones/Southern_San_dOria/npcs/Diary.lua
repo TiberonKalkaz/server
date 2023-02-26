@@ -13,10 +13,9 @@ entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
-
     local aSquiresTestII = player:getQuestStatus(xi.quest.log_id.SANDORIA, xi.quest.id.sandoria.A_SQUIRE_S_TEST_II)
     local medicineWoman = player:getQuestStatus(xi.quest.log_id.SANDORIA, xi.quest.id.sandoria.THE_MEDICINE_WOMAN)
-    local toCureaCough = player:getQuestStatus(xi.quest.log_id.SANDORIA, xi.quest.id.sandoria.TO_CURE_A_COUGH)
+    local toCureaCough = player:getCharVar("toCureaCough")
     local diaryPage = player:getCharVar("DiaryPage")
 
     if diaryPage == 0 then
@@ -25,7 +24,7 @@ entity.onTrigger = function(player, npc)
         player:startEvent(640)          -- reads page 2
     elseif diaryPage == 2 then
         if medicineWoman == QUEST_COMPLETED and aSquiresTestII == QUEST_COMPLETED then
-            if toCureaCough == QUEST_ACCEPTED then
+            if toCureaCough == 1 then
                 player:startEvent(641)  -- reads page 3
             else
                 player:startEvent(640)  -- reads page 2
@@ -40,14 +39,12 @@ entity.onTrigger = function(player, npc)
     --elseif diaryPage >= 4 then
     --    player:startEvent(723)        -- read last page
     end
-
 end
 
 entity.onEventUpdate = function(player, csid, option)
 end
 
 entity.onEventFinish = function(player, csid, option)
-
     local diaryPage = player:getCharVar("DiaryPage")
 
     if option >= diaryPage then

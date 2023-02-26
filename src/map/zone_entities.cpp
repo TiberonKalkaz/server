@@ -239,7 +239,7 @@ void CZoneEntities::FindPartyForMob(CBaseEntity* PEntity)
             int16 sublink = PMob->getMobMod(MOBMOD_SUBLINK);
 
             if (PCurrentMob->allegiance == PMob->allegiance &&
-                (forceLink || PCurrentMob->m_Family == PMob->m_Family || (sublink && sublink == PCurrentMob->getMobMod(MOBMOD_SUBLINK))))
+                (forceLink || PCurrentMob->m_SuperFamily == PMob->m_SuperFamily || PCurrentMob->m_Family == PMob->m_Family || (sublink && sublink == PCurrentMob->getMobMod(MOBMOD_SUBLINK))))
             {
                 if (PCurrentMob->PMaster == nullptr || PCurrentMob->PMaster->objtype == TYPE_MOB)
                 {
@@ -458,7 +458,7 @@ void CZoneEntities::DecreaseZoneCounter(CCharEntity* PChar)
     if (PChar->animation == ANIMATION_SYNTH)
     {
         PChar->CraftContainer->setQuantity(0, synthutils::SYNTHESIS_FAIL);
-        synthutils::sendSynthDone(PChar);
+        synthutils::sendSynthDone(PChar, true);
     }
 
     // TODO: могут возникать проблемы с переходом между одной и той же зоной (zone == prevzone)
@@ -1166,11 +1166,12 @@ void CZoneEntities::UpdateEntityPacket(CBaseEntity* PEntity, ENTITYUPDATE type, 
 
     for (EntityList_t::const_iterator it = m_charList.begin(); it != m_charList.end(); ++it)
     {
-        CCharEntity* PCurrentChar = (CCharEntity*)it->second;
-
-        if (alwaysInclude || type == ENTITY_SPAWN || type == ENTITY_DESPAWN || charutils::hasEntitySpawned(PCurrentChar, PEntity))
+        if (CCharEntity* PCurrentChar = dynamic_cast<CCharEntity*>(it->second))
         {
-            PCurrentChar->updateEntityPacket(PEntity, type, updatemask);
+            if (alwaysInclude || type == ENTITY_SPAWN || type == ENTITY_DESPAWN || charutils::hasEntitySpawned(PCurrentChar, PEntity))
+            {
+                PCurrentChar->updateEntityPacket(PEntity, type, updatemask);
+            }
         }
     }
 }

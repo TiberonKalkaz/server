@@ -24,15 +24,13 @@ quest.sections = {}
 
 quest.sections[1] = {}
 quest.sections[1].check = function(player, status, vars)
-    local bedPlacedTime = quest:getVar(player, 'bedPlacedTime')
-
     return status == QUEST_AVAILABLE and
         xi.moghouse.isInMogHouseInHomeNation(player) and
         player:getFameLevel(player:getNation()) >= 3 and
-        not quest:getMustZone(player) and
         quest:getLocalVar(player, 'questSeen') == 0 and
-        bedPlacedTime ~= 0 and
-        os.time() > bedPlacedTime + 60
+        os.time() > quest:getVar(player, 'bedPlacedTime') and
+        quest:getVar(player, 'bedPlacedTime') > 0 and
+        not quest:getMustZone(player)
 end
 
 local questAvailable =
@@ -40,7 +38,10 @@ local questAvailable =
     ['Moogle'] =
     {
         onTrigger = function(player, npc)
-            return quest:progressEvent(30005, 0, 0, 0, 5, 0, xi.items.POWER_BOW, xi.items.BEETLE_RING)
+            return quest:progressEvent(30005, { [3] = 5,
+                                                [5] = xi.items.POWER_BOW,
+                                                [6] = xi.items.BEETLE_RING,
+                                                })
         end,
     },
 
@@ -80,7 +81,9 @@ local questAccepted =
             end
 
             if questProgress == 0 then
-                return quest:progressEvent(30006, 0, 0, 0, 0, 0, xi.items.POWER_BOW, xi.items.BEETLE_RING)
+                return quest:progressEvent(30006, { [5] = xi.items.POWER_BOW,
+                                                    [6] = xi.items.BEETLE_RING,
+                                                    })
             elseif
                 questProgress == 1 and
                 quest:getVar(player, 'Timer') < os.time()
@@ -99,7 +102,7 @@ local questAccepted =
         [30007] = function(player, csid, option, npc)
             player:confirmTrade()
             quest:setVar(player, 'Prog', 1)
-            quest:setVar(player, 'Timer', os.time() + 60)
+            quest:setVar(player, 'Timer', getMidnight())
         end,
 
         [30008] = function(player, csid, option, npc)

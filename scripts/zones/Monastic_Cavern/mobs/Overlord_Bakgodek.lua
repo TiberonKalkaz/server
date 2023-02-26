@@ -36,10 +36,10 @@ entity.onMobDespawn = function(mob)
     local nqId = mob:getID() - 1
     SetServerVariable("[POP]Overlord_Bakgodek", os.time() + 259200) -- 3 days
     SetServerVariable("[PH]Overlord_Bakgodek", 0)
+    SetServerVariable("[POPNUM]Overlord_Bakgodek", 0)
     DisallowRespawn(mob:getID(), true)
     DisallowRespawn(nqId, false)
-    UpdateNMSpawnPoint(nqId)
-    GetMobByID(nqId):setRespawnTime(math.random(75600, 86400))
+    xi.mob.nmTODPersist(GetMobByID(nqId), math.random(75600, 86400))
 end
 
 return entity

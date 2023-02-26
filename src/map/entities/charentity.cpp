@@ -161,9 +161,9 @@ CCharEntity::CCharEntity()
         m_missionLog[i].current = 0xFFFF;
     }
 
-    m_missionLog[4].current = 0;   // MISSION_TOAU
-    m_missionLog[5].current = 0;   // MISSION_WOTG
-    m_missionLog[6].current = 101; // MISSION_COP
+    m_missionLog[4].current = 0; // MISSION_TOAU
+    m_missionLog[5].current = 0; // MISSION_WOTG
+    m_missionLog[6].current = 0; // MISSION_COP
     for (auto& i : m_missionLog)
     {
         i.statusUpper = 0;
@@ -260,6 +260,8 @@ CCharEntity::CCharEntity()
     m_mentorUnlocked   = false;
     m_jobMasterDisplay = false;
     m_EffectsChanged   = false;
+
+    m_nextDataSave = std::chrono::system_clock::now() + std::chrono::seconds(settings::get<uint16>("main.PLAYER_DATA_SAVE") > 0 ? settings::get<uint16>("main.PLAYER_DATA_SAVE") : 120);
 }
 
 CCharEntity::~CCharEntity()
@@ -674,6 +676,23 @@ CItemEquipment* CCharEntity::getEquip(SLOTTYPE slot)
     return item;
 }
 
+std::vector<CItemEquipment*> CCharEntity::getVisibleEquip()
+{
+    std::vector<CItemEquipment*> visibleItems;
+    CItemEquipment*              item = nullptr;
+
+    for (SLOTTYPE slot : { SLOT_MAIN, SLOT_SUB, SLOT_RANGED, SLOT_AMMO, SLOT_BODY, SLOT_HANDS, SLOT_LEGS, SLOT_FEET })
+    {
+        item = getEquip(slot);
+        if (item != nullptr)
+        {
+            visibleItems.push_back(item);
+        }
+    }
+
+    return visibleItems;
+}
+
 void CCharEntity::ReloadPartyInc()
 {
     m_reloadParty = true;
@@ -775,7 +794,7 @@ bool CCharEntity::PersistData()
 
     if (dataToPersist & CHAR_PERSIST::EFFECTS)
     {
-        StatusEffectContainer->SaveStatusEffects(true);
+        StatusEffectContainer->SaveStatusEffects(true, false);
     }
 
     /* TODO
@@ -1363,6 +1382,7 @@ void CCharEntity::OnAbility(CAbilityState& state, action_t& action)
 
         // get any available merit recast reduction
         uint8 meritRecastReduction = 0;
+        uint8 chargeTime           = 0;
 
         if (PAbility->getMeritModID() > 0 && !(PAbility->getAddType() & ADDTYPE_MERIT))
         {
@@ -1372,7 +1392,14 @@ void CCharEntity::OnAbility(CAbilityState& state, action_t& action)
         auto* charge = ability::GetCharge(this, PAbility->getRecastId());
         if (charge && PAbility->getID() != ABILITY_SIC)
         {
-            action.recast = charge->chargeTime * PAbility->getRecastTime() - meritRecastReduction;
+            // Ready is 2sec/merit (Sic is 4sec/merit so divide by 2)
+            if (PAbility->getMeritModID() == 902)
+            {
+                meritRecastReduction /= 2;
+            }
+
+            chargeTime    = charge->chargeTime - meritRecastReduction;
+            action.recast = chargeTime * PAbility->getRecastTime();
         }
         else
         {
@@ -1550,6 +1577,7 @@ void CCharEntity::OnAbility(CAbilityState& state, action_t& action)
                 }
                 PPet->PAI->MobSkill(PPetTarget, PAbility->getMobSkillID());
             }
+            state.ApplyEnmity();
         }
         // #TODO: make this generic enough to not require an if
         else if ((PAbility->isAoE() || (PAbility->getID() == ABILITY_LIEMENT && getMod(Mod::LIEMENT_EXTENDS_TO_AREA) > 0)) && this->PParty != nullptr)
@@ -1639,7 +1667,7 @@ void CCharEntity::OnAbility(CAbilityState& state, action_t& action)
 
         if (charge)
         {
-            PRecastContainer->Add(RECAST_ABILITY, PAbility->getRecastId(), action.recast, charge->chargeTime, charge->maxCharges);
+            PRecastContainer->Add(RECAST_ABILITY, PAbility->getRecastId(), action.recast, chargeTime, charge->maxCharges);
         }
         else
         {
@@ -2139,12 +2167,7 @@ void CCharEntity::OnItemFinish(CItemState& state, action_t& action)
     bool  isParalyzed      = battleutils::IsParalyzed(this);
     bool  itemLoss         = lua["xi"]["settings"]["map"]["ITEM_PARALYSIS_LOSS"].get<bool>();
     bool  scrollProtection = lua["xi"]["settings"]["map"]["ITEM_PARALYSIS_SCROLL_PROTECTION"].get<bool>();
-    // clang-format off
-    bool isScroll = (PItem->getID() >= 4606 && PItem->getID() <= 4638) || PItem->getID() == 4641 ||
-                    (PItem->getID() >= 4646 && PItem->getID() <= 4647) || (PItem->getID() >= 4651 && PItem->getID() <= 4851) ||
-                    (PItem->getID() >= 4853 && PItem->getID() <= 4863) || (PItem->getID() >= 4866 && PItem->getID() <= 4958) ||
-                    (PItem->getID() >= 4961 && PItem->getID() <= 5106) || (PItem->getID() >= 6569 && PItem->getID() <= 6571);
-    // clang-format on
+    bool  isScroll         = PItem->isScroll();
 
     // TODO: I'm sure this is supposed to be in the action packet... (animation, message)
     if (PItem->getAoE())
@@ -2839,6 +2862,15 @@ void CCharEntity::endCurrentEvent()
 
 void CCharEntity::queueEvent(EventInfo* eventToQueue)
 {
+    for (auto& eventElement : eventQueue)
+    {
+        if (eventElement->eventId == eventToQueue->eventId)
+        {
+            ShowError("CCharEntity::queueEvent: Character attempted to start multiple of the same event.");
+            return;
+        }
+    }
+
     eventQueue.push_back(eventToQueue);
     tryStartNextEvent();
 }

@@ -23,7 +23,7 @@ local function doTerrorRun(mob)
                 mob:setAutoAttackEnabled(false)
                 mob:setMobAbilityEnabled(false)
                 mob:setMagicCastingEnabled(false)
-                local pos = mob:getPos()
+                local pos = GetPlayerByID(mob:getLocalVar("EmptyTerrorUser")):getPos()
                 mob:pathTo(pos.x + math.random(-5, 5), pos.y, pos.z + math.random(-5, 5), 9) -- Pathflags = 9 (xi.pathflag.run, xi.pathflag.scripted)
             end
         end
@@ -31,6 +31,13 @@ local function doTerrorRun(mob)
 end
 
 g_mixins.families.empty_terroanima = function(emptyMob)
+    emptyMob:addListener("SPAWN", "EMPTY_TERROANIMA_SPAWN", function(mob)
+        -- Prevent mob from entering a state where they can't attack
+        -- if killed during the time an anima is applied to them.
+        mob:setAutoAttackEnabled(true)
+        mob:setMobAbilityEnabled(true)
+        mob:setMagicCastingEnabled(true)
+    end)
 
     emptyMob:addListener("ROAM_TICK", "EMPTY_TERROANIMA_RTICK", function(mob)
         doTerrorRun(mob)
@@ -43,7 +50,6 @@ g_mixins.families.empty_terroanima = function(emptyMob)
     emptyMob:addListener("DEATH", "EMPTY_TERROANIMA_DEATH", function(mob)
         mob:setRoamFlags(0)
     end)
-
 end
 
 return g_mixins.families.empty_terroanima

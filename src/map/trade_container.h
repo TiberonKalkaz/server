@@ -36,8 +36,10 @@
 
 enum CRAFT_TYPE
 {
-    CRAFT_SYNTHESIS   = 0,
-    CRAFT_DESYNTHESIS = 1,
+    CRAFT_SYNTHESIS                = 0,
+    CRAFT_DESYNTHESIS              = 1,
+    CRAFT_SYNTHESIS_NO_MATS_LOSS   = 2,
+    CRAFT_SYNTHESIS_FULL_MATS_LOSS = 3,
 };
 
 class CItem;
@@ -58,7 +60,7 @@ public:
     uint16 getItemID(uint8 slotID);
     uint8  getInvSlotID(uint8 slotID);
     uint32 getQuantity(uint8 slotID); // Number of items in the slot
-    uint8  getConfirmedStatus(uint8 slotID);
+    uint32 getConfirmedStatus(uint8 slotID);
     uint32 getItemQuantity(uint16 itemID); // Number of items of one type
     uint8  getSize();
     uint8  getExSize() const;

@@ -557,7 +557,7 @@ public:
     uint16 CHR();
     uint16 DEF();
     uint16 ATT(uint16 slot = SLOT_MAIN, bool ignoreWeaponMods = false);
-    uint16 ACC(uint8 attackNumber, uint8 offsetAccuracy);
+    uint16 ACC(uint8 attackNumber, int8 offsetAccuracy);
     uint16 EVA();
     uint16 RATT(uint8 skill, float distance, uint16 bonusSkill = 0);
     uint16 GetBaseRATT(uint8 skill, uint16 bonusSkill = 0);
@@ -592,7 +592,8 @@ public:
     void  SetDeathType(uint8 type);
     uint8 GetDeathType();
 
-    uint8 GetHPP() const;   // количество hp в процентах
+    uint8 GetHPP() const; // количество hp в процентах
+    uint8 GetHPPNoPercentOrConvert();
     int32 GetMaxHP() const; // максимальное количество hp
     uint8 GetMPP() const;   // количество mp в процентах
     int32 GetMaxMP() const; // максимальное количество mp

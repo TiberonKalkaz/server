@@ -12,6 +12,7 @@ zones[xi.zone.WINDURST_WOODS] =
     {
         CONQUEST_BASE                 = 0,     -- Tallying conquest results...
         ITEM_CANNOT_BE_OBTAINED       = 6543,  -- You cannot obtain the <item>. Come back after sorting your inventory.
+        DEFAULT_CANNOT_BE_OBTAINED    = 6545,  -- You cannot obtain the item. Come back after sorting your inventory.
         ITEM_OBTAINED                 = 6549,  -- Obtained: <item>.
         GIL_OBTAINED                  = 6550,  -- Obtained <number> gil.
         KEYITEM_OBTAINED              = 6552,  -- Obtained key item: <keyitem>.
@@ -27,6 +28,7 @@ zones[xi.zone.WINDURST_WOODS] =
         HOMEPOINT_SET                 = 6649,  -- Home point set!
         YOU_ACCEPT_THE_MISSION        = 6742,  -- You have accepted the mission.
         ITEM_DELIVERY_DIALOG          = 6838,  -- We can deliver goods to your residence or to the residences of your friends.
+        MAP_MARKER_TUTORIAL           = 6929,  -- The map will open when you select Map from the main menu. Choose Markers and scroll to the right to check the location.
         MOG_LOCKER_OFFSET             = 7014,  -- Your Mog Locker lease is valid until <timestamp>, kupo.
         FISHING_MESSAGE_OFFSET        = 7112,  -- You can't fish here.
         IMAGE_SUPPORT                 = 7216,  -- Your [fishing/woodworking/smithing/goldsmithing/clothcraft/leatherworking/bonecraft/alchemy/cooking] skills went up [a little/ever so slightly/ever so slightly].
@@ -97,6 +99,24 @@ zones[xi.zone.WINDURST_WOODS] =
             [17764462] = 58, -- Taraihi-Perunhi
             [17764464] = 56, -- Nhobi Zalkia
             [17764465] = 57, -- Millerovieunet
+        },
+        STARLIGHT_DECORATIONS =
+        {
+            [17764748] = 17764748,  -- Starlight Celebration Center Tree
+            [17764749] = 17764749,  -- Starlight Celebration Tree
+            [17764750] = 17764750,  -- Starlight Celebration Tree
+            [17764751] = 17764751,  -- Starlight Celebration Tree
+            [17764752] = 17764752,  -- Starlight Celebration Tree
+            [17764753] = 17764753,  -- Starlight Celebration Tree
+            [17764754] = 17764754,  -- Starlight Celebration Tree
+            [17764755] = 17764755,  -- Starlight Celebration Tree
+            [17764756] = 17764756,  -- Starlight Celebration Tree
+            [17764757] = 17764757,  -- Starlight Celebration Tree
+            [17764758] = 17764758,  -- Starlight Celebration Tree
+            [17764759] = 17764759,  -- Starlight Celebration Tree
+            [17764760] = 17764760,  -- Starlight Celebration Tree
+            [17764761] = 17764761,  -- Token Moogle
+            -- [17764763] = 17764763,  -- Rokor-Makor
         },
     },
 }

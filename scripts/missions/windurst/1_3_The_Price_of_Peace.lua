@@ -68,7 +68,7 @@ mission.sections =
         check = function(player, currentMission)
             return currentMission == xi.mission.id.nation.NONE and
                 player:getNation() == mission.areaId and
-                not player:hasCompletedMission(mission.areaId, mission.missionId)
+                player:hasCompletedMission(mission.areaId, mission.missionId - 1)
         end,
 
         [xi.zone.PORT_WINDURST] =

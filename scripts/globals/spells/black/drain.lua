@@ -42,10 +42,10 @@ spellObject.onSpellCast = function(caster, target, spell)
         dmg = 0
     end
 
-    if target:isUndead() then
-        dmg = 0
+    -- Upyri: ID 4105
+    if target:isMob() and (target:isUndead() or target:getPool() == 4105) then
         spell:setMsg(xi.msg.basic.MAGIC_NO_EFFECT) -- No effect
-        return dmg
+        return 0
     end
 
     -- Don't drain more HP than the target has left
@@ -60,7 +60,6 @@ spellObject.onSpellCast = function(caster, target, spell)
     caster:addHP(dmg)
 
     return math.min(dmg, hpDiff)
-
 end
 
 return spellObject

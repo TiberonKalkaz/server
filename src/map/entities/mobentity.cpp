@@ -1,4 +1,4 @@
-/*
+﻿/*
 ===========================================================================
 
   Copyright (c) 2010-2015 Darkstar Dev Teams
@@ -573,14 +573,15 @@ void CMobEntity::Spawn()
 {
     TracyZoneScoped;
     CBattleEntity::Spawn();
-    m_giveExp      = true;
-    m_ExpPenalty   = 0;
-    m_HiPCLvl      = 0;
-    m_HiPartySize  = 0;
-    m_THLvl        = 0;
-    m_ItemStolen   = false;
-    m_DropItemTime = 1000;
-    animationsub   = (uint8)getMobMod(MOBMOD_SPAWN_ANIMATIONSUB);
+    m_giveExp           = true;
+    m_ExpPenalty        = 0;
+    m_HiPCLvl           = 0;
+    m_HiPartySize       = 0;
+    m_THLvl             = 0;
+    m_ItemStolen        = false;
+    m_DropItemTime      = 1000;
+    m_pathFindDisengage = 0;
+    animationsub        = (uint8)getMobMod(MOBMOD_SPAWN_ANIMATIONSUB);
     SetCallForHelpFlag(false);
 
     PEnmityContainer->Clear();
@@ -785,6 +786,7 @@ void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
 
     PSkill->setTotalTargets(targets);
     PSkill->setTP(state.GetSpentTP());
+    PSkill->setHP(health.hp);
     PSkill->setHPP(GetHPP());
 
     uint16 msg            = 0;
@@ -829,8 +831,8 @@ void CMobEntity::OnMobSkillFinished(CMobSkillState& state, action_t& action)
         else
         {
             damage = luautils::OnMobWeaponSkill(PTargetFound, this, PSkill, &action);
-            this->PAI->EventHandler.triggerListener("WEAPONSKILL_USE", CLuaBaseEntity(this), CLuaBaseEntity(PTargetFound), PSkill->getID(), state.GetSpentTP(), &action);
-            PTarget->PAI->EventHandler.triggerListener("WEAPONSKILL_TAKE", CLuaBaseEntity(PTargetFound), CLuaBaseEntity(this), PSkill->getID(), state.GetSpentTP(), &action);
+            this->PAI->EventHandler.triggerListener("WEAPONSKILL_USE", CLuaBaseEntity(this), CLuaBaseEntity(PTargetFound), PSkill->getID(), state.GetSpentTP(), CLuaAction(&action));
+            PTarget->PAI->EventHandler.triggerListener("WEAPONSKILL_TAKE", CLuaBaseEntity(PTargetFound), CLuaBaseEntity(this), PSkill->getID(), state.GetSpentTP(), CLuaAction(&action));
         }
 
         if (msg == 0)
@@ -1114,9 +1116,9 @@ float CMobEntity::ApplyTH(int16 m_THLvl, int16 rate)
             multi = 1.20f + (0.30f * (m_THLvl - 1));
             return multi;
         }
-        else if (m_THLvl < 4)
+        else if (m_THLvl < 5)
         {
-            multi = 1.50f + (0.15f * (m_THLvl - 1));
+            multi = 1.50f + (0.15f * (m_THLvl - 2));
             return multi;
         }
         else if (m_THLvl < 8)
@@ -1154,7 +1156,7 @@ float CMobEntity::ApplyTH(int16 m_THLvl, int16 rate)
         }
         else
         {
-            multi = 2.66f + (0.16f * (m_THLvl - 2));
+            multi = 2.66f + (0.17f * (m_THLvl - 2));
             return multi;
         }
     }
@@ -1172,7 +1174,7 @@ float CMobEntity::ApplyTH(int16 m_THLvl, int16 rate)
         }
         else if (m_THLvl < 5)
         {
-            multi = 2.34f + (0.16f * (m_THLvl - 2));
+            multi = 2.66f + (0.16f * (m_THLvl - 2));
             return multi;
         }
         else if (m_THLvl < 6)
@@ -1295,7 +1297,7 @@ void CMobEntity::DropItems(CCharEntity* PChar)
             {
                 // Determine if this group should drop an item and determine bonus
                 float bonus = ApplyTH(m_THLvl, group.GroupRate);
-                if (group.GroupRate > 0 && xirand::GetRandomNumber(1000) < group.GroupRate * settings::get<float>("map.DROP_RATE_MULTIPLIER") * bonus)
+                if (group.GroupRate > 0 && xirand::GetRandomNumber(1000) < std::round(group.GroupRate * settings::get<float>("map.DROP_RATE_MULTIPLIER") * bonus))
                 {
                     // Each item in the group is given its own weight range which is the previous value to the previous value + item.DropRate
                     // Such as 2 items with drop rates of 200 and 800 would be 0-199 and 200-999 respectively
@@ -1323,7 +1325,7 @@ void CMobEntity::DropItems(CCharEntity* PChar)
             for (int16 roll = 0; roll < maxRolls; ++roll)
             {
                 float bonus = ApplyTH(m_THLvl, item.DropRate);
-                if (item.DropRate > 0 && xirand::GetRandomNumber(1000) < item.DropRate * settings::get<float>("map.DROP_RATE_MULTIPLIER") * bonus)
+                if (item.DropRate > 0 && xirand::GetRandomNumber(1000) < std::round(item.DropRate * settings::get<float>("map.DROP_RATE_MULTIPLIER") * bonus))
                 {
                     if (AddItemToPool(item.ItemID, ++dropCount))
                     {
@@ -1629,12 +1631,17 @@ void CMobEntity::DropItems(CCharEntity* PChar)
 
         for (uint8 i = 0; i < crystalRolls; i++)
         {
-            if (xirand::GetRandomNumber(100) < 20 && AddItemToPool(4095 + m_Element, ++dropCount))
+            if (xirand::GetRandomNumber(100) < 50 && AddItemToPool(4095 + m_Element, ++dropCount))
             {
                 return;
             }
         }
     }
+}
+
+bool CMobEntity::CanMove()
+{
+    return !StatusEffectContainer->IsAsleep() && !StatusEffectContainer->HasStatusEffect({EFFECT_BIND, EFFECT_PETRIFICATION, EFFECT_TERROR, EFFECT_STUN});
 }
 
 bool CMobEntity::CanAttack(CBattleEntity* PTarget, std::unique_ptr<CBasicPacket>& errMsg)
@@ -1653,7 +1660,20 @@ bool CMobEntity::CanAttack(CBattleEntity* PTarget, std::unique_ptr<CBasicPacket>
                 attack_range = (uint8)skill->getDistance();
             }
         }
-        return !((distance(loc.p, PTarget->loc.p) - PTarget->m_ModelRadius) > attack_range || !PAI->GetController()->IsAutoAttackEnabled());
+
+        if ((distance(loc.p, PTarget->loc.p) - PTarget->m_ModelRadius) > attack_range)
+        {
+            m_pathFindDisengage += 1;
+            return false;
+        }
+        else if (!PAI->GetController()->IsAutoAttackEnabled())
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
     else
     {

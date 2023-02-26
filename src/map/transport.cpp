@@ -151,6 +151,14 @@ void CTransportHandler::InitializeTransport()
 
             zoneTown.npcDoor  = zoneutils::GetEntity(sql->GetUIntData(2), TYPE_NPC);
             zoneTown.ship.npc = zoneutils::GetEntity(sql->GetUIntData(1), TYPE_SHIP);
+
+            // Moved here, you can't access the npcDoor or .ship.npc if they're nullptr, so the following lines cause a read access error
+            if (zoneTown.npcDoor == nullptr || zoneTown.ship.npc == nullptr)
+            {
+                ShowError("Transport <%u>: transport or door not found", (uint8)sql->GetIntData(0));
+                continue;
+            }
+
             zoneTown.ship.npc->name.resize(8);
             zoneTown.ship.npc->manualConfig = true;
 
@@ -170,11 +178,6 @@ void CTransportHandler::InitializeTransport()
             zoneTown.ship.setVisible(false);
             zoneTown.closeDoor(false);
 
-            if (zoneTown.npcDoor == nullptr || zoneTown.ship.npc == nullptr)
-            {
-                ShowError("Transport <%u>: transport or door not found", (uint8)sql->GetIntData(0));
-                continue;
-            }
             if (zoneTown.ship.timeArriveDock < 10)
             {
                 ShowError("Transport <%u>: time_anim_arrive must be > 10", (uint8)sql->GetIntData(0));
@@ -439,6 +442,31 @@ void CTransportHandler::TransportTimer()
                         case 12:
                             zoneIterator->voyageZone->SetZoneAnimation(8);
                             zoneIterator->voyageZone->SetZoneAnimLength(590);
+                            break;
+                    }
+                }
+                else if (zoneId == ZONE_PHANAUET_CHANNEL)
+                {
+                    uint32 hour = CVanaTime::getInstance()->getHour();
+                    switch (hour)
+                    {
+                        case 5:
+                            [[fallthrough]];
+                        case 20:
+                            zoneIterator->voyageZone->SetZoneAnimation(0);
+                            zoneIterator->voyageZone->SetZoneAnimLength(540);
+                            break;
+                        case 10:
+                            zoneIterator->voyageZone->SetZoneAnimation(16);
+                            zoneIterator->voyageZone->SetZoneAnimLength(840);
+                            break;
+                        case 17:
+                            zoneIterator->voyageZone->SetZoneAnimation(24);
+                            zoneIterator->voyageZone->SetZoneAnimLength(270);
+                            break;
+                        case 0:
+                            zoneIterator->voyageZone->SetZoneAnimation(8);
+                            zoneIterator->voyageZone->SetZoneAnimLength(540);
                             break;
                     }
                 }

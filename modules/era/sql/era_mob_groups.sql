@@ -77,6 +77,13 @@ UPDATE mob_groups set minLevel = 77, maxLevel = 79 WHERE name = "Hobgoblin_Physi
 UPDATE mob_groups set minLevel = 77, maxLevel = 79 WHERE name = "Hobgoblin_Alastor" and zoneid = 4;
 UPDATE mob_groups set minLevel = 80, maxLevel = 80 WHERE name = "Hobgoblin_Angler" and zoneid = 4;
 
+-- Locus Mobs
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Bight_Rarab' AND groupid='53' AND zoneid='4';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Camelopard' AND groupid='54' AND zoneid='4';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Hypnos_Eft' AND groupid='55' AND zoneid='4';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Ghost_Crab' AND groupid='56' AND zoneid='4';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Fiddler_Crab' AND groupid='57' AND zoneid='4';
+
 -- ------------------------------------------------------------
 -- Uleguerand_Range (Zone 5)
 -- ------------------------------------------------------------
@@ -310,7 +317,7 @@ INSERT INTO `mob_groups` (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, 
 (92,1390,24,'Fomor_Samurai',330,1,877,0,0,52,54,0),     -- These are in prep for complete zone revamps
     -- 42-44
 (93,1397,24,'Fomor_Thief',330,1,885,0,0,42,44,0),       -- These are in prep for complete zone revamps
-(94,1388,24,'Fomor_Ranger',330,1,872,0,0,42,44,0),      -- These are in prep for complete zone revamps
+(94,1388,24,'Fomor_Ranger',330,1,0,0,0,42,44,0),        -- These are in prep for complete zone revamps
 (95,1398,24,'Fomor_Warrior',330,1,888,0,0,42,44,0),     -- These are in prep for complete zone revamps
 (96,1391,24,'Fomor_Summoner',330,1,880,0,0,42,44,0),    -- These are in prep for complete zone revamps
 (97,1395,24,'Fomors_Elemental',0,128,0,0,0,34,36,0),    -- These are in prep for complete zone revamps
@@ -694,6 +701,8 @@ UPDATE mob_groups SET minLevel = 20, maxLevel = 10 WHERE name = "Snipper"       
 UPDATE mob_groups SET minLevel = 20, maxLevel = 23 WHERE name = "Snipper_fished"  and zoneid = 118;
 UPDATE mob_groups SET minLevel = 24, maxLevel = 26 WHERE name = "Clipper_fished"  and zoneid = 118;
 UPDATE mob_groups SET minLevel = 24, maxLevel = 26 WHERE name = "Shoal_Pugil_fished"  and zoneid = 118;
+UPDATE mob_groups SET minLevel = 20, maxLevel = 23 WHERE name = "Zu"  and zoneid = 118;
+UPDATE mob_groups SET minLevel = 20, maxLevel = 23 WHERE name = "Bull_Dhalmel"  and zoneid = 118;
 
 -- ------------------------------------------------------------
 -- Meriphataud_Mountains (Zone 119)
@@ -984,6 +993,7 @@ INSERT INTO `mob_groups` (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, 
 UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Lacerator' AND groupid='18' AND zoneid='173';
 UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Spool_Leech' AND groupid='19' AND zoneid='173';
 UPDATE mob_groups SET content_tag='WOTG' WHERE name='Thoon' AND groupid='27' AND zoneid='173';
+UPDATE mob_groups SET dropid = 567 WHERE name='Jelly' AND zoneid = 173;
 
 UPDATE mob_groups SET minLevel = 30, maxLevel = 33 WHERE name = "Greater_Pugil"  and zoneid = 173;
 INSERT INTO `mob_groups` (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES (40,3500,173,'Scimitar_Scorpion',480,0,6040,0,0,34,37,0); -- These are in prep for complete zone revamps
@@ -1013,20 +1023,34 @@ UPDATE mob_groups SET content_tag='WOTG' WHERE name='Tyrant' AND groupid='14' AN
 -- King_Ranperres_Tomb (Zone 190)
 -- ------------------------------------------------------------
 
-UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Tomb_Worm' AND groupid='26' AND zoneid='190';
 UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Ogre_Bat' AND groupid='27' AND zoneid='190';
-UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Cutlass_Scorpion' AND groupid='28' AND zoneid='190';
 UPDATE mob_groups SET content_tag='ABYSSEA' WHERE name='Bonnet_Beetle' AND groupid='36' AND zoneid='190';
 UPDATE mob_groups SET content_tag='WOTG' WHERE name='Gwyllgi' AND groupid='17' AND zoneid='190';
 UPDATE mob_groups SET content_tag='WOTG' WHERE name='Ankou' AND groupid='21' AND zoneid='190';
 UPDATE mob_groups SET content_tag='WOTG' WHERE name='Barbastelle' AND groupid='22' AND zoneid='190';
 
-UPDATE mob_groups SET minLevel = 80, maxLevel = 80 WHERE name = "Lemures"  and zoneid = 190;
+UPDATE mob_groups SET spawntype = 0 WHERE name = "Nachzehrer_war"  and zoneid = 190;
+UPDATE mob_groups SET spawntype = 0 WHERE name = "Nachzehrer_blm"  and zoneid = 190;
+
 INSERT INTO `mob_groups` (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, `spawntype`, `dropid`, `HP`, `MP`, `minLevel`, `maxLevel`, `allegiance`) VALUES
-(50,3946,190,'Tomb_Worm',660,0,429,0,0,60,62,0),        -- These are in prep for complete zone revamps
-(51,6456,190,'Dire_Bat',660,0,6041,0, 0,62,64,0),       -- These are in prep for complete zone revamps
-(52,871,190,'Cutlass_Scorpion',660,0,6042,0,0,63,65,0), -- These are in prep for complete zone revamps
-(53,244,190,'Armet_Beetle',660,0,169,0,0,64,66,0);      -- These are in prep for complete zone revamps
+(60,3946,190,'Tomb_Worm',660,0,429,0,0,60,62,0),        -- These are in prep for complete zone revamps
+(61,6456,190,'Dire_Bat',660,0,6041,0, 0,62,64,0),       -- These are in prep for complete zone revamps
+(62,871,190,'Cutlass_Scorpion',660,0,6042,0,0,63,65,0), -- These are in prep for complete zone revamps
+(63,244,190,'Armet_Beetle',660,0,169,0,0,64,66,0),      -- These are in prep for complete zone revamps
+(64,20015,190,'Thousand_Eyes',960,0,2402,0,0,60,62,0),  -- These are in prep for complete zone revamps
+(65,1898,190,'Hati',960,0,1278,0,0,77,79,0),            -- These are in prep for complete zone revamps
+(66,20014,190,'Lemures',960,0,1506,0,0,80,80,0);        -- These are in prep for complete zone revamps
+
+-- Locus Mobs
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Tomb_Worm' AND groupid='26' AND zoneid='190';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Dire_Bat' AND groupid='27' AND zoneid='190';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Cutlass_Scorpion' AND groupid='28' AND zoneid='190';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Thousand_Eyes' AND groupid='29' AND zoneid='190';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Lemures' AND groupid='33' AND zoneid='190';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Armet_Beetle' AND groupid='36' AND zoneid='190';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Hati' AND groupid='48' AND zoneid='190';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Spartoi_Sorcerer' AND groupid='50' AND zoneid='190';
+UPDATE mob_groups SET content_tag='ROV' WHERE name='Locus_Spartoi_Warrior' AND groupid='49' AND zoneid='190';
 
 -- ------------------------------------------------------------
 -- Dangruf_Wadi (Zone 191)
@@ -1051,7 +1075,7 @@ INSERT INTO `mob_groups` (`groupid`, `poolid`, `zoneid`, `name`, `respawntime`, 
 (41,1527,191,'Giant_Grub',330,0,2341,0,0,9,12,0),       -- These are in prep for complete zone revamps
 (42,1666,191,'Goblin_Gambler',330,0,1119,0,0,21,23,0),  -- These are in prep for complete zone revamps
 (43,1683,191,'Goblin_Leecher',330,0,1107,0,0,21,23,0),  -- These are in prep for complete zone revamps
-(44,1690,191,'Goblin_Mugger',330,0,2341,0,0,21,23,0),   -- These are in prep for complete zone revamps
+(44,1690,191,'Goblin_Mugger',330,0,1117,0,0,21,23,0),   -- These are in prep for complete zone revamps
 (45,5733,191,'Snipper',330,0,2283,0,0,16,20,0);         -- These are in prep for complete zone revamps
 UPDATE mob_groups SET minLevel = 15, maxLevel = 17 WHERE name = "Wadi_Leech_fished"  and zoneid = 191;
 UPDATE mob_groups SET minLevel = 80, maxLevel = 80 WHERE name = "Lemures"  and zoneid = 190;

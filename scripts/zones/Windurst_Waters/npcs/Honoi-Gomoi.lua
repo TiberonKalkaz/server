@@ -5,6 +5,7 @@
 -- !pos -195 -11 -120 238
 -----------------------------------
 local ID = require("scripts/zones/Windurst_Waters/IDs")
+require("scripts/globals/events/starlight_celebrations")
 require("scripts/globals/keyitems")
 require("scripts/globals/missions")
 require("scripts/globals/npc_util")
@@ -18,6 +19,12 @@ entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
+    if xi.events.starlightCelebration.isStarlightEnabled() ~= 0 then
+        if xi.events.starlightCelebration.npcGiftsNpcOnTrigger(player, 3) then
+            return
+        end
+    end
+
     if
         player:hasKeyItem(xi.ki.NEW_MODEL_HAT) and
         not utils.mask.getBit(player:getCharVar("QuestHatInHand_var"), 1)

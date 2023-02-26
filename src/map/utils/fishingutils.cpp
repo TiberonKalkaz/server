@@ -1303,6 +1303,10 @@ namespace fishingutils
 
     fishingarea_t* GetFishingArea(CCharEntity* PChar)
     {
+        // We should not be here. Caller is responsible for acting on a player that
+        // is attempting to fish in MH
+        XI_DEBUG_BREAK_IF(PChar->m_moghouseID > 0)
+
         int16        zoneId = PChar->getZone();
         position_t   p      = PChar->loc.p;
         areavector_t loc    = { p.x, p.y, p.z };
@@ -1929,6 +1933,12 @@ namespace fishingutils
             return;
         }
 
+        if (PChar->m_moghouseID > 0)
+        {
+            ShowError(fmt::format("Player {} attempting to fish inside Mog House", PChar->GetName()));
+            return;
+        }
+
         PChar->StatusEffectContainer->DelStatusEffect(EFFECT_INVISIBLE);
         PChar->StatusEffectContainer->DelStatusEffect(EFFECT_HIDE);
         PChar->StatusEffectContainer->DelStatusEffect(EFFECT_CAMOUFLAGE);
@@ -1946,6 +1956,8 @@ namespace fishingutils
         }
         else
         {
+            auto secs = std::chrono::duration_cast<std::chrono::seconds>(server_clock::now().time_since_epoch());
+            PChar->setCharVar("[Fish]LastCastTime", secs.count());
             PChar->lastCastTime = vanaTime;
             PChar->nextFishTime = PChar->lastCastTime + 5;
         }
@@ -2243,6 +2255,12 @@ namespace fishingutils
                     }
                     else
                     {
+                        // ignore pirates chart items since not in pirates fight
+                        if (item->fishID == 5329 || item->fishID == 5330)
+                        {
+                            continue;
+                        }
+
                         if (!item->quest_only && FishingPools[PChar->getZone()].catchPools[area->areaId].stock[item->fishID].quantity == 0)
                         {
                             NoCatchList.insert(item->fishID);

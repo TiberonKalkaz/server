@@ -42,8 +42,12 @@ zones[xi.zone.RIVERNE_SITE_B01] =
             [16896105] = 16896107, -- 687.199 21.161 582.560
             [16896106] = 16896107, -- 666.737 20.012 652.352
         },
+        BOROKA           = 16896131,
         UNSTABLE_CLUSTER = 16896155,
         BAHAMUT_V2       = 16896157,
+        SPILOSPOK        = 16896152,
+        CHEMACHIQ        = 16896153,
+        BOKABRAQ         = 16896154,
     },
     npc =
     {

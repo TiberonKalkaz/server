@@ -21,9 +21,9 @@ zoneObject.onZoneIn = function(player, prevZone)
         (month == 12 and day >= 5) or
         (month == 1 and day <= 5)
     then
-        player:ChangeMusic(0, 239)
-        player:ChangeMusic(1, 239)
-        -- No need for an 'else' to change it back outside these dates as a re-zone will handle that.
+        player:changeMusic(0, 239)
+        player:changeMusic(1, 239)
+    -- No need for an 'else' to change it back outside these dates as a re-zone will handle that.
     end
 
     -- MOG HOUSE EXIT
@@ -34,6 +34,8 @@ zoneObject.onZoneIn = function(player, prevZone)
     then
         player:setPos(46.2, -5, -78, 172)
     end
+
+    xi.moghouse.exitJobChange(player, prevZone)
 
     return cs
 end
@@ -49,6 +51,7 @@ zoneObject.onEventUpdate = function(player, csid, option)
 end
 
 zoneObject.onEventFinish = function(player, csid, option)
+    xi.moghouse.exitJobChangeFinish(player, csid, option)
 end
 
 return zoneObject

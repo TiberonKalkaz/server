@@ -14,10 +14,10 @@ local sharedLoot =
         [          xi.items.CORAL_FRAGMENT] =  50,
         [          xi.items.DRILL_CALAMARY] = 200,
         [             xi.items.DWARF_PUGIL] = 100,
-        [xi.items.HIGH_QUALITY_PUGIL_SCALE] =  50,
-        [             xi.items.PAMTAM_KELP] = 250,
+        [xi.items.HIGH_QUALITY_PUGIL_SCALES] =  50,
+        --[             xi.items.PAMTAM_KELP] = 250, (ToAU Era, giving weight to SHALL_SHELL as similar value item)
         [               xi.items.SALINATOR] = 100,
-        [             xi.items.SHALL_SHELL] = 150,
+        [             xi.items.SHALL_SHELL] = 400,
         [               xi.items.ZEBRA_EEL] = 100,
     },
     item2 =
@@ -96,11 +96,14 @@ entity.onTrigger = function(player, npc)
     local shimmering = GetNPCByID(ID.npc.SHIMMERING_POINT)
     shimmering:setStatus(xi.status.DISAPPEAR)
     local party = player:getParty()
-    for _,member in pairs(party) do
-        member:ChangeMusic(0, 0)
-        member:ChangeMusic(1, 0)
-        member:ChangeMusic(2, 101)
-        member:ChangeMusic(3, 102)
+    for _, member in pairs(party) do
+        if member:hasStatusEffect(xi.effect.LEVEL_RESTRICTION) then
+            member:delStatusEffect(xi.effect.LEVEL_RESTRICTION)
+        end
+        member:changeMusic(0, 0)
+        member:changeMusic(1, 0)
+        member:changeMusic(2, 101)
+        member:changeMusic(3, 102)
         member:setLocalVar("Chart", 0)
     end
 end

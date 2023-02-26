@@ -73,7 +73,7 @@ struct profile_t
     uint8      nation;     // Your Nation Allegiance.
     uint8      mhflag;     // Flag of exit from MOGHOUSE
     uint16     title;      // rank
-    uint16     fame[15];   // Fame
+    uint16     fame[16];   // Fame
     uint8      rank[3];    // RAGN in three states
     uint16     rankpoints; // rank glasses in three states
     location_t home_point; // Renaissance point character
@@ -378,6 +378,7 @@ public:
     void              resetFellowZoningInfo();         // reset fellow zoning info (when changing job ect)
     uint8             m_SetBlueSpells[20];             // The 0x200 offsetted blue magic spell IDs which the user has set. (1 byte per spell)
     uint32            m_FieldChocobo;
+    time_point        m_nextDataSave; // Sets the next point to save to the DB.
 
     UnlockedAttachments_t m_unlockedAttachments; // Unlocked Automaton Attachments (1 bit per attachment)
     CAutomatonEntity*     PAutomaton;            // Automaton statistics
@@ -539,7 +540,8 @@ public:
     void   SetPlayTime(uint32 playTime);        // Set playtime
     uint32 GetPlayTime(bool needUpdate = true); // Get playtime
 
-    CItemEquipment* getEquip(SLOTTYPE slot);
+    CItemEquipment*              getEquip(SLOTTYPE slot);
+    std::vector<CItemEquipment*> getVisibleEquip();
 
     CBasicPacket* PendingPositionPacket = nullptr;
 

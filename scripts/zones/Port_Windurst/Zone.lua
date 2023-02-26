@@ -2,6 +2,7 @@
 -- Zone: Port_Windurst (240)
 -----------------------------------
 local ID = require('scripts/zones/Port_Windurst/IDs')
+require('scripts/globals/events/starlight_celebrations')
 require('scripts/globals/conquest')
 require('scripts/globals/cutscenes')
 require('scripts/globals/settings')
@@ -11,20 +12,11 @@ local zoneObject = {}
 
 zoneObject.onInitialize = function(zone)
     SetExplorerMoogles(ID.npc.EXPLORER_MOOGLE)
+    xi.events.starlightCelebration.applyStarlightDecorations(zone:getID())
 end
 
 zoneObject.onZoneIn = function(player, prevZone)
     local cs = { -1 }
-
-    -- FIRST LOGIN (START CS)
-    if player:getPlaytime(false) == 0 then
-        if xi.settings.main.NEW_CHARACTER_CUTSCENE == 1 then
-            cs = { 305, -1, xi.cutscenes.params.NO_OTHER_ENTITY } -- (cs, textTable, Flags)
-        end
-
-        player:setPos(-120, -5.5, 175, 48)
-        player:setHomePoint()
-    end
 
     if
         player:getXPos() == 0 and
@@ -39,6 +31,8 @@ zoneObject.onZoneIn = function(player, prevZone)
             player:setPos(position, -15.56, 258, 65)
         end
     end
+
+    xi.moghouse.exitJobChange(player, prevZone)
 
     return cs
 end
@@ -59,11 +53,11 @@ zoneObject.onEventUpdate = function(player, csid, option)
 end
 
 zoneObject.onEventFinish = function(player, csid, option)
-    if csid == 305 then
-        player:messageSpecial(ID.text.ITEM_OBTAINED, 536)
-    elseif csid == 10002 then
+    if csid == 10002 then
         player:setPos(0, 0, 0, 0, 225)
     end
+
+    xi.moghouse.exitJobChangeFinish(player, csid, option)
 end
 
 return zoneObject
