@@ -7230,7 +7230,7 @@ namespace charutils
         {
             spawnlist = &PChar->SpawnPCList;
         }
-        else if (entity->objtype == TYPE_PET)
+        else if (entity->objtype == TYPE_PET || entity->objtype == TYPE_FELLOW)
         {
             spawnlist = &PChar->SpawnPETList;
         }
