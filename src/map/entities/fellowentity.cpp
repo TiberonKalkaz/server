@@ -39,6 +39,7 @@ This file is part of DarkStar-server source code.
 #include "fellowentity.h"
 
 CFellowEntity::CFellowEntity(CCharEntity* PChar)
+: CMobEntity()
 {
     objtype                 = TYPE_FELLOW;
     m_EcoSystem             = ECOSYSTEM::HUMANOID;
@@ -47,6 +48,7 @@ CFellowEntity::CFellowEntity(CCharEntity* PChar)
     spawnAnimation          = SPAWN_ANIMATION::SPECIAL;
     m_IsClaimable           = false;
     m_bReleaseTargIDOnDeath = true;
+    isRenamed               = true;
 
     PAI = std::make_unique<CAIContainer>(this, std::make_unique<CPathFind>(this), std::make_unique<CFellowController>(PChar, this),
                                          std::make_unique<CTargetFind>(this));
@@ -60,19 +62,29 @@ CFellowEntity::~CFellowEntity()
 void CFellowEntity::PostTick()
 {
     CBattleEntity::PostTick();
+
     if (loc.zone && updatemask && status != STATUS_TYPE::DISAPPEAR)
     {
-        loc.zone->PushPacket(this, CHAR_INRANGE, new CEntityUpdatePacket(this, ENTITY_UPDATE, updatemask));
+        loc.zone->UpdateEntityPacket(this, ENTITY_UPDATE, updatemask);
+
+        if (PMaster && PMaster->PParty && updatemask & UPDATE_HP)
+        {
+            // clang-format off
+            PMaster->ForParty([this](auto PMember)
+            {
+                static_cast<CCharEntity*>(PMember)->pushPacket(new CCharHealthPacket(this));
+            });
+            // clang-format on
+        }
         updatemask = 0;
     }
 }
 
 void CFellowEntity::FadeOut()
 {
-    //ShowDebug("fellowentity FadeOut DESPAWN. \n");
     animation = ANIMATION_DESPAWN;
     CBaseEntity::FadeOut();
-    loc.zone->PushPacket(this, CHAR_INRANGE, new CEntityUpdatePacket(this, ENTITY_DESPAWN, UPDATE_NONE));
+    loc.zone->UpdateEntityPacket(this, ENTITY_DESPAWN, UPDATE_NONE);
 }
 
 void CFellowEntity::Die()

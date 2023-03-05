@@ -35,7 +35,8 @@
 CFellowDespawnPacket::CFellowDespawnPacket(CBaseEntity* PEntity)
 {
     this->setType(0x0E);
-    this->setSize(0x2A);
+    //this->setSize(0x2A);
+    this->setSize(0x56);
 
     ref<uint32>(0x04)      = PEntity->id;
     ref<uint16>(0x08)      = PEntity->targid;
@@ -55,6 +56,19 @@ CFellowDespawnPacket::CFellowDespawnPacket(CBaseEntity* PEntity)
     ref<uint8>(0x27)       = 0x28;
     ref<uint8>(0x28)       = 0x48;
     ref<uint8>(0x2B)       = 0x02;
-    memcpy(data + (0x30), &(PEntity->look), 20);
-    memcpy(data + (0x44), PEntity->GetName().c_str(), PEntity->name.size());
+    ref<uint16>(0x30)      = PEntity->look.size;
+    memcpy(data + (0x30), &PEntity->look, sizeof(look_t));
+    //memcpy(data + (0x44), PEntity->GetName().c_str(), PEntity->name.size());
+
+    auto name       = PEntity->packetName;
+    auto nameOffset = 0x44;
+    auto maxLength  = std::min<size_t>(name.size(), PacketNameLength);
+
+    // Make sure to zero-out the existing name area of the packet
+    auto start = data + nameOffset;
+    auto size  = this->getSize();
+    std::memset(start, 0U, size);
+
+    // Copy in name
+    std::memcpy(start, name.c_str(), maxLength);
 }

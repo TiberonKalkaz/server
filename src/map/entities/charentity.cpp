@@ -746,7 +746,6 @@ void CCharEntity::RemoveFellow()
     if (m_PFellow == nullptr || !m_PFellow->PAI->IsSpawned())
         return;
 
-    // loc.zone->PushPacket(this, CHAR_INRANGE_SELF, new CFellowDespawnPacket(this));
     m_PFellow->PAI->Despawn();
     m_PFellow = nullptr;
     pushPacket(new CCharUpdatePacket(this));

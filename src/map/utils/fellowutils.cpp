@@ -61,9 +61,9 @@ This file is part of DarkStar-server source code.
 
 struct Fellow_t
 {
-    look_t      look;      // appearance
-    std::string name;      // name
-    ECOSYSTEM   EcoSystem; // ecosystem
+    look_t      look;        // appearance
+    std::string name;        // name
+    ECOSYSTEM   EcoSystem;   // ecosystem
 
     uint8  zoneKills;
     uint8  name_prefix;
@@ -621,6 +621,7 @@ namespace fellowutils
             PFellow->name.clear();
             PFellow->name.insert(0, (const char*)sql->GetData(1));
             //ShowDebug("PMaster: %u Fellow name = %s ID = %u\n", PMaster->id, PFellow->name, FellowID);
+            PFellow->packetName.insert(0, (const char*)sql->GetData(1));
 
             uint8 mlvl = (uint8)sql->GetIntData(2); // pull lvl from db
             if (PMaster->GetMLevel() < mlvl)
