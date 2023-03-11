@@ -267,7 +267,6 @@ int32 do_init(int32 argc, char** argv)
     battleutils::LoadSkillChainDamageModifiers();
     petutils::LoadPetList();
     fellowutils::LoadFellowList();
-    fellowutils::LoadFellowMessages();
     trustutils::LoadTrustList();
     mobutils::LoadCustomMods();
     jobpointutils::LoadGifts();
@@ -277,6 +276,7 @@ int32 do_init(int32 argc, char** argv)
     ShowInfo("do_init: loading zones");
     zoneutils::LoadZoneList();
 
+    fellowutils::LoadFellowMessages();
     fishingutils::InitializeFishingSystem();
     instanceutils::LoadInstanceList();
 
