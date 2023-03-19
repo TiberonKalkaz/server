@@ -16,16 +16,18 @@ entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
-     -- if the player has this maw teleport already, has an adventuring fellow, but does not have wotg adventuring fellow access, time to get it
+    -- if the player has this maw teleport already, has an adventuring fellow, but does not have wotg adventuring fellow access, time to get it
     local hasMaw = player:hasTeleport(xi.teleport.type.PAST_MAW, 2)
     local bond = player:getFellowValue("bond")
-    local wotg_unlock = player:getFellowValue("wotg_unlock")
-   
-    if (hasMaw == true and bond ~= nil and wotg_unlock ~= nil and wotg_unlock ~= 1) then
-        local styleParam    = xi.fellow_utils.getStyleParam(player)
-        local lookParam     = xi.fellow_utils.getLookParam(player)
-        local fellowParam   = xi.fellow_utils.getFellowParam(player)
+    local wotgUnlock = player:getFellowValue("wotg_unlock")
 
+    if
+        hasMaw and
+        bond ~= nil and
+        wotgUnlock ~= nil and
+        wotgUnlock ~= 1
+    then
+        local fellowParam   = xi.fellow_utils.getFellowParam(player)
         player:startEvent(265, 0, 23, 1743, 0, 0, 9568257, 0, fellowParam)
     else
         xi.maws.onTrigger(player, npc)
@@ -33,7 +35,7 @@ entity.onTrigger = function(player, npc)
 end
 
 entity.onEventUpdate = function(player, csid, option)
-    if (csid == 265) then
+    if csid == 265 then
         local styleParam    = xi.fellow_utils.getStyleParam(player)
         local lookParam     = xi.fellow_utils.getLookParam(player)
         local fellowParam   = xi.fellow_utils.getFellowParam(player)
@@ -43,11 +45,13 @@ entity.onEventUpdate = function(player, csid, option)
 end
 
 entity.onEventFinish = function(player, csid, option)
-    if (csid == 265) then
+    if csid == 265 then
         player:messageSpecial(ID.text.CAN_SUMMON_FELLOW_WOTG)
         player:setFellowValue("wotg_unlock", 1)
-        local mawDestination = { 366.858,   8.545, -228.861,  95, 120}
-        player:timer(500, function(player) player:setPos(unpack(mawDestination)) end)
+        local mawDestination = { 366.858,   8.545, -228.861,  95, 120 }
+        player:timer(500, function(playerArg)
+            playerArg:setPos(unpack(mawDestination))
+        end)
     else
         xi.maws.onEventFinish(player, csid, option)
     end

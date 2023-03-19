@@ -191,7 +191,6 @@ struct FellowInfo_t
     int16 fellowMP;      // fellow mp
 };
 
-
 struct AuctionHistory_t
 {
     uint16 itemid;

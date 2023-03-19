@@ -13058,7 +13058,6 @@ void CLuaBaseEntity::setPetName(uint8 pType, uint16 value, sol::object const& ar
     }
 }
 
-
 /************************************************************************
  *  Function: spawnFellow()
  *  Purpose : Spawns an NPC Fellow
@@ -13142,7 +13141,7 @@ void CLuaBaseEntity::fellowAttack(CLuaBaseEntity* PEntity)
     XI_DEBUG_BREAK_IF(m_PBaseEntity == nullptr);
     XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
-    CFellowEntity*  PFellow = ((CCharEntity*)m_PBaseEntity)->m_PFellow;
+    CFellowEntity* PFellow = ((CCharEntity*)m_PBaseEntity)->m_PFellow;
 
     if (PFellow != nullptr)
     {
@@ -13183,7 +13182,7 @@ int32 CLuaBaseEntity::getFellowValue(std::string const& option)
     XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_PC);
 
     const char* Query = "SELECT %s FROM char_fellow WHERE charid = %u;";
-    int32 ret = sql->Query(Query, option, m_PBaseEntity->id);
+    int32       ret   = sql->Query(Query, option, m_PBaseEntity->id);
 
     if (ret != SQL_ERROR && sql->NumRows() != 0 && sql->NextRow() == SQL_SUCCESS)
     {

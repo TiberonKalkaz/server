@@ -61,9 +61,9 @@ This file is part of DarkStar-server source code.
 
 struct Fellow_t
 {
-    look_t      look;        // appearance
-    std::string name;        // name
-    ECOSYSTEM   EcoSystem;   // ecosystem
+    look_t      look;      // appearance
+    std::string name;      // name
+    ECOSYSTEM   EcoSystem; // ecosystem
 
     uint8  zoneKills;
     uint8  name_prefix;
@@ -558,7 +558,7 @@ namespace fellowutils
         {
             PFellow->look.sub = (uint16)sql->GetIntData(0) + 0x7000;
         }
-        
+
         if (((uint16)sql->GetIntData(1) == SKILL_HAND_TO_HAND || (((uint16)sql->GetIntData(1) == SKILL_KATANA)) && settings::get<bool>("main.ALLOW_ADVENTURING_FELLOW_KATANA_DW")))
         {
             PFellow->look.sub = PFellow->look.main + 0x1000;
@@ -620,7 +620,6 @@ namespace fellowutils
         {
             PFellow->name.clear();
             PFellow->name.insert(0, (const char*)sql->GetData(1));
-            //ShowDebug("PMaster: %u Fellow name = %s ID = %u\n", PMaster->id, PFellow->name, FellowID);
             PFellow->packetName.insert(0, (const char*)sql->GetData(1));
 
             uint8 mlvl = (uint8)sql->GetIntData(2); // pull lvl from db
@@ -1032,12 +1031,10 @@ namespace fellowutils
             uint8  currentCap = (uint8)sql->GetIntData(0);
             uint8  currentLvl = (uint8)sql->GetIntData(1);
             uint32 currentExp = (uint32)sql->GetIntData(2);
-            //ShowDebug("fellowutils:: Cap: %u Lvl: %u Exp: %u\n", currentCap, currentLvl, currentExp);
 
             if (exp != 0)
                 currentExp += exp; // add normal exp
 
-            //ShowDebug("fellowutils::GetExpNEXTLevel is: %u\n", GetExpNEXTLevel(currentLvl));
             if (GetExpNEXTLevel(currentLvl) != 0)
             {
                 if (currentExp >= GetExpNEXTLevel(currentLvl))
@@ -1066,7 +1063,7 @@ namespace fellowutils
                     }
                 }
             }
-            //ShowDebug("fellowutils:: FINAL currentExp: %u currentLvl: %u\n", currentExp, currentLvl);
+
             SaveFellowExp(PMaster, currentLvl, currentExp);
             charutils::AddPoints(PMaster, "fellow_point", exp / 2);
         }
@@ -1103,7 +1100,7 @@ namespace fellowutils
                 maxKills = 25;
             else if (fellowBond >= 30)
                 maxKills = 20;
-            //ShowDebug("fellowutils:: kills: %u maxKills: %u\n", kills, maxKills);
+
             PMaster->m_PFellow->SetLocalVar("maxKills", maxKills);
             PMaster->m_PFellow->SetLocalVar("zoneKills", PMaster->m_PFellow->zoneKills);
 
@@ -1173,18 +1170,16 @@ namespace fellowutils
     {
         uint16 message       = 0;
         uint16 MessageOffset = GetMessageOffset(PChar->getZone());
-        //ShowDebug("fellowutils:: MessageOffset: %u Zone: %u\n", MessageOffset, PChar->getZone());
-        uint8  currentCap  = 0;
-        uint8  currentLvl  = 0;
-        uint32 currentExp  = 0;
-        uint16 expPercent  = 0;
-        uint32 expNEXTLvl  = 0;
-        uint8  type        = 0;
-        uint16 param       = 0;
-        uint16 kills       = 0;
-        uint8  chatCounter = PChar->GetLocalVar("chatCounter");
-        uint8  roll        = xirand::GetRandomNumber(3);
-        //ShowDebug("fellowutils:: chatConter: %u roll: %u option: %u\n", chatCounter, roll, option);
+        uint8  currentCap    = 0;
+        uint8  currentLvl    = 0;
+        uint32 currentExp    = 0;
+        uint16 expPercent    = 0;
+        uint32 expNEXTLvl    = 0;
+        uint8  type          = 0;
+        uint16 param         = 0;
+        uint16 kills         = 0;
+        uint8  chatCounter   = PChar->GetLocalVar("chatCounter");
+        uint8  roll          = xirand::GetRandomNumber(3);
 
         const char* fmtQuery = "SELECT\
                 char_fellow.lvlcap,\

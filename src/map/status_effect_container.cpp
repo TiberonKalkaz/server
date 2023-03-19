@@ -1787,7 +1787,7 @@ void CStatusEffectContainer::HandleAura(CStatusEffect* PStatusEffect)
             });
             // clang-format on
 
-             // Apply the aura's buff to the owner of the buff's fellow
+            // Apply the aura's buff to the owner of the buff's fellow
             CBattleEntity* PFellow = (CBattleEntity*)((CCharEntity*)PEntity)->m_PFellow;
             if (PFellow != nullptr && PEntity->loc.zone->GetID() == PFellow->loc.zone->GetID() &&
                 distanceSquared(m_POwner->loc.p, PFellow->loc.p) < aura_range * aura_range && !PFellow->isDead())

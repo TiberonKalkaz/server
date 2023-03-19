@@ -12,9 +12,12 @@ entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
-    local FellowQuest = player:getCharVar("[Quest]Unlisted_Qualities")
-    if (player:getQuestStatus(xi.quest.log_id.JEUNO,xi.quest.id.jeuno.UNLISTED_QUALITIES) == QUEST_ACCEPTED and utils.mask.getBit(FellowQuest,2) == false) then
-        player:startEvent(20000,0,0,0,0,0,0,0,player:getFellowValue("fellowid"))
+    local fellowQuest = player:getCharVar("[Quest]Unlisted_Qualities")
+    if
+        player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.UNLISTED_QUALITIES) == QUEST_ACCEPTED and
+        not utils.mask.getBit(fellowQuest, 2)
+    then
+        player:startEvent(20000, 0, 0, 0, 0, 0, 0, 0, player:getFellowValue("fellowid"))
     else
         player:startEvent(190)
     end
@@ -28,6 +31,7 @@ entity.onEventFinish = function(player, csid, option)
         player:setFellowValue("face", option)
         player:setCharVar("[Quest]Unlisted_Qualities", utils.mask.setBit(player:getCharVar("[Quest]Unlisted_Qualities"), 2, true))
     end
+
     --[[
     Adventuring Fellow Face Options:
         0   1A

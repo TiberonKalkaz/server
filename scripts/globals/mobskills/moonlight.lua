@@ -16,10 +16,10 @@ mobskillObject.onMobSkillCheck = function(target, mob, skill)
 end
 
 mobskillObject.onMobWeaponSkill = function(target, mob, skill)
-    local mpRecoverAmt = mob:getWeaponDmg() *1.25
+    local mpRecoverAmt = mob:getWeaponDmg() * 1.25
     local maxmp = target:getMaxMP()
     local currmp = target:getMP()
-    if ( mpRecoverAmt + currmp > maxmp ) then
+    if mpRecoverAmt + currmp > maxmp then
             mpRecoverAmt = maxmp - currmp
         end
     skill:setMsg(xi.msg.basic.RECOVERS_MP, 0, mpRecoverAmt)

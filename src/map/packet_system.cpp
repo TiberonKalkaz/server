@@ -126,7 +126,6 @@ along with this program.  If not, see http://www.gnu.org/licenses/
 #include "packets/inventory_count.h"
 #include "packets/inventory_finish.h"
 #include "packets/inventory_item.h"
-#include "packets/inventory_item.h"
 #include "packets/inventory_modify.h"
 #include "packets/inventory_size.h"
 #include "packets/jobpoint_details.h"
@@ -563,7 +562,7 @@ void SmallPacket0x00D(map_session_data_t* const PSession, CCharEntity* const PCh
             if (sql->Query(QuerySpawn, PChar->id) != SQL_ERROR && sql->NumRows() != 0 && sql->NextRow() == SQL_SUCCESS)
                 spawnTime = (uint32)sql->GetIntData(0);
             sql->Query("UPDATE char_fellow SET maxTime = %u WHERE charid = %u",
-                      maxTime - (CVanaTime::getInstance()->getVanaTime() + 1009810800 - spawnTime), PChar->id);
+                       maxTime - (CVanaTime::getInstance()->getVanaTime() + 1009810800 - spawnTime), PChar->id);
             PChar->setFellowZoningInfo();
         }
 
@@ -3870,7 +3869,7 @@ void SmallPacket0x05E(map_session_data_t* const PSession, CCharEntity* const PCh
         if (sql->Query(QuerySpawn, PChar->id) != SQL_ERROR && sql->NumRows() != 0 && sql->NextRow() == SQL_SUCCESS)
             spawnTime = (uint32)sql->GetIntData(0);
         sql->Query("UPDATE char_fellow SET maxTime = %u WHERE charid = %u",
-                  maxTime - (CVanaTime::getInstance()->getVanaTime() + 1009810800 - spawnTime), PChar->id);
+                   maxTime - (CVanaTime::getInstance()->getVanaTime() + 1009810800 - spawnTime), PChar->id);
         PChar->setFellowZoningInfo();
         PChar->RemoveFellow();
     }
