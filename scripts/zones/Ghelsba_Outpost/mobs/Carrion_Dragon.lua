@@ -5,62 +5,34 @@
 -----------------------------------
 local ID = require("scripts/zones/Ghelsba_Outpost/IDs")
 require("scripts/globals/pets/fellow")
+require("scripts/globals/fellow_utils")
 require("scripts/globals/status")
 -----------------------------------
 local entity = {}
 
 entity.onMobSpawn = function(mob)
-    mob:setMobMod(xi.mobMod.SOUND_RANGE, 20)
+    mob:setAutoAttackEnabled(true)
+    mob:setMobAbilityEnabled(true)
 end
 
 entity.onMobFight = function(mob, target)
-    if mob:getHPP() <= 75 and mob:getID() == ID.mob.CARRION_DRAGON then
+    if mob:getHPP() <= 75 and mob:getID() == ID.mob.CARRION_DRAGON and mob:getLocalVar("CS_Lock") == 0 then
+        -- Disable the dragon
+        mob:setLocalVar("CS_Lock", 1)
         SetServerVariable("[Mirror_Mirror]BCNMmobHP", mob:getHP())
-        DespawnMob(mob:getID())
-        SpawnMob(ID.mob.CARRION_DRAGON + 1)
+        mob:setAutoAttackEnabled(false)
+        mob:setMobAbilityEnabled(false)
+
         local players = mob:getBattlefield():getPlayers()
         for i,player in pairs(players) do
             player:disengage()
-            local fellowParam = getFellowParam(player)
+            local fellowParam = xi.fellow_utils.getFellowParam(player)
             player:startEvent(32004, 140, 0, 5, 0, 0, 0, 0, fellowParam)
         end
     end
 end
 
 entity.onMobDeath = function(mob, player, isKiller)
-end
-
-entity.onEventUpdate = function(player,csid,option)
-    -- Carrion Dragon event initation does not set PChar->m_event.Script, and LoadEventScript does not look for bcnms - so this event bubbles up to the zone
-    --[[
-    local players = player:getBattlefield():getPlayers()
-    local fellowParam = getFellowParam(player)
-
-    if csid == 32004 then
-        for i,player in pairs(players) do
-            player:updateEvent(140, 0, 5, 0, 0, 1048578, 0, fellowParam)
-        end
-    end
-    ]]
-end
-
-entity.onEventFinish = function(player,csid,option)
-    -- Carrion Dragon event initation does not set PChar->m_event.Script, and LoadEventScript does not look for bcnms - so this event bubbles up to the zone
-    --[[
-    if csid == 32004 then
-        local mob = GetMobByID(ID.mob.CARRION_DRAGON + 1)
-        local players = player:getBattlefield():getPlayers()
-        mob:setHP(GetServerVariable("[Mirror_Mirror]BCNMmobHP"))
-        mob:setPos(-189, -10, 42)
-        for i,player in pairs(players) do
-            player:setLocalVar("triggerFellow", 1) -- no greeting on spawn
-            player:setLocalVar("FellowDisengage", 1) -- fellow cannot sync disengage
-            player:spawnFellow(player:getFellowValue("fellowid"))
-            player:getFellow():setPos(-197, -10, 40.5)
-            player:timer(20000, function(player) player:fellowAttack(mob) end)
-        end
-    end
-    ]]
 end
 
 return entity

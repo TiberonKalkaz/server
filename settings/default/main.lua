@@ -259,7 +259,8 @@ xi.settings.main =
     ENABLE_SYNERGY = 0, -- Default to off as Synergy is not coded
 
     -- Adventuring Fellows
-    ENABLE_ADVENTURING_FELLOWS   = 1, -- Enable or disable the ability to quest and call Adventuring Fellows
+    ENABLE_ADVENTURING_FELLOWS         = true, -- Enable or disable the ability to quest and call Adventuring Fellows
+    ALLOW_ADVENTURING_FELLOW_KATANA_DW = true, -- Enable or disable dual wielding katanas for Adventuring Fellows
 
     -- NM Persistence
     NM_PERSISTENCE = 1, -- When set to 1, timed NM spawns will be persistent through server crashing

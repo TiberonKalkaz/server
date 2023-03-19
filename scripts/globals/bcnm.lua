@@ -606,7 +606,7 @@ local function checkReqs(player, npc, bfid, registrant)
         end,
 
         [37] = function() -- Quest: Mirror Mirror
-        return player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.MIRROR_MIRROR) == QUEST_ACCEPTED and player:getCharVar("[Quest]Mirror_Mirror") == 2 
+            return player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.MIRROR_MIRROR) == QUEST_ACCEPTED and player:getCharVar("[Quest]Mirror_Mirror") == 2 
         end, 
 
         [64] = function() -- Mission 2-3
@@ -1147,6 +1147,10 @@ local function checkReqs(player, npc, bfid, registrant)
     -- Requirements to enter a battlefield already registered by a party member
     local enterReqs =
     {
+        [37] = function() -- Quest: Mirror Mirror
+            return player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.MIRROR_MIRROR) == QUEST_ACCEPTED and player:getCharVar("[Quest]Mirror_Mirror") == 2 
+        end,
+
         [226] = function() -- Quest: Waking the Beast (Fullmoon Fountain)
             return player:hasKeyItem(xi.ki.WHISPER_OF_FLAMES) and
                 player:hasKeyItem(xi.ki.WHISPER_OF_TREMORS) and

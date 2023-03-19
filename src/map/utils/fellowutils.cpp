@@ -558,8 +558,8 @@ namespace fellowutils
         {
             PFellow->look.sub = (uint16)sql->GetIntData(0) + 0x7000;
         }
-        // settings::get<float>("map.SJ_MP_DIVISOR") - get dual wield from config
-        if ((uint16)sql->GetIntData(1) == SKILL_HAND_TO_HAND || ((uint16)sql->GetIntData(1) == SKILL_KATANA))// && map_config.adventuring_fellow_dualwield))
+        
+        if (((uint16)sql->GetIntData(1) == SKILL_HAND_TO_HAND || (((uint16)sql->GetIntData(1) == SKILL_KATANA)) && settings::get<bool>("main.ALLOW_ADVENTURING_FELLOW_KATANA_DW")))
         {
             PFellow->look.sub = PFellow->look.main + 0x1000;
         }
@@ -683,8 +683,7 @@ namespace fellowutils
                 ((CItemWeapon*)PFellow->m_Weapons[SLOT_MAIN])->setBaseDelay(delay);
                 ((CItemWeapon*)PFellow->m_Weapons[SLOT_MAIN])->setDamage(damage);
 
-                //settings::get<float>("map.SJ_MP_DIVISOR") - get dual wield from config
-                if ((uint16)sql->GetIntData(1) == SKILL_KATANA)// && map_config.adventuring_fellow_dualwield)
+                if (((uint16)sql->GetIntData(1) == SKILL_KATANA) && settings::get<bool>("main.ALLOW_ADVENTURING_FELLOW_KATANA_DW"))
                 {
                     PFellow->m_dualWield = true;
                     ((CItemWeapon*)PFellow->m_Weapons[SLOT_SUB])->setSkillType((uint8)sql->GetIntData(1));

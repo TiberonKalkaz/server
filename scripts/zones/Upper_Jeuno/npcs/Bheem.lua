@@ -4,6 +4,7 @@
 -----------------------------------
 local ID = require("scripts/zones/Upper_Jeuno/IDs")
 require("scripts/globals/pets/fellow")
+require("scripts/globals/fellow_utils")
 require("scripts/globals/quests")
 -----------------------------------
 local entity = {}
@@ -12,13 +13,14 @@ entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
+    print("hit")
     local UnlistedQualities = player:getQuestStatus(xi.quest.log_id.JEUNO,xi.quest.id.jeuno.UNLISTED_QUALITIES)
     local UnlistedQualitiesProgress = player:getCharVar("[Quest]Unlisted_Qualities")
     local LookingGlass = player:getQuestStatus(xi.quest.log_id.JEUNO,xi.quest.id.jeuno.GIRL_IN_THE_LOOKING_GLASS)
     local LookingGlassProgress = player:getCharVar("[Quest]Looking_Glass")
     local fellowParam = 0
     if UnlistedQualities >= QUEST_ACCEPTED and (UnlistedQualitiesProgress >= 7 or UnlistedQualitiesProgress == 0) then
-        fellowParam = getFellowParam(player)
+        fellowParam = xi.fellow_utils.getFellowParam(player)
     end
 
     if UnlistedQualities == QUEST_ACCEPTED and UnlistedQualitiesProgress < 7 then

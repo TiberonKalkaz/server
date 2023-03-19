@@ -12237,7 +12237,7 @@ uint16 CLuaBaseEntity::getWeaponDmg()
 
 uint16 CLuaBaseEntity::getMobWeaponDmg(uint8 slot)
 {
-    XI_DEBUG_BREAK_IF(m_PBaseEntity->objtype != TYPE_MOB);
+    XI_DEBUG_BREAK_IF(!(m_PBaseEntity->objtype == TYPE_MOB || m_PBaseEntity->objtype == TYPE_FELLOW));
 
     auto* PMob = static_cast<CMobEntity*>(m_PBaseEntity);
 
@@ -14995,7 +14995,7 @@ void CLuaBaseEntity::untargetableAndUnactionable(uint32 milliseconds)
 
 uint32 CLuaBaseEntity::getPool()
 {
-    if (m_PBaseEntity->objtype == TYPE_MOB || m_PBaseEntity->objtype == TYPE_TRUST)
+    if (m_PBaseEntity->objtype == TYPE_MOB || m_PBaseEntity->objtype == TYPE_TRUST || m_PBaseEntity->objtype == TYPE_FELLOW)
     {
         CMobEntity* PMob = static_cast<CMobEntity*>(m_PBaseEntity);
         return PMob->m_Pool;
@@ -15680,7 +15680,7 @@ bool CLuaBaseEntity::clearSession(std::string const& playerName)
 /************************************************************************
 *  Function: sendNpcEmote()
 *  Purpose : Makes an NPC entity emit an emote.
-*  Example : taru:sendEmote(target, tpz.emote.PANIC, tpz.emoteMode.MOTION)
+*  Example : taru:sendEmote(target, xi.emote.PANIC, xi.emoteMode.MOTION)
 *  Notes   : Originally added for Pirate / Brigand chart events
              target parameter can be nil
 ************************************************************************/
