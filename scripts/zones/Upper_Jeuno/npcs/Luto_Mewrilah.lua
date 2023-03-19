@@ -184,7 +184,7 @@ entity.onTrigger = function(player, npc)
         not utils.mask.getBit(wildcatJeuno, 7)
     then
         player:startEvent(10085)
-    elseif UnlistedQualities == QUEST_AVAILABLE and player:getRank(player:getNation()) >= 4 and xi.settings.main.ENABLE_ADVENTURING_FELLOWS == 1 then  -- Rank 4 not required after 2013
+    elseif UnlistedQualities == QUEST_AVAILABLE and player:getRank(player:getNation()) >= 4 and xi.settings.main.ENABLE_ADVENTURING_FELLOWS == true then  -- Rank 4 not required after 2013
         player:startEvent(10031)
     elseif UnlistedQualities == QUEST_ACCEPTED and UnlistedQualitiesProgress < 15 then
         player:startEvent(10033)

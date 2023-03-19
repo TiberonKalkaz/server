@@ -11,7 +11,7 @@ local itemObject = {}
 itemObject.onItemCheck = function(target)
     if target:getFellow() ~= nil or target:hasStatusEffect(xi.effect.LEVEL_RESTRICTION)
         or target:hasStatusEffect(xi.effect.LEVEL_SYNC) or
-        xi.settings.main.ENABLE_ADVENTURING_FELLOWS == nil or xi.settings.main.ENABLE_ADVENTURING_FELLOWS == 0 then
+        xi.settings.main.ENABLE_ADVENTURING_FELLOWS == nil or xi.settings.main.ENABLE_ADVENTURING_FELLOWS == false then
             return xi.msg.basic.ITEM_UNABLE_TO_USE
     end
 
