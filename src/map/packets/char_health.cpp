@@ -24,8 +24,8 @@
 #include "char_health.h"
 
 #include "../entities/charentity.h"
-#include "../entities/trustentity.h"
 #include "../entities/fellowentity.h"
+#include "../entities/trustentity.h"
 
 CCharHealthPacket::CCharHealthPacket(CCharEntity* PChar)
 {
@@ -75,7 +75,6 @@ CCharHealthPacket::CCharHealthPacket(CTrustEntity* PTrust)
     ref<uint8>(0x22) = PTrust->GetSJob();
     ref<uint8>(0x23) = PTrust->GetSLevel();
 }
-
 
 CCharHealthPacket::CCharHealthPacket(CFellowEntity* PFellow)
 {

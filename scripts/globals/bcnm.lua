@@ -606,8 +606,8 @@ local function checkReqs(player, npc, bfid, registrant)
         end,
 
         [37] = function() -- Quest: Mirror Mirror
-            return player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.MIRROR_MIRROR) == QUEST_ACCEPTED and player:getCharVar("[Quest]Mirror_Mirror") == 2 
-        end, 
+            return player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.MIRROR_MIRROR) == QUEST_ACCEPTED and player:getCharVar("[Quest]Mirror_Mirror") == 2
+        end,
 
         [64] = function() -- Mission 2-3
             return nationStatus == 10 and
@@ -1148,7 +1148,7 @@ local function checkReqs(player, npc, bfid, registrant)
     local enterReqs =
     {
         [37] = function() -- Quest: Mirror Mirror
-            return player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.MIRROR_MIRROR) == QUEST_ACCEPTED and player:getCharVar("[Quest]Mirror_Mirror") == 2 
+            return player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.MIRROR_MIRROR) == QUEST_ACCEPTED and player:getCharVar("[Quest]Mirror_Mirror") == 2
         end,
 
         [226] = function() -- Quest: Waking the Beast (Fullmoon Fountain)

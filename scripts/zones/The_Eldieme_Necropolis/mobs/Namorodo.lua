@@ -15,7 +15,9 @@ end
 
 entity.onMobSpawn = function(mob)
     mob:setMagicCastingEnabled(false)
-    mob:timer(30000, function(mob) mob:setMagicCastingEnabled(true) end)
+    mob:timer(30000, function(mobArg)
+        mobArg:setMagicCastingEnabled(true)
+    end)
 end
 
 entity.onMobFight = function(mob, target)
@@ -27,7 +29,9 @@ entity.onMobDeath = function(mob, player, isKiller)
     if fellow ~= nil then
         player:showText(fellow, ID.text.SEEMS_TO_BE_THE_END + xi.fellow_utils.checkPersonality(personality))
         player:setCharVar("[Quest]Looking_Glass", 3)
-        player:timer(30000, function(player) player:despawnFellow() end) -- 30 sec to talk to fellow
+        player:timer(30000, function(playerArg)
+            playerArg:despawnFellow()
+        end) -- 30 sec to talk to fellow
     end
 end
 

@@ -41,18 +41,17 @@ This file is part of DarkStar-server source code.
 CFellowEntity::CFellowEntity(CCharEntity* PChar)
 : CMobEntity()
 {
-    objtype                 = TYPE_FELLOW;
-    m_EcoSystem             = ECOSYSTEM::HUMANOID;
-    allegiance              = ALLEGIANCE_TYPE::PLAYER;
-    PMaster                 = PChar;
-    spawnAnimation          = SPAWN_ANIMATION::SPECIAL;
-    m_IsClaimable           = false;
-    m_bReleaseTargIDOnDeath = true;
-    isRenamed               = true;
+    objtype                     = TYPE_FELLOW;
+    m_EcoSystem                 = ECOSYSTEM::HUMANOID;
+    allegiance                  = ALLEGIANCE_TYPE::PLAYER;
+    PMaster                     = PChar;
+    spawnAnimation              = SPAWN_ANIMATION::SPECIAL;
+    m_IsClaimable               = false;
+    m_bReleaseTargIDOnDisappear = true;
+    isRenamed                   = true;
+    zoneKills                   = 0;
 
-    PAI = std::make_unique<CAIContainer>(this, std::make_unique<CPathFind>(this), std::make_unique<CFellowController>(PChar, this),
-                                         std::make_unique<CTargetFind>(this));
-    zoneKills   = 0;
+    PAI = std::make_unique<CAIContainer>(this, std::make_unique<CPathFind>(this), std::make_unique<CFellowController>(PChar, this), std::make_unique<CTargetFind>(this));
 }
 
 CFellowEntity::~CFellowEntity()

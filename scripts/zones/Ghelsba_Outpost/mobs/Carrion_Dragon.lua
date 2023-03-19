@@ -16,7 +16,11 @@ entity.onMobSpawn = function(mob)
 end
 
 entity.onMobFight = function(mob, target)
-    if mob:getHPP() <= 75 and mob:getID() == ID.mob.CARRION_DRAGON and mob:getLocalVar("CS_Lock") == 0 then
+    if
+        mob:getHPP() <= 75 and
+        mob:getID() == ID.mob.CARRION_DRAGON and
+        mob:getLocalVar("CS_Lock") == 0
+    then
         -- Disable the dragon
         mob:setLocalVar("CS_Lock", 1)
         SetServerVariable("[Mirror_Mirror]BCNMmobHP", mob:getHP())
@@ -24,7 +28,7 @@ entity.onMobFight = function(mob, target)
         mob:setMobAbilityEnabled(false)
 
         local players = mob:getBattlefield():getPlayers()
-        for i,player in pairs(players) do
+        for i, player in pairs(players) do
             player:disengage()
             local fellowParam = xi.fellow_utils.getFellowParam(player)
             player:startEvent(32004, 140, 0, 5, 0, 0, 0, 0, fellowParam)

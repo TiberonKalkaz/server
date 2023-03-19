@@ -11,15 +11,17 @@ entity.onTrade = function(player, npc, trade)
 end
 
 entity.onTrigger = function(player, npc)
-    local MirrorMirror = player:getQuestStatus(xi.quest.log_id.JEUNO,xi.quest.id.jeuno.MIRROR_MIRROR)
-    local MirrorMirrorProgress = player:getCharVar("[Quest]Mirror_Mirror")
+    local mirrorMirror = player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.MIRROR_MIRROR)
+    local mirrorMirrorProgress = player:getCharVar("[Quest]Mirror_Mirror")
     local fellowParam = xi.fellow_utils.getFellowParam(player)
 
-    if MirrorMirror == QUEST_ACCEPTED and MirrorMirrorProgress == 1 then
-        player:startEvent(745,0,0,0,0,0,0,0,fellowParam)
+    if
+        mirrorMirror == QUEST_ACCEPTED and
+        mirrorMirrorProgress == 1
+    then
+        player:startEvent(745, 0, 0, 0, 0, 0, 0, 0, fellowParam)
     else
-        -- This does not seem to be implemented in ASB yet
-        player:startEvent(650) -- 651 starts quest "A Job For The Consortium"
+        player:startEvent(650)
     end
 end
 

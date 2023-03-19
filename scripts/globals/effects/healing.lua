@@ -69,9 +69,11 @@ effectObject.onEffectTick = function(target, effect)
         local mpNotice      = target:getLocalVar("mpNotice")
         local mpp           = target:getMP() / target:getMaxMP() * 100
         local mpSignals     = false
-            if bit.band(optionsMask, bit.lshift(1,2)) == 4 then mpSignals = true end
+        if bit.band(optionsMask, bit.lshift(1, 2)) == 4 then
+            mpSignals = true
+        end
 
-        if mpp >= 67 and mpNotice == 1 and mpSignals == true then
+        if mpp >= 67 and mpNotice == 1 and mpSignals then
             master:showText(target, ID.text.FELLOW_MESSAGE_OFFSET + 45 + personality)
             target:setLocalVar("mpNotice", 0)
         elseif mpp < 67 and mpNotice ~= 1 then
@@ -113,6 +115,7 @@ effectObject.onEffectTick = function(target, effect)
             if target:getHPP() < 100 then
                 target:updateEnmityFromCure(target, healHP)
             end
+
             target:addHPLeaveSleeping(healHP)
             target:addMP(12 + ((healtime - 2) * (1 + target:getMod(xi.mod.CLEAR_MIND))) + target:getMod(xi.mod.MPHEAL))
         end

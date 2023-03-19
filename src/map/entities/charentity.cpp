@@ -66,13 +66,13 @@
 #include "charentity.h"
 #include "conquest_system.h"
 #include "enmity_container.h"
+#include "fellowentity.h"
 #include "item_container.h"
 #include "items/item_furnishing.h"
 #include "items/item_usable.h"
 #include "items/item_weapon.h"
 #include "job_points.h"
 #include "latent_effect_container.h"
-#include "fellowentity.h"
 #include "mobentity.h"
 #include "mobskill.h"
 #include "modifier.h"
@@ -504,7 +504,6 @@ bool CCharEntity::shouldPetPersistThroughZoning()
            petType == PET_TYPE::AUTOMATON ||
            (petType == PET_TYPE::JUG_PET && settings::get<bool>("map.KEEP_JUGPET_THROUGH_ZONING"));
 }
-
 
 void CCharEntity::setFellowZoningInfo()
 {
@@ -3011,4 +3010,3 @@ void CCharEntity::clearCharVarsWithPrefix(std::string const& prefix)
 
     sql->Query("DELETE FROM char_vars WHERE charid = %u AND varname LIKE '%s%%';", this->id, prefix.c_str());
 }
-
