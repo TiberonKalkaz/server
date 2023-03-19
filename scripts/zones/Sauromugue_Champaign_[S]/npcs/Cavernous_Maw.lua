@@ -8,6 +8,7 @@ local ID = require("scripts/zones/Sauromugue_Champaign_[S]/IDs")
 require("scripts/globals/maws")
 require("scripts/globals/teleports")
 require("scripts/globals/pets/fellow")
+require("scripts/globals/fellow_utils")
 -----------------------------------
 local entity = {}
 
@@ -21,9 +22,9 @@ entity.onTrigger = function(player, npc)
     local wotg_unlock = player:getFellowValue("wotg_unlock")
    
     if (hasMaw == true and bond ~= nil and wotg_unlock ~= nil and wotg_unlock ~= 1) then
-        local styleParam    = getStyleParam(player)
-        local lookParam     = getLookParam(player)
-        local fellowParam   = getFellowParam(player)
+        local styleParam    = xi.fellow_utils.getStyleParam(player)
+        local lookParam     = xi.fellow_utils.getLookParam(player)
+        local fellowParam   = xi.fellow_utils.getFellowParam(player)
 
         player:startEvent(265, 0, 23, 1743, 0, 0, 9568257, 0, fellowParam)
     else
@@ -33,9 +34,9 @@ end
 
 entity.onEventUpdate = function(player, csid, option)
     if (csid == 265) then
-        local styleParam    = getStyleParam(player)
-        local lookParam     = getLookParam(player)
-        local fellowParam   = getFellowParam(player)
+        local styleParam    = xi.fellow_utils.getStyleParam(player)
+        local lookParam     = xi.fellow_utils.getLookParam(player)
+        local fellowParam   = xi.fellow_utils.getFellowParam(player)
 
         player:updateEvent(0, 0, 1743, 0, 0, styleParam, lookParam, fellowParam)
     end

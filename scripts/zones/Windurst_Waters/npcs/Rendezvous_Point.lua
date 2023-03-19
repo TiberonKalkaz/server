@@ -5,6 +5,7 @@
 -----------------------------------
 local ID = require("scripts/zones/Windurst_Waters/IDs")
 require("scripts/globals/pets/fellow")
+require("scripts/globals/fellow_utils")
 require("scripts/globals/npc_util")
 require("scripts/globals/quests")
 -----------------------------------
@@ -22,9 +23,9 @@ entity.onTrigger = function(player,npc)
         if not player:hasItem(14810) then menuParam = menuParam - 32 end -- need pearl option
     local pearl         = 0 -- able to recieve dropped pearl
         if player:getFellowValue("pearlTime") > os.time() then pearl = 1 end -- not able
-    local styleParam    = getStyleParam(player)
-    local lookParam     = getLookParam(player)
-    local fellowParam   = getFellowParam(player)
+    local styleParam    = xi.fellow_utils.getStyleParam(player)
+    local lookParam     = xi.fellow_utils.getLookParam(player)
+    local fellowParam   = xi.fellow_utils.getFellowParam(player)
 
     if player:getQuestStatus(xi.quest.log_id.JEUNO,xi.quest.id.jeuno.MIRROR_MIRROR) == QUEST_COMPLETED then
         if player:getQuestStatus(xi.quest.log_id.JEUNO,xi.quest.id.jeuno.CHAMELEON_CAPERS) == QUEST_COMPLETED then
@@ -49,9 +50,9 @@ entity.onEventUpdate = function(player,csid,option)
     local job           = player:getFellowValue("job")
     local bond          = player:getFellowValue("bond")
     local armorLock     = player:getFellowValue("armorLock")
-    local styleParam    = getStyleParam(player)
-    local lookParam     = getLookParam(player)
-    local fellowParam   = getFellowParam(player)
+    local styleParam    = xi.fellow_utils.getStyleParam(player)
+    local lookParam     = xi.fellow_utils.getLookParam(player)
+    local fellowParam   = xi.fellow_utils.getFellowParam(player)
     local questParam    = 0 -- default quest chat
 -- TODO: Quest options as quests are implemented
         if player:getQuestStatus(xi.quest.log_id.JEUNO,xi.quest.id.jeuno.PAST_REFLECTIONS) == QUEST_ACCEPTED then

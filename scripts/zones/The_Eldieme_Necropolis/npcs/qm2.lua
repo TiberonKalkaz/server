@@ -5,6 +5,7 @@
 -----------------------------------
 local ID = require("scripts/zones/The_Eldieme_Necropolis/IDs")
 require("scripts/globals/pets/fellow")
+require("scripts/globals/fellow_utils")
 require("scripts/globals/quests")
 -----------------------------------
 local entity = {}
@@ -15,7 +16,7 @@ end
 entity.onTrigger = function(player,npc)
     local triggerFellow = player:getLocalVar("triggerFellow")
     local LookingGlass = player:getCharVar("[Quest]Looking_Glass")
-    local fellowParam = getFellowParam(player)
+    local fellowParam = xi.fellow_utils.getFellowParam(player)
     local queue = GetServerVariable("[Looking_Glass]Queue")
    
     if player:getQuestStatus(xi.quest.log_id.JEUNO,xi.quest.id.jeuno.GIRL_IN_THE_LOOKING_GLASS) == QUEST_ACCEPTED and
@@ -26,6 +27,8 @@ entity.onTrigger = function(player,npc)
             player:startEvent(65,195,0,0,0,0,0,0,fellowParam)
             player:setCharVar("[Quest]Looking_Glass", 2)
             SetServerVariable("[Looking_Glass]Queue", os.time() + 180)
+    else
+        player:messageSpecial(ID.text.NOTHING_OUT_OF_ORDINARY)
     end
 end
 

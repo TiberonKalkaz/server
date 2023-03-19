@@ -28,7 +28,7 @@ function onTrigger(player)
         return
     end
 
-    if xi.settings.main.ENABLE_ADVENTURING_FELLOWS == nil or xi.settings.main.ENABLE_ADVENTURING_FELLOWS == 0 then
+    if xi.settings.main.ENABLE_ADVENTURING_FELLOWS == nil or xi.settings.main.ENABLE_ADVENTURING_FELLOWS == false then
         error(player, "Fellows are disabled via server settings.")
         return
     end

@@ -5,6 +5,7 @@
 -----------------------------------
 local ID = require("scripts/zones/Ghelsba_Outpost/IDs")
 require("scripts/globals/pets/fellow")
+require("scripts/globals/fellow_utils")
 require("scripts/globals/battlefield")
 require("scripts/globals/keyitems")
 require("scripts/globals/quests")
@@ -35,7 +36,7 @@ end;
 -- from the core when a player disconnects or the time limit is up, etc
 
 battlefieldObject.onBattlefieldLeave = function(player,battlefield,leavecode)
-    local fellowParam = getFellowParam(player)
+    local fellowParam = xi.fellow_utils.getFellowParam(player)
 
     if leavecode == xi.battlefield.leaveCode.WON then --play end CS. Need time and battle id for record keeping + storage
         local name, clearTime, partySize = battlefield:getRecord()
@@ -46,19 +47,50 @@ battlefieldObject.onBattlefieldLeave = function(player,battlefield,leavecode)
 end;
 
 battlefieldObject.onEventUpdate = function(player,csid,option)
-    local fellowParam = getFellowParam(player)
-
-    if csid == 32001 then
+    -- no fellows outside the bcnm
+    if csid == 32001 or csid == 32002 then
         if player:getFellow() ~= nil then
             player:despawnFellow()
         end
+    end
+
+    if csid == 32001 then
+        local fellowParam = xi.fellow_utils.getFellowParam(player)
         player:updateEvent(140, 0, 5, 197, 0, 1048578, 0, fellowParam)
     end
+
+    if csid == 32004 then
+        local fellowParam = xi.fellow_utils.getFellowParam(player)
+        player:updateEvent(140, 0, 5, 0, 0, 1048578, 0, fellowParam)
+        local mob = GetMobByID(ID.mob.CARRION_DRAGON)
+        mob:setStatus(xi.status.INVISIBLE)
+    end
+    
 end;
 
 battlefieldObject.onEventFinish = function(player,csid,option)
     if csid == 32001 and option ~= 0 and player:getCharVar("[Quest]Mirror_Mirror") == 2 then
         player:setCharVar("[Quest]Mirror_Mirror", 3)
+    end
+
+    if csid == 32001 or csid == 32002 then
         SetServerVariable("[Mirror_Mirror]BCNMmobHP", 0)
     end
+
+    if csid == 32004 then
+        DespawnMob(ID.mob.CARRION_DRAGON)
+        SpawnMob(ID.mob.CARRION_DRAGON + 1)
+        local mob = GetMobByID(ID.mob.CARRION_DRAGON + 1)
+        local players = player:getBattlefield():getPlayers()
+        mob:setHP(GetServerVariable("[Mirror_Mirror]BCNMmobHP"))
+        mob:setPos(-189, -10, 42)
+
+        player:setLocalVar("triggerFellow", 1) -- no greeting on spawn
+        player:setLocalVar("FellowDisengage", 1) -- fellow cannot sync disengage
+        player:spawnFellow(player:getFellowValue("fellowid"))
+        player:getFellow():setPos(-197, -10, 40.5)
+        player:timer(20000, function(player) player:fellowAttack(mob) end)
+    end
 end;
+
+return battlefieldObject

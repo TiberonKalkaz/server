@@ -5,6 +5,7 @@
 -----------------------------------
 local ID = require("scripts/zones/Upper_Jeuno/IDs")
 require("scripts/globals/pets/fellow")
+require("scripts/globals/fellow_utils")
 require("scripts/globals/npc_util")
 require("scripts/globals/quests")
 require("scripts/globals/pets")
@@ -173,7 +174,7 @@ entity.onTrigger = function(player, npc)
     local bond = 0
     local weaponlevel = 0
     if UnlistedQualities == QUEST_COMPLETED then
-        fellowParam = getFellowParam(player)
+        fellowParam = xi.fellow_utils.getFellowParam(player)
         bond = player:getFellowValue("bond")
         weaponlevel = player:getFellowValue("weaponlvl")
     end
@@ -208,7 +209,7 @@ entity.onTrigger = function(player, npc)
     elseif MirrorMirror == QUEST_COMPLETED and player:getLocalVar("StartOver") == 1 then
         player:startEvent(10053,244,14810,0,0,0,0,0,fellowParam)
     elseif MirrorMirror == QUEST_COMPLETED then
-        if (player:getEquipID(xi.slot.EAR1) == 14810 or player:getEquipID(xi.slot.EAR2)) then
+        if (player:getEquipID(xi.slot.EAR1) == 14810 or player:getEquipID(xi.slot.EAR2) == 14810) then
             if (bond >= 10 and weaponlevel == 0) then
                 player:startEvent(10050, 0, 0, 0, 0, 0, 0, 0, fellowParam)
             elseif (bond >= 20 and weaponlevel == 1) then
