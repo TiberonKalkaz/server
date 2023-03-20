@@ -2308,7 +2308,8 @@ void CCharEntity::Die()
     setBlockingAid(false);
 
     // influence for conquest system
-    conquest::LoseInfluencePoints(this);
+    if (this->GetMLevel() >= 5)
+        conquest::LoseInfluencePoints(this);
 
     if (GetLocalVar("MijinGakure") == 0 &&
         (PBattlefield == nullptr || (PBattlefield->GetRuleMask() & RULES_LOSE_EXP) == RULES_LOSE_EXP) &&
