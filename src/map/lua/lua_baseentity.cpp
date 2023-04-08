@@ -13730,6 +13730,7 @@ void CLuaBaseEntity::setMobLevel(uint8 level)
     if (auto* PMob = dynamic_cast<CMobEntity*>(m_PBaseEntity))
     {
         PMob->SetMLevel(level);
+        PMob->SetSLevel(level);
         mobutils::CalculateMobStats(PMob);
         mobutils::GetAvailableSpells(PMob);
     }
