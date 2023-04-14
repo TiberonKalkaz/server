@@ -1321,7 +1321,7 @@ local function checkReqs(player, npc, bfid, registrant)
 
         [1057] = function() -- Quest: Apocalypse Nigh
             return player:hasCompletedQuest(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.APOCALYPSE_NIGH) or
-                player:getCharVar('ApocalypseNigh') >= 3
+                player:getCharVar("Quest[3][89]Status") >= 3
         end,
 
         [1290] = function() -- NW Apollyon
@@ -1739,7 +1739,7 @@ local function checkSkip(player, bfid)
             return player:hasCompletedQuest(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.APOCALYPSE_NIGH) or
                 (
                     player:getQuestStatus(xi.quest.log_id.JEUNO, xi.quest.id.jeuno.APOCALYPSE_NIGH) == QUEST_ACCEPTED and
-                    player:getCharVar('ApocalypseNigh') > 3
+                    player:getCharVar("Quest[3][89]Status") > 3
                 )
         end,
 
