@@ -444,8 +444,6 @@ void SmallPacket0x00C(map_session_data_t* const PSession, CCharEntity* const PCh
 
         PChar->resetPetZoningInfo();
     }
-    // Reset the petZoning info
-    PChar->resetPetZoningInfo();
 
     // respawn fellow from last zone if applicable
     if (PChar->fellowZoningInfo.respawnFellow)
