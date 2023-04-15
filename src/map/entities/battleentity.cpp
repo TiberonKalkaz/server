@@ -2064,21 +2064,22 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
         else if ((xirand::GetRandomNumber(100) < attack.GetHitRate() || attackRound.GetSATAOccured()) &&
                  !PTarget->StatusEffectContainer->HasStatusEffect(EFFECT_ALL_MISS))
         {
-            // attack hit, try to be absorbed by shadow unless it is a SATA attack round
-            if (!(attackRound.GetSATAOccured()) && battleutils::IsAbsorbByShadow(PTarget, this))
-            {
-                actionTarget.messageID = MSGBASIC_SHADOW_ABSORB;
-                actionTarget.param     = 1;
-                actionTarget.reaction  = REACTION::EVADE;
-                attack.SetEvaded(true);
-            }
-            else if (attack.IsParried())
+            // attack hit, try to be deflected by parry unless it is a SATA attack round
+            if (!(attackRound.GetSATAOccured()) && attack.IsParried())
             {
                 actionTarget.messageID  = 70;
                 actionTarget.reaction   = REACTION::PARRY | REACTION::HIT;
                 actionTarget.speceffect = SPECEFFECT::NONE;
                 battleutils::HandleTacticalParry(PTarget);
                 battleutils::HandleIssekiganEnmityBonus(PTarget, this);
+            }
+            // attack hit, try to be absorbed by shadow unless it is a SATA attack round
+            else if (!(attackRound.GetSATAOccured()) && battleutils::IsAbsorbByShadow(PTarget, this))
+            {
+                actionTarget.messageID = MSGBASIC_SHADOW_ABSORB;
+                actionTarget.param     = 1;
+                actionTarget.reaction  = REACTION::EVADE;
+                attack.SetEvaded(true);
             }
             else if (attack.CheckAnticipated() || attack.CheckCounter())
             {
@@ -2115,7 +2116,7 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
                         // Calculate attack bonus for Counterstance Effect Job Points
                         // Needs verification, as there appears to be conflicting information regarding an attack bonus based on DEX
                         // vs a base damage increase.
-                        float csJpAtkBonus = 0;
+                        float csJpAtkBonus = 1;
                         if (PTarget->objtype == TYPE_PC && PTarget->GetMJob() == JOB_MNK && PTarget->StatusEffectContainer->HasStatusEffect(EFFECT_COUNTERSTANCE))
                         {
                             auto*  PChar        = static_cast<CCharEntity*>(PTarget);
@@ -2163,11 +2164,16 @@ bool CBattleEntity::OnAttack(CAttackState& state, action_t& action)
 
                 actionTarget.reaction = REACTION::HIT;
 
-                if (this->GetLocalVar("TREDECIM_COUNTER") == 13 && weaponSlot == SLOT_MAIN)
+                if (this->objtype == TYPE_PC && weaponSlot == SLOT_MAIN && ((CCharEntity*)this)->getCharVar("TREDECIM_COUNTER") > 12)
                 {
-                    // Ensure critical is only set to main weapon slot
-                    attack.SetCritical(true, weaponSlot, attack.IsGuarded());
-                    this->SetLocalVar("TREDECIM_COUNTER", -1);
+                    // Check for Tredecim
+                    auto* equippedWeapon = dynamic_cast<CItemWeapon*>(this->m_Weapons[SLOT_MAIN]);
+                    if (equippedWeapon->getID() == 18052)
+                    {
+                        // Ensure critical is only set to main weapon slot
+                        attack.SetCritical(true, weaponSlot, attack.IsGuarded());
+                        ((CCharEntity*)this)->setCharVar("TREDECIM_COUNTER", -1);
+                    }
                 }
 
                 // Critical hit.

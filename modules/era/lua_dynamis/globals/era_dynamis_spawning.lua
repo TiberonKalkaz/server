@@ -45,6 +45,43 @@ xi.dynamis = xi.dynamis or {  }
 --          Dynamis Mob Spawning          --
 --------------------------------------------
 
+xi.dynamis.spawnWaveIndicies = function(zone, waveNumber, indicies)
+    if not waveNumber then
+        return
+    end
+
+    if not indicies then
+        return
+    end
+
+    local zoneID = zone:getID()
+
+    local mobList = xi.dynamis.mobList[zone:getID()][waveNumber].wave
+    if not mobList then
+        return
+    end
+
+    for _, mobIndex in indicies do
+        local mobType = xi.dynamis.mobList[zoneID][mobIndex].info[1]
+        if mobType == "NM" then
+            xi.dynamis.nmDynamicSpawn(mobIndex, nil, true, zoneID)
+        else
+            xi.dynamis.nonStandardDynamicSpawn(mobIndex, nil, true, zoneID)
+        end
+    end
+
+    -- Account for previous waves if this is not the first wave
+    if waveNumber > 1 then
+        for n = 1, waveNumber do
+            zone:setLocalVar(string.format("Wave_%i_Spawned", n), 1)
+        end
+    end
+
+    -- Update current variables for wave
+    zone:setLocalVar(string.format("Wave_%i_Spawned", waveNumber), 1)
+    zone:setLocalVar(string.format("[DYNA]CurrentWave_%s", zoneID), waveNumber)
+end
+
 xi.dynamis.spawnWave = function(zone, zoneID, waveNumber)
     for _, mobIndex in pairs(xi.dynamis.mobList[zoneID][waveNumber].wave) do
         local mobType = xi.dynamis.mobList[zoneID][mobIndex].info[1]
@@ -61,6 +98,7 @@ xi.dynamis.spawnWave = function(zone, zoneID, waveNumber)
         end
     end
     zone:setLocalVar(string.format("Wave_%i_Spawned", waveNumber), 1)
+    zone:setLocalVar(string.format("[DYNA]CurrentWave_%s", zoneID), waveNumber)
 end
 
 xi.dynamis.parentOnEngaged = function(mob, target)
@@ -381,7 +419,7 @@ xi.dynamis.normalDynamicSpawn = function(oMob, oMobIndex, target)
                     xi.dynamis.mobOnDeath(mobArg)
                 end,
                 onMobDespawn = function (mob) xi.dynamis.mobOnDespawn(mob) end,
-                releaseIdOnDeath = true,
+                releaseIdOnDisappear = true,
                 spawnSet = 3,
                 specialSpawnAnimation = spawnAnim,
                 entityFlags = nameObj[job][6],
@@ -596,7 +634,7 @@ xi.dynamis.nonStandardDynamicSpawn = function(mobIndex, oMob, forceLink, zoneID,
             xi.dynamis.mobOnDeath(mob)
         end,
         onMobDespawn = function (mob) xi.dynamis.mobOnDespawn(mob) end,
-        releaseIdOnDeath = true,
+        releaseIdOnDisappear = true,
         spawnSet = 3,
         specialSpawnAnimation = oMob ~= nil,
         mixins = mobFunctions[mobMobType]["mixins"],
@@ -1204,7 +1242,7 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
         onMobWeaponSkill= xi.dynamis.nmFunctions[xi.dynamis.nmInfoLookup[mobName][7]]["onMobWeaponSkill"][1],
         onMobDeath= xi.dynamis.nmFunctions[xi.dynamis.nmInfoLookup[mobName][7]]["onMobDeath"][1],
         onMobDespawn = function (mob) xi.dynamis.mobOnDespawn(mob) end,
-        releaseIdOnDeath = true,
+        releaseIdOnDisappear = true,
         spawnSet = 3,
         specialSpawnAnimation = oMob ~= nil,
         entityFlags = flags,
@@ -1295,15 +1333,6 @@ xi.dynamis.spawnDynamicPet =function(target, oMob, mobJob)
             [327] = -- Goblin Family
             {
                 [false] = { "V. Slime" , 130, 134, 0, 54, 229 }, -- Normal Goblin BST (VSlime)
-                [true] = -- Goblin NM
-                {
-                    ["Trailblix Goatmug"] = { "V. Slime" , 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
-                    ["Rutrix Hamgams"] = { "V. Slime" , 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
-                    ["Blazox Boneybod"] = { "V. Slime", 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
-                    ["Routsix Rubbertendon"] = { "V. Slime" , 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
-                    ["Blazax Boneybad"] = { "V. Slime" , 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
-                    ["Woodnix Shrillwistle"] = { "W. Slime" , 7, 40, 0, 54, 229 }, -- NM Goblin BST (WSSlime)
-                },
             },
             [334] = -- Orc Family
             {
@@ -1346,17 +1375,24 @@ xi.dynamis.spawnDynamicPet =function(target, oMob, mobJob)
                     ["Soo Jopo the Fiendking"] = { "V. Crow", 100, 134, 0, 52, 55 }, -- NM Yagudo BST (VCro)
                 },
             },
+            [373] = -- Goblin Armored Family
+            {
+                [true] = -- Goblin NM
+                {
+                    ["Trailblix Goatmug"] = { "V. Slime" , 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
+                    ["Rutrix Hamgams"] = { "V. Slime" , 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
+                    ["Blazox Boneybod"] = { "V. Slime", 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
+                    ["Routsix Rubbertendon"] = { "V. Slime" , 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
+                    ["Blazax Boneybad"] = { "V. Slime" , 130, 134, 0, 54, 229 }, -- NM Goblin BST (VSlime)
+                    ["Woodnix Shrillwistle"] = { "W. Slime" , 7, 40, 0, 54, 229 }, -- NM Goblin BST (WSSlime)
+                },
+            },
         },
         [xi.job.DRG] =
         {
             [327] = -- Goblin Family
             {
                 [false] = { "V. Wyvern", 27, 134, 0, 0, 714 },
-                [true] =
-                {
-                    ["Draklix Scalecrust"] = { "V. Wyvern", 27, 134, 0, 0, 714 }, -- Normal Vanguard's Wyvern (Vwyv)
-                    ["Wyrmwix Snakespecs"] = { "V. Wyvern", 27, 134, 0, 0, 714 }, -- Normal Vanguard's Wyvern (Vwyv)
-                },
             },
             [334] = -- Orc Family
             {
@@ -1408,18 +1444,20 @@ xi.dynamis.spawnDynamicPet =function(target, oMob, mobJob)
                     ["Apocalyptic Beast"] = { "Dragon's Wyvern", 27, 134, 0, 0, 714 }, -- Dragon's Wyvern (Dwyv)
                 },
             },
+            [373] = -- Goblin Armored Family
+            {
+                [true] =
+                {
+                    ["Draklix Scalecrust"] = { "V. Wyvern", 27, 134, 0, 0, 714 }, -- Normal Vanguard's Wyvern (Vwyv)
+                    ["Wyrmwix Snakespecs"] = { "V. Wyvern", 27, 134, 0, 0, 714 }, -- Normal Vanguard's Wyvern (Vwyv)
+                },
+            },
         },
         [xi.job.SMN] =
         {
             [327] = -- Goblin Family
             {
                 [false] = { "V. Avatar" , 36, 134, 0, 0, 34 }, -- Vanguard's Avatar (VAva)
-                [true] = -- Goblin NM
-                {
-                    ["Morblox Chubbychin"] = { "V. Avatar" , 36, 134, 0, 0, 34 }, -- Vanguard's Avatar (VAva)
-                    ["Morgmox Moldnoggin"] = { "V. Avatar" , 36, 134, 0, 0, 34 }, -- Vanguard's Avatar (VAva)
-                    ["Mortilox Wartpaws"] = { "V. Avatar" , 36, 134, 0, 0, 34 }, -- Vanguard's Avatar (VAva)
-                },
             },
             [334] = -- Orc Family
             {
@@ -1470,6 +1508,15 @@ xi.dynamis.spawnDynamicPet =function(target, oMob, mobJob)
                 [true] = -- Dwagon NM
                 {
                     ["Apocalyptic Beast"] = { "Dragon's Avatar", 36, 134, 0, 0, 34 }, -- Dragon's Avatar (Dava)
+                },
+            },
+            [373] = -- Goblin Armored Family
+            {
+                [true] = -- Goblin NM
+                {
+                    ["Morblox Chubbychin"] = { "V. Avatar" , 36, 134, 0, 0, 34 }, -- Vanguard's Avatar (VAva)
+                    ["Morgmox Moldnoggin"] = { "V. Avatar" , 36, 134, 0, 0, 34 }, -- Vanguard's Avatar (VAva)
+                    ["Mortilox Wartpaws"] = { "V. Avatar" , 36, 134, 0, 0, 34 }, -- Vanguard's Avatar (VAva)
                 },
             },
         },
@@ -1560,7 +1607,7 @@ xi.dynamis.spawnDynamicPet =function(target, oMob, mobJob)
         onMobRoam = petFunctions[mobJob][functionLookup]["onMobRoam"][1],
         onMobDeath = function(mob, player, optParams) xi.dynamis.onPetDeath(mob) end,
         onMobDespawn = function (mob) xi.dynamis.mobOnDespawn(mob) end,
-        releaseIdOnDeath = true,
+        releaseIdOnDisappear = true,
         spawnSet = 3,
         specialSpawnAnimation = oMob ~= nil,
         mixins = petFunctions[mobJob][functionLookup]["mixins"],
