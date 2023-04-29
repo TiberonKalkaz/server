@@ -59,6 +59,11 @@ CCharEntity* CZoneInstance::GetCharByID(uint32 id)
 {
     TracyZoneScoped;
     CCharEntity* PEntity = nullptr;
+    PEntity              = __super::GetCharByID(id);
+    if (PEntity != nullptr)
+    {
+        return PEntity;
+    }
     for (const auto& instance : instanceList)
     {
         PEntity = instance->GetCharByID(id);
@@ -94,6 +99,10 @@ void CZoneInstance::InsertMOB(CBaseEntity* PMob)
     {
         PMob->PInstance->InsertMOB(PMob);
     }
+    else
+    {
+        __super::InsertMOB(PMob);
+    }
 }
 
 void CZoneInstance::InsertNPC(CBaseEntity* PNpc)
@@ -101,6 +110,10 @@ void CZoneInstance::InsertNPC(CBaseEntity* PNpc)
     if (PNpc->PInstance)
     {
         PNpc->PInstance->InsertNPC(PNpc);
+    }
+    else
+    {
+        __super::InsertNPC(PNpc);
     }
 }
 
@@ -117,6 +130,10 @@ void CZoneInstance::InsertPET(CBaseEntity* PPet)
     if (PPet->PInstance)
     {
         PPet->PInstance->InsertPET(PPet);
+    }
+    else
+    {
+        __super::InsertPET(PPet);
     }
 }
 
@@ -196,6 +213,13 @@ void CZoneInstance::IncreaseZoneCounter(CCharEntity* PChar)
             {
                 PChar->PInstance = instance.get();
             }
+        }
+
+        // Still not in an instance - TODO add hybrid check
+        if (!PChar->PInstance)
+        {
+            __super::IncreaseZoneCounter(PChar);
+            return;
         }
     }
 

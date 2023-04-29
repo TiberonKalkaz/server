@@ -1081,7 +1081,7 @@ void CZone::CharZoneIn(CCharEntity* PChar)
         PChar->PTreasurePool->AddMember(PChar);
     }
 
-    if (m_zoneType != ZONE_TYPE::DUNGEON_INSTANCED)
+    if (m_zoneType != ZONE_TYPE::DUNGEON_INSTANCED || m_zoneID == 140)
     {
         charutils::ClearTempItems(PChar);
         PChar->PInstance = nullptr;

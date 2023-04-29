@@ -45,7 +45,7 @@ CInstanceLoader::CInstanceLoader(uint16 instanceid, CCharEntity* PRequester)
     auto   instanceData = instanceutils::GetInstanceData(instanceid);
     CZone* PZone        = zoneutils::GetZone(instanceData.instance_zone);
 
-    if (!PZone || PZone->GetType() != ZONE_TYPE::DUNGEON_INSTANCED)
+    if ((!PZone || PZone->GetType() != ZONE_TYPE::DUNGEON_INSTANCED) && PZone->GetID() != ZONE_GHELSBA_OUTPOST)
     {
         ShowError("Invalid zone for instanceid: %d", instanceid);
         return;

@@ -268,8 +268,10 @@ namespace zoneutils
 
                 uint32 NpcID  = sql->GetUIntData(1);
                 uint16 ZoneID = (NpcID - 0x1000000) >> 12;
+                if (NpcID == 17350932)
+                    ShowDebug("NPC 17350932 loading");
 
-                if (GetZone(ZoneID)->GetType() != ZONE_TYPE::DUNGEON_INSTANCED)
+                if (GetZone(ZoneID)->GetType() != ZONE_TYPE::DUNGEON_INSTANCED || ZoneID == 140)
                 {
                     CNpcEntity* PNpc = new CNpcEntity;
                     PNpc->targid     = NpcID & 0xFFF;
@@ -380,7 +382,7 @@ namespace zoneutils
                 uint16    ZoneID   = (uint16)sql->GetUIntData(0);
                 ZONE_TYPE zoneType = GetZone(ZoneID)->GetType();
 
-                if (zoneType != ZONE_TYPE::DUNGEON_INSTANCED)
+                if (zoneType != ZONE_TYPE::DUNGEON_INSTANCED || ZoneID == 140)
                 {
                     CMobEntity* PMob = new CMobEntity;
 
@@ -694,7 +696,7 @@ namespace zoneutils
         {
             ZONE_TYPE zoneType    = static_cast<ZONE_TYPE>(sql->GetUIntData(0));
             uint8     restriction = static_cast<uint8>(sql->GetUIntData(1));
-            if (zoneType == ZONE_TYPE::DUNGEON_INSTANCED)
+            if (zoneType == ZONE_TYPE::DUNGEON_INSTANCED || ZoneID == 140)
             {
                 return new CZoneInstance((ZONEID)ZoneID, GetCurrentRegion(ZoneID), GetCurrentContinent(ZoneID), restriction);
             }
