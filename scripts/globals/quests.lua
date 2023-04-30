@@ -78,7 +78,7 @@ xi.quest.id =
     -----------------------------------
     [xi.quest.area[xi.quest.log_id.SANDORIA]] =
     {
-                A_SENTRYS_PERIL             = 0,   -- + Converted
+        A_SENTRYS_PERIL             = 0,   -- + Converted
         WATERS_OF_THE_CHEVAL        = 1,   -- + Converted
         ROSEL_THE_ARMORER           = 2,   -- + Converted
         THE_PICKPOCKET              = 3,   -- + Converted

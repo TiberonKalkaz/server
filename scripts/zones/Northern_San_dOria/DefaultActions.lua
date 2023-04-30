@@ -1,6 +1,7 @@
 local ID = require("scripts/zones/Northern_San_dOria/IDs")
 
 return {
+
     ['Abeaule']     = { text = ID.text.ABEAULE_DIALOG_THANKS },
     ['Abioleget']   = { text = ID.text.ABIOLEGET_DIALOG },
     ['Ailbeche']    = { event = 868 },
@@ -8,6 +9,7 @@ return {
     ['Belgidiveau'] = { event = 585 },
     ['Chasalvige']  = { event = 6 },
     ['Eperdur']     = { event = 678 },
+
     ['Gilipese']   =
     {
         onTrigger = function(player, npc)
