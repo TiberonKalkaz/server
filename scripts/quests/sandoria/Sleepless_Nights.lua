@@ -55,12 +55,12 @@ quest.sections =
             {
                 onTrade = function(player, npc, trade)
                     if npcUtil.tradeHasExactly(trade, { { xi.items.JUG_OF_MARY_S_MILK, 1 } }) then
-                        return quest:event(84)
+                        return quest:progressEvent(84)
                     end
                 end,
 
                 onTrigger = function(player, npc)
-                    return quest:progressEvent(83)
+                    return quest:event(83)
                 end,
 
             },
