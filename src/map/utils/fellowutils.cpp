@@ -189,7 +189,9 @@ namespace fellowutils
                 Fellow->name.insert(0, (const char*)sql->GetData(1));
 
                 Fellow->m_Family = (uint16)sql->GetIntData(2);
-                memcpy(&Fellow->look, sql->GetData(3), 20);
+                uint16 sqlModelID[10];
+                memcpy(&sqlModelID, sql->GetData(3), 20);
+                Fellow->look      = look_t(sqlModelID);
                 Fellow->size      = 0;
                 Fellow->EcoSystem = (ECOSYSTEM)sql->GetIntData(4);
                 Fellow->m_Element = 0;
@@ -471,15 +473,15 @@ namespace fellowutils
 
             PMaster->loc.zone->InsertPET(PFellow);
             PMaster->m_PFellow = PFellow;
-            ((CCharEntity*)PMaster)->pushPacket(new CCharUpdatePacket((CCharEntity*)PMaster));
-            ((CCharEntity*)PMaster)->pushPacket(new CCharSyncPacket((CCharEntity*)PMaster));
+            PMaster->pushPacket(new CCharUpdatePacket(PMaster));
+            PMaster->pushPacket(new CCharSyncPacket(PMaster));
             luautils::OnMobSpawn(PFellow);
 
             // apply stats from previous zone if this fellow is being transfered
             if (spawningFromZone == true)
             {
-                PFellow->health.hp = ((CCharEntity*)PMaster)->fellowZoningInfo.fellowHP;
-                PFellow->health.mp = ((CCharEntity*)PMaster)->fellowZoningInfo.fellowMP;
+                PFellow->health.hp = PMaster->fellowZoningInfo.fellowHP;
+                PFellow->health.mp = PMaster->fellowZoningInfo.fellowMP;
             }
             else if (spawningFromZone == false)
             {
@@ -491,7 +493,7 @@ namespace fellowutils
         }
         else
         {
-            static_cast<CCharEntity*>(PMaster)->resetFellowZoningInfo();
+            PMaster->resetFellowZoningInfo();
         }
     }
 
@@ -528,12 +530,12 @@ namespace fellowutils
     {
         CFellowEntity* PFellow    = new CFellowEntity(PMaster);
         PFellow->loc              = PMaster->loc;
+        PFellow->loc.p            = PMaster->loc.p;
         PFellow->m_OwnerID.id     = PMaster->id;
         PFellow->m_OwnerID.targid = PMaster->targid;
+        Fellow_t* fellow          = g_PFellowList[FellowID];
 
-        PFellow->loc.p                                     = PMaster->loc.p;
-        Fellow_t* fellow                                   = g_PFellowList[FellowID];
-        ((CCharEntity*)PMaster)->fellowZoningInfo.fellowID = FellowID;
+        PMaster->fellowZoningInfo.fellowID = FellowID;
 
         PFellow->look = fellow->look;
         uint8 type    = 0;
@@ -559,7 +561,7 @@ namespace fellowutils
             PFellow->look.sub = (uint16)sql->GetIntData(0) + 0x7000;
         }
 
-        if (((uint16)sql->GetIntData(1) == SKILL_HAND_TO_HAND || (((uint16)sql->GetIntData(1) == SKILL_KATANA)) && settings::get<bool>("main.ALLOW_ADVENTURING_FELLOW_KATANA_DW")))
+        if ((uint16)sql->GetIntData(1) == SKILL_HAND_TO_HAND || (((uint16)sql->GetIntData(1) == SKILL_KATANA) && settings::get<bool>("main.ALLOW_ADVENTURING_FELLOW_KATANA_DW")))
         {
             PFellow->look.sub = PFellow->look.main + 0x1000;
         }
@@ -1007,8 +1009,7 @@ namespace fellowutils
                 exp = 300;
         }
         // ShowDebug("fellowutils::Distribute... exp is: %u\n", exp);
-        fellowutils::AddExperiencePoints(PFellow, PMob, (uint32)exp, PChar);
-        // Add fellow_points here
+        fellowutils::AddExperiencePoints(PFellow, PMob, exp, PChar);
         fellowutils::AddKillCount(PChar);
     }
 
@@ -1325,9 +1326,6 @@ namespace fellowutils
             case SKILL_DAGGER:
                 damage = floor(level * 0.4 + 2.3);
                 break;
-            case SKILL_SWORD:
-                damage = floor((level * 0.5) + 5);
-                break;
             case SKILL_GREAT_SWORD:
                 damage = floor((level * 1.05) + 12.5);
                 break;
@@ -1355,6 +1353,10 @@ namespace fellowutils
             case SKILL_STAFF: // Pole class
                 damage = floor((level * 0.71) + 8.39);
                 break;
+            case SKILL_SWORD:
+            default:
+                damage = floor((level * 0.5) + 5);
+                break;
         }
         return damage;
     }
@@ -1368,9 +1370,6 @@ namespace fellowutils
                 break;
             case SKILL_DAGGER:
                 delay = 195;
-                break;
-            case SKILL_SWORD:
-                delay = 236;
                 break;
             case SKILL_GREAT_SWORD:
                 delay = 444;
@@ -1398,6 +1397,10 @@ namespace fellowutils
                 break;
             case SKILL_STAFF: // Pole class
                 delay = 402;
+                break;
+            case SKILL_SWORD:
+            default:
+                delay = 236;
                 break;
         }
         return (delay * 1000) / 60;

@@ -3610,7 +3610,7 @@ namespace luautils
     {
         TracyZoneScoped;
 
-        if (PMob == nullptr || PMob->objtype != TYPE_MOB || PMob->objtype != TYPE_FELLOW)
+        if (PMob == nullptr || PMob->objtype != TYPE_MOB)
         {
             return -1;
         }

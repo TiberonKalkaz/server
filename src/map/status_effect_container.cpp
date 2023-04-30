@@ -1845,11 +1845,11 @@ void CStatusEffectContainer::HandleAura(CStatusEffect* PStatusEffect)
                 distanceSquared(m_POwner->loc.p, PFellow->loc.p) < aura_range * aura_range && !PFellow->isDead())
             {
                 CStatusEffect* PEffect = new CStatusEffect(
-                    (EFFECT)PStatusEffect->GetSubID(),    // Effect ID
-                    (uint16)PStatusEffect->GetSubID(),    // Effect Icon (Associated with ID)
-                    (uint16)PStatusEffect->GetSubPower(), // Power
-                    3,                                    // Tick
-                    4);                                   // Duration
+                    (EFFECT)PStatusEffect->GetSubID(), // Effect ID
+                    (uint16)PStatusEffect->GetSubID(), // Effect Icon (Associated with ID)
+                    PStatusEffect->GetSubPower(),      // Power
+                    3,                                 // Tick
+                    4);                                // Duration
                 PEffect->SetFlag(EFFECTFLAG_NO_LOSS_MESSAGE);
                 PFellow->StatusEffectContainer->AddStatusEffect(PEffect, true);
             }
