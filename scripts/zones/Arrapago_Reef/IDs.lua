@@ -26,6 +26,7 @@ zones[xi.zone.ARRAPAGO_REEF] =
         STAGING_GATE_ILRUSI           = 7323, -- Ilrusi Atoll Staging Point.
         CANNOT_LEAVE                  = 7328, -- You cannot leave this area while in the possession of <keyitem>.
         RESPONSE                      = 7337, -- There is no response...
+        ASSAULT_START_OFFSET          = 7454, -- Max MP Down removed for <name>.
         DOOR_IS_LOCKED                = 7466, -- The door is locked.  You might be able to open it with <item>.
         DOOR_IS_LOCKED2               = 7467, -- The door is locked.  You might be able to open it with <item> or <item>.
         KEY_BREAKS                    = 7468, -- The <item> breaks!
@@ -56,11 +57,11 @@ zones[xi.zone.ARRAPAGO_REEF] =
         {
             [16998653] = 16998655, -- 136.234 -6.831 468.779
         },
-        MEDUSA                = DYNAMIC_LOOKUP,
-        LIL_APKALLU           = DYNAMIC_LOOKUP,
-        VELIONIS              = DYNAMIC_LOOKUP,
-        ZAREEHKL_THE_JUBILANT = DYNAMIC_LOOKUP,
-        NUHN                  = DYNAMIC_LOOKUP,
+        MEDUSA                = GetFirstID("Medusa"),
+        LIL_APKALLU           = GetFirstID("Lil_Apkallu"),
+        VELIONIS              = GetFirstID("Velionis"),
+        ZAREEHKL_THE_JUBILANT = GetFirstID("Zareehkl_the_Jubilant"),
+        NUHN                  = GetFirstID("Nuhn"),
     },
     npc =
     {

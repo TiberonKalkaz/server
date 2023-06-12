@@ -17,8 +17,11 @@ zoneObject.onInitialize = function(zone)
     xi.conq.setRegionalConquestOverseers(zone:getRegionID())
 end
 
-zoneObject.onConquestUpdate = function(zone, updatetype)
-    xi.conq.onConquestUpdate(zone, updatetype)
+zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)
+    xi.conq.onConquestUpdate(zone, updatetype, influence, owner, ranking, isConquestAlliance)
+end
+
+zoneObject.onZoneTick = function(zone)
 end
 
 zoneObject.onZoneIn = function(player, prevZone)
@@ -29,7 +32,7 @@ zoneObject.onZoneIn = function(player, prevZone)
         player:getYPos() == 0 and
         player:getZPos() == 0
     then
-        player:setPos(315.644, -1.517, -60.633, 108)
+        player:setPos(-219, 0, -318, 191)
     end
 
     if quests.rainbow.onZoneIn(player) then

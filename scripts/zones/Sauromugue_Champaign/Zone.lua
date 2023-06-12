@@ -22,6 +22,9 @@ zoneObject.onInitialize = function(zone)
     xi.voidwalker.zoneOnInit(zone)
 end
 
+zoneObject.onZoneTick = function(zone)
+end
+
 zoneObject.onZoneIn = function(player, prevZone)
     local cs = -1
 
@@ -30,7 +33,7 @@ zoneObject.onZoneIn = function(player, prevZone)
         player:getYPos() == 0 and
         player:getZPos() == 0
     then
-        player:setPos(-103.991, -25.956, -425.221, 190)
+        player:setPos(-571, 1, 339, 7)
     end
 
     if quests.rainbow.onZoneIn(player) then
@@ -40,8 +43,8 @@ zoneObject.onZoneIn = function(player, prevZone)
     return cs
 end
 
-zoneObject.onConquestUpdate = function(zone, updatetype)
-    xi.conq.onConquestUpdate(zone, updatetype)
+zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)
+    xi.conq.onConquestUpdate(zone, updatetype, influence, owner, ranking, isConquestAlliance)
 end
 
 zoneObject.onTriggerAreaEnter = function(player, triggerArea)

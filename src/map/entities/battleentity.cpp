@@ -101,7 +101,7 @@ CBattleEntity::~CBattleEntity() = default;
 
 bool CBattleEntity::isDead()
 {
-    return (health.hp <= 0 || status == STATUS_TYPE::DISAPPEAR || PAI->IsCurrentState<CDeathState>() || PAI->IsCurrentState<CDespawnState>());
+    return (health.hp <= 0 || status == STATUS_TYPE::DISAPPEAR || (PAI && PAI->IsCurrentState<CDeathState>()) || (PAI && PAI->IsCurrentState<CDespawnState>()));
 }
 
 bool CBattleEntity::isAlive()
@@ -415,7 +415,7 @@ int16 CBattleEntity::GetAmmoDelay()
 uint16 CBattleEntity::GetMainWeaponDmg()
 {
     TracyZoneScoped;
-    if (objtype == TYPE_PET || objtype == TYPE_MOB)
+    if ((objtype == TYPE_PET && static_cast<CPetEntity*>(this)->getPetType() == PET_TYPE::JUG_PET) || objtype == TYPE_MOB)
     {
         return mobutils::GetWeaponDamage(static_cast<CMobEntity*>(this), SLOT_MAIN);
     }
@@ -469,7 +469,7 @@ uint16 CBattleEntity::GetRangedWeaponDmg()
     if (objtype == TYPE_MOB)
     {
         auto* PMob = static_cast<CMobEntity*>(this);
-        return (mobutils::GetWeaponDamage(PMob, SLOT_RANGED) + getMod(Mod::RANGED_DMG_RATING)) * battleutils::GetRangedDistanceCorrection(this, distance(this->loc.p, this->GetBattleTarget()->loc.p));
+        return (mobutils::GetWeaponDamage(PMob, SLOT_RANGED) + getMod(Mod::RANGED_DMG_RATING)) * battleutils::GetRangedDistanceCorrection(this, distance(this->loc.p, this->GetBattleTarget()->loc.p), false);
     }
 
     if (auto* weapon = dynamic_cast<CItemWeapon*>(m_Weapons[SLOT_RANGED]))
@@ -680,7 +680,14 @@ int32 CBattleEntity::takeDamage(int32 amount, CBattleEntity* attacker /* = nullp
         this->SetLocalVar("weaponskillHit", 0);
     }
 
-    // if attack has master, if it has a master -> if its a PC and the enmity containter holds the mob
+    if (getMod(Mod::ABSORB_DMG_TO_MP) > 0)
+    {
+        int16 absorbedMP = (int16)(amount * getMod(Mod::ABSORB_DMG_TO_MP) / 100);
+        if (absorbedMP > 0)
+        {
+            addMP(absorbedMP);
+        }
+    }
 
     return addHP(-amount);
 }
@@ -794,7 +801,7 @@ uint16 CBattleEntity::RATT(uint8 skill, float distance, uint16 bonusSkill)
 
     if ((this->objtype == TYPE_PC) || (this->objtype == TYPE_PET && this->PMaster->objtype == TYPE_PC && ((CPetEntity*)this)->getPetType() == PET_TYPE::AUTOMATON)) // PC or PC Automaton
     {
-        ATT = int32((float)ATT * battleutils::GetRangedDistanceCorrection(this, distance));
+        ATT = int32((float)ATT * battleutils::GetRangedDistanceCorrection(this, distance, true));
     }
 
     return std::clamp(ATT + (ATT * m_modStat[Mod::RATTP] / 100) + std::min<int16>((ATT * m_modStat[Mod::FOOD_RATTP] / 100), m_modStat[Mod::FOOD_RATT_CAP]), 0, 65535);
@@ -840,7 +847,7 @@ uint16 CBattleEntity::RACC(uint8 skill, float distance, uint16 bonusSkill)
     {
         if (!this->StatusEffectContainer->HasStatusEffect(EFFECT_SHARPSHOT))
         {
-            acc = int16((float)acc * battleutils::GetRangedDistanceCorrection(this, distance));
+            acc = int16((float)acc * battleutils::GetRangedDistanceCorrection(this, distance, false));
         }
     }
 
@@ -1060,9 +1067,13 @@ void CBattleEntity::SetSLevel(uint8 slvl)
     TracyZoneScoped;
     if (!settings::get<bool>("map.INCLUDE_MOB_SJ") && this->objtype == TYPE_MOB && this->objtype != TYPE_PET)
     {
-        // Technically, we shouldn't be assuming mobs even have a ratio they must adhere to.
-        // But there is no place in the DB to set subLV right now.
-        m_slvl = (slvl > (m_mlvl >> 1) ? (m_mlvl == 1 ? 1 : (m_mlvl >> 1)) : slvl);
+        m_slvl = m_mlvl; // All mobs have a 1:1 ratio of MainJob/Subjob
+    }
+    else if (this->objtype == TYPE_PET &&
+             (static_cast<CPetEntity*>(this)->getPetType() == PET_TYPE::AVATAR || static_cast<CPetEntity*>(this)->getPetType() == PET_TYPE::AVATAR) &&
+             static_cast<CPetEntity*>(this)->PMaster != nullptr && static_cast<CPetEntity*>(this)->PMaster->objtype == TYPE_PC)
+    {
+        m_slvl = this->GetMLevel();
     }
     else if (this->objtype == TYPE_PET &&
              (static_cast<CPetEntity*>(this)->getPetType() == PET_TYPE::AVATAR || static_cast<CPetEntity*>(this)->m_PetID <= PETID_DARKSPIRIT) &&
@@ -1679,6 +1690,12 @@ void CBattleEntity::OnCastFinished(CMagicState& state, action_t& action)
     CBattleEntity* POriginalTarget = PActionTarget;
     bool           IsMagicCovered  = false;
 
+    // Check that the target id hasn't been released since starting the spell cast.
+    if (!state.CheckTarget())
+    {
+        return;
+    }
+
     luautils::OnSpellPrecast(this, PSpell);
 
     state.SpendCost();
@@ -1950,7 +1967,17 @@ bool CBattleEntity::CanAttack(CBattleEntity* PTarget, std::unique_ptr<CBasicPack
         return false;
     }
 
-    return !((distance(loc.p, PTarget->loc.p) - PTarget->m_ModelRadius) > GetMeleeRange() || !PAI->GetController()->IsAutoAttackEnabled());
+    auto distancecheck = (distance(loc.p, PTarget->loc.p) - PTarget->m_ModelRadius) > GetMeleeRange() || !PAI->GetController()->IsAutoAttackEnabled();
+
+    if (this->objtype == TYPE_MOB &&
+        this->GetHPP() < 100 &&
+        !distancecheck &&
+        (abs(this->loc.p.y - PTarget->loc.p.y) > 2 && abs(this->loc.p.y - PTarget->loc.p.y) < 10) &&
+        !this->PAI->PathFind->IsFollowingPath())
+    {
+        this->PAI->PathFind->PathTo(PTarget->loc.p, PATHFLAG_WALLHACK);
+    }
+    return !distancecheck;
 }
 
 void CBattleEntity::OnDisengage(CAttackState& s)

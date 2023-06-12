@@ -24,6 +24,7 @@ zoneObject.onInitialize = function(zone)
     if xi.settings.main.ENABLE_WOTG == 1 then
         xi.mob.nmTODPersistCache(zone, ID.mob.RAMBUKK)
     end
+
     if xi.events.starlightCelebration.isStarlightEnabled ~= 0 then
         xi.events.starlightCelebration.applyStarlightDecorations(zone:getID())
     end
@@ -37,7 +38,7 @@ zoneObject.onZoneIn = function(player, prevZone)
         player:getYPos() == 0 and
         player:getZPos() == 0
     then
-        player:setPos(200.015, -3.187, -536.074, 187)
+        player:setPos(86.131, -65.817, 273.861, 25)
     end
 
     if quests.rainbow.onZoneIn(player) then
@@ -47,15 +48,14 @@ zoneObject.onZoneIn = function(player, prevZone)
     return cs
 end
 
-zoneObject.onConquestUpdate = function(zone, updatetype)
-    xi.conq.onConquestUpdate(zone, updatetype)
+zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)
+    xi.conq.onConquestUpdate(zone, updatetype, influence, owner, ranking, isConquestAlliance)
 end
 
 zoneObject.onGameDay = function()
     SetServerVariable("[DIG]ZONE101_ITEMS", 0)
     if xi.events.starlightCelebration.isStarlightEnabled ~= 0 then
-        local zone = 107
-        xi.events.starlightCelebration.resetSmileHelpers(zone)
+        xi.events.starlightCelebration.resetSmileHelpers(xi.zone.EAST_RONFAURE)
     end
 end
 

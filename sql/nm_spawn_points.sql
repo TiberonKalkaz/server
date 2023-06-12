@@ -23,7 +23,7 @@ CREATE TABLE `nm_spawn_points` (
   `pos_y` float(7,3) NOT NULL DEFAULT '0.000',
   `pos_z` float(7,3) NOT NULL DEFAULT '0.000',
   PRIMARY KEY (`mobid`,`pos`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -133,6 +133,7 @@ INSERT INTO `nm_spawn_points` VALUES (16785676,46,86.146,-6.743,-526.943);
 INSERT INTO `nm_spawn_points` VALUES (16785676,47,87.834,-7.597,-520.502);
 INSERT INTO `nm_spawn_points` VALUES (16785676,48,76.962,-5.935,-514.680);
 INSERT INTO `nm_spawn_points` VALUES (16785676,49,102.059,-5.104,-559.392);
+INSERT INTO `nm_spawn_points` VALUES (16789518,0,-2.370,-3.492,-11.285);
 INSERT INTO `nm_spawn_points` VALUES (16793646,0,-634,0.001,-669); -- Serra
 INSERT INTO `nm_spawn_points` VALUES (16793698,0,-114,0.001,-591); -- Shankha
 INSERT INTO `nm_spawn_points` VALUES (16793742,0,523,-8,762); -- Intulo
@@ -201,6 +202,7 @@ INSERT INTO `nm_spawn_points` VALUES (16806162,0,-364.014,-4.634,-2.627);
 INSERT INTO `nm_spawn_points` VALUES (16806162,1,-328.973,-12.876,67.481);
 INSERT INTO `nm_spawn_points` VALUES (16806162,2,-398.931,-4.536,79.640);
 INSERT INTO `nm_spawn_points` VALUES (16806162,3,-381.284,-9.233,40.054);
+INSERT INTO `nm_spawn_points` VALUES (16806215,0,-483.789,-3.578,258.435);
 INSERT INTO `nm_spawn_points` VALUES (16806227,0,-509.612,-7.883,-57.162);
 INSERT INTO `nm_spawn_points` VALUES (16806227,1,-511.114,-8.854,-61.300);
 INSERT INTO `nm_spawn_points` VALUES (16806227,2,-513.979,-9.972,-66.404);
@@ -255,11 +257,11 @@ INSERT INTO `nm_spawn_points` VALUES (16806249,0,-490.195,-4.503,145.451); -- Am
 INSERT INTO `nm_spawn_points` VALUES (16822423,0,4.609,11.472,-101.235); -- Bugbear Strongman (west)
 INSERT INTO `nm_spawn_points` VALUES (16822427,0,60.728,15.487,-118.886); -- Bugbear Strongman (east)
 INSERT INTO `nm_spawn_points` VALUES (16851267,0,-44.317,0,-242.987); -- Satiator
-INSERT INTO `nm_spawn_points` VALUES (16851267,1,-205.880,-0.500,268.850); -- Satiator on inaccessable island. 
+INSERT INTO `nm_spawn_points` VALUES (16851267,1,-205.880,-0.500,268.850); -- Satiator on inaccessable island.
 INSERT INTO `nm_spawn_points` VALUES (16843043,0,117.68,-0.307,302.450); -- Cerebrator
-INSERT INTO `nm_spawn_points` VALUES (16843043,1,-236.055,-0.500,124.179); -- Cerebrator on inaccessable island. 
+INSERT INTO `nm_spawn_points` VALUES (16843043,1,-236.055,-0.500,124.179); -- Cerebrator on inaccessable island.
 INSERT INTO `nm_spawn_points` VALUES (16859472,0,-169.471,0.000,84.318); -- Coveter
-INSERT INTO `nm_spawn_points` VALUES (16859472,1,-293.877,-0.500,-122.258); -- Coveter on inaccessable island. 
+INSERT INTO `nm_spawn_points` VALUES (16859472,1,-293.877,-0.500,-122.258); -- Coveter on inaccessable island.
 INSERT INTO `nm_spawn_points` VALUES (16875552,0,-88.575,-8.221,-272.966);
 INSERT INTO `nm_spawn_points` VALUES (16875552,1,-85.977,-8.096,-277.417);
 INSERT INTO `nm_spawn_points` VALUES (16875552,2,-80.868,-8.000,-281.892);
@@ -4568,7 +4570,9 @@ INSERT INTO `nm_spawn_points` VALUES (17420555,0,-378.000,-111.000,47.000); -- R
 INSERT INTO `nm_spawn_points` VALUES (17420592,0,-495.000,-128.000,19.000); -- Ogygos
 INSERT INTO `nm_spawn_points` VALUES (17424385,0,-391.000,-145.000,25.000); -- Enkelados
 INSERT INTO `nm_spawn_points` VALUES (17424423,0,-226.158,-144.099,28.522); -- Enkelados
+INSERT INTO `nm_spawn_points` VALUES (17424444,0,-300,-159,21); -- Pallas
 INSERT INTO `nm_spawn_points` VALUES (17424475,0,-360,-159.5,80); -- Ixtab
+INSERT INTO `nm_spawn_points` VALUES (17424480,0,-300,-175,22); -- Alkyoneus
 INSERT INTO `nm_spawn_points` VALUES (17424512,0,-360,-175.5,80); -- Ixtab
 INSERT INTO `nm_spawn_points` VALUES (17428554,0,94.330,0,-14.457); -- Sozu Sarberry
 INSERT INTO `nm_spawn_points` VALUES (17428611,0,-131,-0.6,-7); -- Sozu Terberry

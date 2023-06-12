@@ -31,7 +31,7 @@ zoneObject.onZoneIn = function(player, prevZone)
         player:getYPos() == 0 and
         player:getZPos() == 0
     then
-        player:setPos(-518.867, 35.538, 588.64, 50)
+        player:setPos(660, 0, 306, 190)
     end
 
     if quests.rainbow.onZoneIn(player) then
@@ -47,8 +47,8 @@ zoneObject.onZoneOut = function(player)
     end
 end
 
-zoneObject.onConquestUpdate = function(zone, updatetype)
-    xi.conq.onConquestUpdate(zone, updatetype)
+zoneObject.onConquestUpdate = function(zone, updatetype, influence, owner, ranking, isConquestAlliance)
+    xi.conq.onConquestUpdate(zone, updatetype, influence, owner, ranking, isConquestAlliance)
 end
 
 zoneObject.onGameDay = function()

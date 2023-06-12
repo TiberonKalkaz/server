@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `mob_skill_lists` (
   `skill_list_id` smallint(5) unsigned NOT NULL,
   `mob_skill_id` smallint(3) unsigned NOT NULL,
   PRIMARY KEY (`skill_list_id`,`mob_skill_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
 
 --
 -- Contenu de la table `mob_skill_lists`
@@ -3826,6 +3826,7 @@ INSERT INTO `mob_skill_lists` VALUES ('Barbastelle',1198,392); -- Ultrasonics
 
 INSERT INTO `mob_skill_lists` VALUES ('Omega_Critical',1187,1235); -- pile pitch
 INSERT INTO `mob_skill_lists` VALUES ('Omega_Critical',1187,1239); -- discharger
+INSERT INTO `mob_skill_lists` VALUES ('Omega_Critical',1187,1237); -- hyper_pulse
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega_Standing',1188,1525); -- guided_missile_ii
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega_Standing',1188,1528); -- floodlight
 INSERT INTO `mob_skill_lists` VALUES ('Proto-Omega_Standing',1188,1529); -- hyper_pulse

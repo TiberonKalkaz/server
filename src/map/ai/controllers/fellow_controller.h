@@ -33,6 +33,8 @@ public:
     virtual void Despawn() override;
 
     virtual bool Ability(uint16 targid, uint16 abilityid) override;
+    virtual void DoCombatTick(time_point tick) override;
+    virtual void DoRoamTick(time_point tick) override;
 
 protected:
     bool FellowIsHealing();
@@ -40,8 +42,6 @@ protected:
 
 private:
     static constexpr float RoamDistance{ 3.5f };
-    void                   DoCombatTick(time_point tick);
-    void                   DoRoamTick(time_point tick);
     time_point             m_LastRoamScript{ time_point::min() };
 };
 

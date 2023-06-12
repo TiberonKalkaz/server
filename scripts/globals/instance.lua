@@ -124,7 +124,7 @@ xi.instance.lookup =
     [xi.zone.LEUJAOAM_SANCTUM] =
     {
         { 6900, { 140, 1, -4, 0, 50, 0, 1 }, { 140, 4 }, { 147, 0 } }, -- Assault: Leujaoam Cleansing
-        -- Assault: Orichalcum Survey
+        { 6901, { 140, 2, -4, 0, 50, 0, 1 }, { 140, 4 }, { 147, 0 } }, -- Assault: Orichalcum Survey
         -- Assault: Escort Professor Chanoix
         -- Assault: Shanarha Grass Conservation
         -- Assault: Counting Sheep
@@ -489,7 +489,8 @@ xi.instance.updateInstanceTime = function(instance, elapsed, text)
         (
             wipeTime ~= 0 and
             (elapsed - wipeTime) / 1000 > 180
-        )
+        ) or
+        players == nil
     then
         instance:fail()
         return
