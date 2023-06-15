@@ -394,6 +394,7 @@ end
 
 -- "Default" behaviour. It's up to each instance whether or not they want to use this logic
 xi.instance.onInstanceCreatedCallback = function(player, instance)
+    printf("instance - onInstanceCreatedCallback")
     local zoneLookup = xi.instance.lookup[instance:getZone():getID()]
     local instanceId = instance:getID()
 
