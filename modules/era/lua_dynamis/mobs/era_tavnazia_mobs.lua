@@ -5,7 +5,11 @@ require("scripts/globals/zone")
 require("scripts/globals/utils")
 require("scripts/globals/dynamis")
 -----------------------------------
-
+--[[
+    ToDos:
+    1. Umbrals should be NPCs
+    2. When multiple Diabolos are spawned - they should all have reduced HP and no HP regen
+]]
 xi = xi or {}
 xi.dynamis = xi.dynamis or {}
 
@@ -169,11 +173,22 @@ xi.dynamis.onMobEngagedUmbralDiabolos = function(mob, target)
     mob:setHP(0)
 end
 
+xi.dynamis.setDiabolosCommonTraits = function(mob)
+    mob:setMod(xi.mod.BINDRES, 100)
+    mob:setMod(xi.mod.GRAVITYRES, 100)
+    mob:setMod(xi.mod.LULLABYRES, 100)
+    mob:setMod(xi.mod.SLEEPRES, 100)
+    -- Some forum posts claim a stun or so would get through unresisted.
+    mob:setMod(xi.mod.STUNRES, 95)
+    mob:setMod(xi.mod.SILENCERES, 100)
+    mob:setMobMod(xi.mobMod.SUPERLINK, 5)
+end
+
 xi.dynamis.onSpawnDiabolosClub = function(mob)
     local zone = mob:getZone()
     zone:setLocalVar("DiabolosClub", mob:getID())
     xi.dynamis.setNMStats(mob)
-    mob:setMobMod(xi.mobMod.SUPERLINK, 5)
+    xi.dynamis.setDiabolosCommonTraits(mob)
 end
 
 xi.dynamis.onMobEngagedDiabolosClub = function(mob, target)
@@ -185,21 +200,24 @@ xi.dynamis.onSpawnDiabolosHeart = function(mob)
     local zone = mob:getZone()
     zone:setLocalVar("DiabolosHeart", mob:getID())
     xi.dynamis.setNMStats(mob)
-    mob:setMobMod(xi.mobMod.SUPERLINK, 5)
+    xi.dynamis.setDiabolosCommonTraits(mob)
+    mob:addMobMod(xi.mobMod.NO_STANDBACK, 1)
 end
 
 xi.dynamis.onSpawnDiabolosSpade = function(mob)
     local zone = mob:getZone()
     zone:setLocalVar("DiabolosSpade", mob:getID())
     xi.dynamis.setNMStats(mob)
-    mob:setMobMod(xi.mobMod.SUPERLINK, 5)
+    xi.dynamis.setDiabolosCommonTraits(mob)
 end
 
 xi.dynamis.onSpawnDiabolosDiamond = function(mob)
     local zone = mob:getZone()
     zone:setLocalVar("DiabolosDiamond", mob:getID())
     xi.dynamis.setNMStats(mob)
-    mob:setMobMod(xi.mobMod.SUPERLINK, 5)
+    xi.dynamis.setDiabolosCommonTraits(mob)
+    mob:addMobMod(xi.mobMod.NO_STANDBACK, 1)
+    mob:setAutoAttackEnabled(false)
 end
 
 -- ToDo
@@ -207,7 +225,6 @@ end
 -- Despawn all remaining Umbrals on Diabolos boss engage?
 -- Give title when the last diabolos dies
 -- Spawn ??? when the last diabolos dies (which gives different title)
--- When does music change? when diabolos spawns?
 
 xi.dynamis.mobOnDeathDiabolosClub = function(mob, player, optParams)
 end

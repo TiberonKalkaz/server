@@ -4135,6 +4135,24 @@ INSERT INTO `mob_skill_lists` VALUES ('Nightmare_Worm',4081,1887); -- Sandspin (
 INSERT INTO `mob_skill_lists` VALUES ('Nightmare_Worm',4081,1888); -- Tremors (Larger dmg)
 INSERT INTO `mob_skill_lists` VALUES ('Nightmare_Worm',4081,1889); -- Spirit Vacuum
 INSERT INTO `mob_skill_lists` VALUES ('Nightmare_Worm',4081,1890); -- Sound Vacuum
+
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Diamond',4082,1909); -- Cacodemonia
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Diamond',4082,1912); -- Hypnogenesis
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Diamond',4082,1908); -- Nightmare
+
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Heart',4083,1907); -- Dream Shroud
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Heart',4083,1905); -- Noctoshield
+
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Club',4084,1903); -- Camisado
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Club',4084,1908); -- Nightmare
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Club',4084,1905); -- Noctoshield
+
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1903); -- Camisado
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1907); -- Dream Shroud
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1918); -- Nether Tempest
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1905); -- Noctoshield
+INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1917); -- Sweeping Somnolence
+
 -- End of AirSkyBoat section
 
 -- ------------------------------------------------------------

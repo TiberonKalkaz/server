@@ -15326,7 +15326,7 @@ m:addOverride("xi.globals.mobskills.tremors.onMobWeaponSkill", function(target, 
     xi.mobskills.mobStatusEffectMove(mob, target, xi.effect.DEX_DOWN, 10, 10, 180)
     local damageMod = 1
     if skill:getID() == 1888 then -- Nightmare Worm - increased damage
-        damageMod = 2
+        damageMod = 3
     end
 
     local info = xi.mobskills.mobMagicalMove(mob, target, skill, mob:getMobWeaponDmg(xi.slot.MAIN) * damageMod, xi.magic.ele.EARTH, 1, xi.mobskills.magicalTpBonus.NO_EFFECT, 0, 0, 1.5, 1.75, 2)

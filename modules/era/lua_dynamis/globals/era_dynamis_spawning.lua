@@ -1108,10 +1108,10 @@ xi.dynamis.nmDynamicSpawn = function(mobIndex, oMobIndex, forceLink, zoneID, tar
         ["Nightmare Antlion"] = { "N. Antlion" , 64, 42, 0, 0, 4074, "Nightmare Antlion" }, -- NAnt
         ["Nightmare Worm"] = { "N. Worm" , 7, 42, 1807, 5075, 4081, "Nightmare Worm" }, -- NWor
         ["Umbral Diabolos"] = { "U. Diabolos", 4, 42, 0, nil, nil, "Umbral Diabolos" }, -- Umb
-        ["Diabolos Club"] = { "D. Club", 4, 42, 0, nil, nil, "Diabolos Club" }, -- DiaC
-        ["Diabolos Diamond"] = { "D. Diamond", 3, 42, 0, nil, nil, "Diabolos Diamond" }, -- DiaD
-        ["Diabolos Heart"] = { "D. Heart", 2, 42, 0, nil, nil, "Diabolos Heart" }, -- DiaH
-        ["Diabolos Spade"] = { "D. Spade", 1, 42, 0, nil, nil, "Diabolos Spade" }, -- DiaS
+        ["Diabolos Club"] = { "D. Club", 4, 42, 0, 108, 4084, "Diabolos Club" }, -- DiaC
+        ["Diabolos Diamond"] = { "D. Diamond", 3, 42, 0, 107, 4082, "Diabolos Diamond" }, -- DiaD
+        ["Diabolos Heart"] = { "D. Heart", 2, 42, 0, 106, 4083, "Diabolos Heart" }, -- DiaH
+        ["Diabolos Spade"] = { "D. Spade", 1, 42, 0, nil, 4085, "Diabolos Spade" }, -- DiaS
         ["Diabolos Shard"] = { "D. Shard", 5, 42, 0, nil, nil, "Enabled Auto Attack" }, -- DiaSh
     }
     xi.dynamis.nmFunctions =
