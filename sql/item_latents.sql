@@ -411,7 +411,7 @@ INSERT INTO `item_latents` VALUES (13288,374,10,2,75);   -- "Cure" potency +10% 
 -- -------------------------------------------------------
 -- Sorcerer's Ring
 -- -------------------------------------------------------
-INSERT INTO `item_latents` VALUES (13289,28,10,44,76);    -- "Magic Atk. Bonus"+10 while HP <76% and TP <100%
+INSERT INTO `item_latents` VALUES (13289,28,10,44,75);    -- "Magic Atk. Bonus"+10 while HP <76% and TP <100%
 
 -- -------------------------------------------------------
 -- Fencer's Ring
@@ -2220,6 +2220,15 @@ INSERT INTO `item_latents` VALUES (17212,26,20,37,5);
 INSERT INTO `item_latents` VALUES (17212,26,25,37,4);
 
 -- -------------------------------------------------------
+-- Shigeto Bow
+-- -------------------------------------------------------
+INSERT INTO `item_latents` VALUES (18142,26,7,62,12);     -- RACC +7 for Samurai main job
+
+-- -------------------------------------------------------
+-- Shigeto Bow +1
+-- -------------------------------------------------------
+INSERT INTO `item_latents` VALUES (18143,26,8,62,12);     -- RACC +8 for Samurai main job
+-- -------------------------------------------------------
 -- Musketeer Gun +1/+2
 -- -------------------------------------------------------
 INSERT INTO `item_latents` VALUES (17269,24,8,53,1);     -- RATT +8 in areas outside own nation's control
@@ -2450,11 +2459,6 @@ INSERT INTO `item_latents` VALUES (17697,17,15,31,0);    -- Mighty Talwar [Eleme
 INSERT INTO `item_latents` VALUES (17697,287,8,31,0);    -- Mighty Talwar DMG+8 on Windsday
 INSERT INTO `item_latents` VALUES (17699,165,6,47,0);    -- Dissector Crit Rate +6% when broken (500 WS points)
 INSERT INTO `item_latents` VALUES (17699,287,13,47,0);   -- Dissector DMG+13 when broken (500 WS points)
-
--- -------------------------------------------------------
--- Shiva's Shotel
--- -------------------------------------------------------
-INSERT INTO `item_latents` VALUES (17711,431,1,21,14);   -- Additional effect: Ice damage
 
 -- -------------------------------------------------------
 -- Mensur Epee
@@ -2701,11 +2705,6 @@ INSERT INTO `item_latents` VALUES (18097,287,13,47,0);   -- Gondo-Shizunori DMG+
 INSERT INTO `item_latents` VALUES (18099,23,24,6,1000);  -- Attack+24 while TP <100%
 INSERT INTO `item_latents` VALUES (18099,25,5,6,1000);   -- Accuracy+5 while TP <100%
 INSERT INTO `item_latents` VALUES (18099,287,5,6,1000);  -- DMG+5 while TP <100%
-
--- -------------------------------------------------------
--- Leviathan's Couse
--- -------------------------------------------------------
--- TODO: INSERT INTO `item_latents` VALUES (18109,431,1,21,12); -- Additional effect: Water damage while you or a party member has Leviathan summoned
 
 INSERT INTO `item_latents` VALUES (18112,287,9,58,0);    -- Puk Lance DMG+9 in Assault
 -- TODO: -- Puk Lance Wyvern: HP +50 in Assault
@@ -2965,11 +2964,6 @@ INSERT INTO `item_latents` VALUES (18387,25,5,58,0);     -- Djinnbringer Accurac
 INSERT INTO `item_latents` VALUES (18387,287,3,58,0);    -- Djinnbringer DMG+3 in Assault
 INSERT INTO `item_latents` VALUES (18390,28,3,8,4);
 
--- -------------------------------------------------------
--- Ramuh's Mace
--- -------------------------------------------------------
--- TODO: INSERT INTO `item_latents` VALUES (18404,431,1,21,15); -- Additional effect: Lightning damage
-
 INSERT INTO `item_latents` VALUES (18407,5,20,58,0);     -- Imperial Wand MP +20 in Assault
 INSERT INTO `item_latents` VALUES (18407,27,-3,58,0);    -- Imperial Wand Enmity -3 in Assault
 INSERT INTO `item_latents` VALUES (18407,287,2,58,0);    -- Imperial Wand DMG+2 in Assault
@@ -3022,10 +3016,8 @@ INSERT INTO `item_latents` VALUES (18508,25,2,16,5);     -- ACC +2~8,party size 
 INSERT INTO `item_latents` VALUES (18508,25,2,16,6);     -- ACC +2~8,party size 3+. Effect strengthens with more members
 
 -- -------------------------------------------------------
--- Carbuncle's Pole
+-- Yigit Staff
 -- --------------------------------------------------------
-INSERT INTO `item_latents` VALUES (18581,431,2,21,8);    -- Additional effect: Light damage
-
 INSERT INTO `item_latents` VALUES (18582,6,2,58,0);      -- Yigit Staff MP% +2 in Assault
 INSERT INTO `item_latents` VALUES (18582,287,1,58,0);    -- Yigit Staff DMG+1 in Assault
 

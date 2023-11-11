@@ -264,6 +264,7 @@ m:addOverride("xi.globals.mobskills.aqua_breath.onMobSkillCheck", function(targe
     if target:isBehind(mob, 96) then
         return 1
     end
+
     return 0
 end)
 
@@ -330,6 +331,16 @@ end)
 m:addOverride("xi.globals.mobskills.astral_flow.onMobSkillCheck", function(target, mob, skill)
     return 0
 end)
+
+local function petInactive(pet)
+    return
+        pet:hasStatusEffect(xi.effect.LULLABY) or
+        pet:hasStatusEffect(xi.effect.STUN) or
+        pet:hasStatusEffect(xi.effect.PETRIFICATION) or
+        pet:hasStatusEffect(xi.effect.SLEEP_II) or
+        pet:hasStatusEffect(xi.effect.SLEEP_I) or
+        pet:hasStatusEffect(xi.effect.TERROR)
+end
 
 m:addOverride("xi.globals.mobskills.astral_flow_pet.onMobSkillCheck", function(target, mob, skill)
     -- must have pet
@@ -503,6 +514,7 @@ m:addOverride("xi.globals.mobskills.bastion_of_twilight.onMobSkillCheck", functi
     then
         return 1
     end
+
     return 0
 end)
 
@@ -951,6 +963,7 @@ m:addOverride("xi.globals.mobskills.chainspell.onMobSkillCheck", function(target
 end)
 
 m:addOverride("xi.globals.mobskills.chains_of_apathy.onMobSkillCheck", function(target, mob, skill)
+    local ID = require("scripts/zones/Empyreal_Paradox/IDs")
     local targets = mob:getEnmityList()
     for i, v in pairs(targets) do
         if v.entity:isPC() then
@@ -969,6 +982,7 @@ m:addOverride("xi.globals.mobskills.chains_of_apathy.onMobSkillCheck", function(
 end)
 
 m:addOverride("xi.globals.mobskills.chains_of_arrogance.onMobSkillCheck", function(target, mob, skill)
+    local ID = require("scripts/zones/Empyreal_Paradox/IDs")
     local targets = mob:getEnmityList()
     for i, v in pairs(targets) do
         if v.entity:isPC() then
@@ -987,6 +1001,7 @@ m:addOverride("xi.globals.mobskills.chains_of_arrogance.onMobSkillCheck", functi
 end)
 
 m:addOverride("xi.globals.mobskills.chains_of_cowardice.onMobSkillCheck", function(target, mob, skill)
+    local ID = require("scripts/zones/Empyreal_Paradox/IDs")
     local targets = mob:getEnmityList()
     for i, v in pairs(targets) do
         if v.entity:isPC() then
@@ -1005,6 +1020,7 @@ m:addOverride("xi.globals.mobskills.chains_of_cowardice.onMobSkillCheck", functi
 end)
 
 m:addOverride("xi.globals.mobskills.chains_of_envy.onMobSkillCheck", function(target, mob, skill)
+    local ID = require("scripts/zones/Empyreal_Paradox/IDs")
     local targets = mob:getEnmityList()
     for i, v in pairs(targets) do
         if v.entity:isPC() then
@@ -1023,6 +1039,7 @@ m:addOverride("xi.globals.mobskills.chains_of_envy.onMobSkillCheck", function(ta
 end)
 
 m:addOverride("xi.globals.mobskills.chains_of_rage.onMobSkillCheck", function(target, mob, skill)
+    local ID = require("scripts/zones/Empyreal_Paradox/IDs")
     local targets = mob:getEnmityList()
     for i, v in pairs(targets) do
         if v.entity:isPC() then
@@ -2141,7 +2158,7 @@ end)
 m:addOverride("xi.globals.mobskills.fire_maneuver.onMobSkillCheck", function(target, mob, skill)
     if not mob:getPet():isAlive() then
         return 0
-    elseif GetMobByID(mob:getID()+1):isAlive() and mob:getPool() == 1296 then
+    elseif GetMobByID(mob:getID() + 1):isAlive() and mob:getPool() == 1296 then
         return 0
     else
         return 1
@@ -2181,6 +2198,7 @@ m:addOverride("xi.globals.mobskills.flame_blast.onMobSkillCheck", function(targe
     if mob:getAnimationSub() ~= 1 then
         return 1
     end
+
     return 0
 end)
 
@@ -3002,6 +3020,7 @@ m:addOverride("xi.globals.mobskills.hurricane_wing_flying.onMobSkillCheck", func
     if mob:getAnimationSub() ~= 1 then
         return 1
     end
+
     return 0
 end)
 
@@ -3064,7 +3083,7 @@ end)
 m:addOverride("xi.globals.mobskills.ice_maneuver.onMobSkillCheck", function(target, mob, skill)
     if not mob:getPet():isAlive() then
         return 0
-    elseif GetMobByID(mob:getID()+1):isAlive() and mob:getPool() == 1296 then
+    elseif GetMobByID(mob:getID() + 1):isAlive() and mob:getPool() == 1296 then
         return 0
     else
         return 1
@@ -3946,7 +3965,7 @@ end)
 
 m:addOverride("xi.globals.mobskills.nether_blast.onMobSkillCheck", function(target, mob, skill)
     -- Ranged attack only used when target is out of range
-    if (mob:checkDistance(target) > 2) then
+    if mob:checkDistance(target) > 2 then
         return 0
     else
         return 1
@@ -3973,6 +3992,7 @@ m:addOverride("xi.globals.mobskills.noctoshield.onMobSkillCheck", function(targe
     if mob:hasStatusEffect(xi.effect.PHALANX) then
         return 1
     end
+
     return 0
 end)
 
@@ -4434,7 +4454,13 @@ end)
 
 m:addOverride("xi.globals.mobskills.power_attack.onMobSkillCheck", function(target, mob, skill)
     local mobSkin = mob:getModelId() --Mobskill based on modelid, this is for all h2h models
-    if mobSkin == 271 or mobSkin == 642 or mobSkin == 643 or mobSkin == 709 or mobSkin == 711 then
+    if
+        mobSkin == 271 or
+        mobSkin == 642 or
+        mobSkin == 643 or
+        mobSkin == 709 or
+        mobSkin == 711
+    then
         return 0
     end
 
@@ -4447,7 +4473,16 @@ end)
 
 m:addOverride("xi.globals.mobskills.power_attack_weapon.onMobSkillCheck", function(target, mob, skill)
     local mobSkin = mob:getModelId() -- Mobskill based on modelid, these are the gigas with weapons
-    if mobSkin == 274 or mobSkin == 275 or mobSkin == 640 or mobSkin == 703 or mobSkin == 707 or mobSkin == 708 or mobSkin == 710 or mobSkin == 720 then
+    if
+        mobSkin == 274 or
+        mobSkin == 275 or
+        mobSkin == 640 or
+        mobSkin == 703 or
+        mobSkin == 707 or
+        mobSkin == 708 or
+        mobSkin == 710 or
+        mobSkin == 720
+    then
         return 0
     end
 
@@ -5294,7 +5329,7 @@ end)
 m:addOverride("xi.globals.mobskills.sic.onMobSkillCheck", function(target, mob, skill)
     if not mob:getPet():isAlive() then
         return 0
-    elseif GetMobByID(mob:getID()+3):isAlive() and mob:getPool() == 1296 then
+    elseif GetMobByID(mob:getID() + 3):isAlive() and mob:getPool() == 1296 then
         return 0
     else
         return 1
@@ -5807,7 +5842,6 @@ m:addOverride("xi.globals.mobskills.sweet_breath.onMobSkillCheck", function(targ
 end)
 
 m:addOverride("xi.globals.mobskills.swift_blade.onMobSkillCheck", function(target, mob, skill)
-
     return 0
 end)
 
@@ -6093,7 +6127,7 @@ end)
 m:addOverride("xi.globals.mobskills.thunder_maneuver.onMobSkillCheck", function(target, mob, skill)
     if not mob:getPet():isAlive() then
         return 0
-    elseif GetMobByID(mob:getID()+1):isAlive() and mob:getPool() == 1296 then
+    elseif GetMobByID(mob:getID() + 1):isAlive() and mob:getPool() == 1296 then
         return 0
     else
         return 1
@@ -6241,6 +6275,7 @@ m:addOverride("xi.globals.mobskills.tremorous_tread.onMobSkillCheck", function(t
     if mob:getAnimationSub() == 0 then
         return 0
     end
+
     return 1
 end)
 
@@ -6523,6 +6558,7 @@ m:addOverride("xi.globals.mobskills.voidsong.onMobSkillCheck", function(target, 
     then
         return 0
     end
+
     -- can only used if not silenced
     if
         mob:getMainJob() == xi.job.BRD and
@@ -6639,7 +6675,7 @@ end)
 m:addOverride("xi.globals.mobskills.water_maneuver.onMobSkillCheck", function(target, mob, skill)
     if not mob:getPet():isAlive() then
         return 0
-    elseif GetMobByID(mob:getID()+1):isAlive() and mob:getPool() == 1296 then
+    elseif GetMobByID(mob:getID() + 1):isAlive() and mob:getPool() == 1296 then
         return 0
     else
         return 1
@@ -6673,6 +6709,7 @@ m:addOverride("xi.globals.mobskills.wheel_of_impregnability.onMobSkillCheck", fu
     then
         return 1
     end
+
     return 0
 end)
 
@@ -6772,7 +6809,7 @@ end)
 m:addOverride("xi.globals.mobskills.wind_maneuver.onMobSkillCheck", function(target, mob, skill)
     if not mob:getPet():isAlive() then
         return 0
-    elseif GetMobByID(mob:getID()+1):isAlive() and mob:getPool() == 1296 then
+    elseif GetMobByID(mob:getID() + 1):isAlive() and mob:getPool() == 1296 then
         return 0
     else
         return 1

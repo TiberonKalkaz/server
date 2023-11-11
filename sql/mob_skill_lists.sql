@@ -3997,7 +3997,11 @@ INSERT INTO `mob_skill_lists` VALUES ('JailerOfTemperance',4047,1467);
 INSERT INTO `mob_skill_lists` VALUES ('JailerOfTemperance',4047,1468);
 INSERT INTO `mob_skill_lists` VALUES ('JailerOfTemperance',4047,1469);
 
--- 4048 Available
+INSERT INTO `mob_skill_lists` VALUES ('Jaded_Jody',4048,316);  -- Impale
+INSERT INTO `mob_skill_lists` VALUES ('Jaded_Jody',4048,317);  -- Vampiric Lash
+INSERT INTO `mob_skill_lists` VALUES ('Jaded_Jody',4048,1793); -- Vampiric Root
+INSERT INTO `mob_skill_lists` VALUES ('Jaded_Jody',4048,319);  -- Bad Breath
+INSERT INTO `mob_skill_lists` VALUES ('Jaded_Jody',4048,320);  -- Sweet Breath
 
 INSERT INTO `mob_skill_lists` VALUES ('Shooting_Fish',4049,313); -- knockback splashbreath
 INSERT INTO `mob_skill_lists` VALUES ('Cogitator',4050,1242); -- empty cutter
@@ -4152,6 +4156,8 @@ INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1907); -- Dream Shro
 INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1918); -- Nether Tempest
 INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1905); -- Noctoshield
 INSERT INTO `mob_skill_lists` VALUES ('Diabolos_Spade',4085,1917); -- Sweeping Somnolence
+
+INSERT INTO `mob_skill_lists` VALUES ('Dark_Rider',4083,2126); -- Zantetsuken
 
 -- End of AirSkyBoat section
 
