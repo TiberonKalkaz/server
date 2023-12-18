@@ -19,7 +19,10 @@ mobskillObject.onMobWeaponSkill = function(target, mob, skill)
 
     local dmg = xi.mobskills.mobFinalAdjustments(info.dmg, mob, skill, target, xi.attackType.RANGED, xi.damageType.PIERCING, info.hitslanded)
 
-    if skill:getMsg() ~= xi.msg.basic.SHADOW_ABSORB then
+    if
+        skill:getMsg() ~= xi.msg.basic.SHADOW_ABSORB and
+        skill:getMsg() ~= xi.msg.basic.ANTICIPATE
+    then
         if dmg > 0 then
             skill:setMsg(xi.msg.basic.RANGED_ATTACK_HIT)
         else

@@ -777,7 +777,11 @@ function AbilityFinalAdjustments(dmg, mob, skill, target, skilltype, skillparam,
     end
 
     --handle Third Eye using shadowbehav as a guide
-    if skilltype == xi.attackType.PHYSICAL and mob:checkThirdEye(target) then
+    if
+        (skilltype == xi.attackType.PHYSICAL or
+        skilltype == xi.attackType.RANGED) and
+        mob:checkThirdEye(target)
+    then
         skill:setMsg(xi.msg.basic.ANTICIPATE)
         return 0
     end
