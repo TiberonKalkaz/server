@@ -62,9 +62,25 @@ uint16 CItemEquipment::getEquipSlotId() const
     return m_equipSlotID;
 }
 
+/// <summary>
+/// Gets the equip slots which should be removed when the item is EQUIPPED
+/// Used for items which occupy multiple equipslots - eg. Cloaks which occupy body and head
+/// </summary>
+/// <returns>An integer representing a bitmask corresponding to BattleEntity SLOTTYPE</returns>
 uint16 CItemEquipment::getRemoveSlotId() const
 {
     return m_removeSlotID;
+}
+
+/// <summary>
+/// Gets the equip slots which should be "removed" from the characters appearance when the item is equipped or lockstyled
+/// Used for items which occupy multiple appearance slots
+/// eg. Mandragora Suit which has a getRemoveSlotId of body and legs - but appearance wise "removes" hands, body, legs, and feet
+/// </summary>
+/// <returns>An integer representing a bitmask corresponding to BattleEntity SLOTTYPE</returns>
+uint16 CItemEquipment::getRemoveSlotLookId() const
+{
+    return m_removeSlotLookID;
 }
 
 uint8 CItemEquipment::getReqLvl() const
@@ -112,9 +128,25 @@ void CItemEquipment::setEquipSlotId(uint16 equipSlot)
     m_equipSlotID = equipSlot;
 }
 
-void CItemEquipment::setRemoveSlotId(uint16 removSlot)
+/// <summary>
+/// Sets the equip slots which should be removed when the item is EQUIPPED
+/// Used for items which occupy multiple equipslots - eg. Cloaks which occupy body and head
+/// </summary>
+/// <param name="removeSlot">An integer representing a bitmask corresponding to BattleEntity SLOTTYPE</param>
+void CItemEquipment::setRemoveSlotId(uint16 removeSlot)
 {
-    m_removeSlotID = removSlot;
+    m_removeSlotID = removeSlot;
+}
+
+/// <summary>
+/// Sets the equip slots which should be "removed" from the characters appearance when the item is equipped or lockstyled
+/// Used for items which occupy multiple appearance slots
+/// eg. Mandragora Suit which has a getRemoveSlotId of body and legs - but appearance wise "removes" hands, body, legs, and feet
+/// </summary>
+/// <param name="removeSlotLook">An integer representing a bitmask corresponding to BattleEntity SLOTTYPE</param>
+void CItemEquipment::setRemoveSlotLookId(uint16 removeSlotLook)
+{
+    m_removeSlotLookID = removeSlotLook;
 }
 
 uint8 CItemEquipment::getSlotType() const

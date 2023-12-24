@@ -2413,7 +2413,7 @@ namespace charutils
                 continue;
             }
 
-            auto removeSlotID = PItem->getRemoveSlotId();
+            auto removeSlotID = PItem->getRemoveSlotLookId();
             if (removeSlotID > 0)
             {
                 for (auto i = 4u; i <= 8u; i++)
@@ -2745,7 +2745,6 @@ namespace charutils
         }
 
         charutils::BuildingCharSkillsTable(PChar);
-
         PChar->UpdateHealth();
         PChar->m_EquipSwap = true;
         PChar->updatemask |= UPDATE_LOOK;

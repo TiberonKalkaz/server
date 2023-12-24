@@ -397,8 +397,9 @@ namespace itemutils
                             "f.element,"      // 37
                             "f.aura,"         // 38
 
-                            "p.slot,"    // 39
-                            "p.element " // 40
+                            "p.slot,"      // 39
+                            "p.element,"   // 40
+                            "a.rslotlook " // 41
                             "FROM item_basic AS b "
                             "LEFT JOIN item_usable AS u USING (itemId) "
                             "LEFT JOIN item_equipment  AS a USING (itemId) "
@@ -461,6 +462,7 @@ namespace itemutils
                         ((CItemEquipment*)PItem)->setScriptType(sql->GetUIntData(20));
                         ((CItemEquipment*)PItem)->setEquipSlotId(sql->GetUIntData(21));
                         ((CItemEquipment*)PItem)->setRemoveSlotId(sql->GetUIntData(22));
+                        ((CItemEquipment*)PItem)->setRemoveSlotLookId(sql->GetUIntData(41));
                         ((CItemEquipment*)PItem)->setSuperiorLevel(sql->GetUIntData(23));
                         ((CItemEquipment*)PItem)->setRace(sql->GetUIntData(24));
 
