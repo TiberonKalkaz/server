@@ -1106,6 +1106,13 @@ namespace battleutils
 
             return true;
         }
+        else
+        {
+            // Clean up the messaging sent to client if we do not have an effect to proc.
+            Action->spikesEffect  = SUBEFFECT::SUBEFFECT_NONE;
+            Action->spikesParam   = 0;
+            Action->spikesMessage = 0;
+        }
 
         return false;
     }
