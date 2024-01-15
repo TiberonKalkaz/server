@@ -933,6 +933,26 @@ void CMobController::Move()
 void CMobController::HandleEnmity()
 {
     TracyZoneScoped;
+    if (PMob->GetLocalVar("enmityDebugPrint") == 1)
+    {
+        ShowDebug("======================= mob enmity table =======================");
+        for (auto it = PMob->PEnmityContainer->GetEnmityList()->begin(); it != PMob->PEnmityContainer->GetEnmityList()->end(); ++it)
+        {
+            const EnmityObject_t& PEnmityObject = it->second;
+            if (PEnmityObject.PEnmityOwner != nullptr)
+            {
+                ShowDebug("\t%s\tTotal:%d\tCE:%d\tVE:%d\tActive:%s",
+                    PEnmityObject.PEnmityOwner != nullptr ? PEnmityObject.PEnmityOwner->GetName().c_str() : "Unknown",
+                    PEnmityObject.CE + PEnmityObject.VE,
+                    PEnmityObject.CE,
+                    PEnmityObject.VE,
+                    PEnmityObject.active);
+            }
+            
+        }
+        ShowDebug("================================================================");
+    }
+
     PMob->PEnmityContainer->DecayEnmity();
     if (PMob->getMobMod(MOBMOD_SHARE_TARGET) > 0 && PMob->GetEntity(PMob->getMobMod(MOBMOD_SHARE_TARGET), TYPE_MOB))
     {
@@ -1090,6 +1110,8 @@ void CMobController::DoRoamTick(time_point tick)
                 }
                 else if (!(PMob->getMobMod(MOBMOD_NO_DESPAWN) != 0) && !settings::get<bool>("map.MOB_NO_DESPAWN"))
                 {
+                    ShowCritical("Mob %s ID: %d Distance: %f MaxDist: %f - Despawning.", PMob->name.c_str(), PMob->id, distance(PMob->m_SpawnPoint, PMob->loc.p), PMob->m_maxRoamDistance);
+                    // roam_home_distance m_SpawnPoint loc.p m_maxRoamDistance
                     PMob->PAI->Despawn();
                     return;
                 }

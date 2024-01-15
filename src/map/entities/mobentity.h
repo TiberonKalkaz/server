@@ -297,7 +297,7 @@ private:
     time_point                     m_DespawnTimer{ time_point::min() }; // Despawn Timer to despawn mob after set duration
     std::unordered_map<int, int16> m_mobModStat;
     std::unordered_map<int, int16> m_mobModStatSave;
-    static constexpr float         roam_home_distance{ 60.f };
+    static constexpr float         roam_home_distance{ 100.f };
 };
 
 #endif
