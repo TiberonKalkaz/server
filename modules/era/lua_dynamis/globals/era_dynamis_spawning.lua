@@ -425,7 +425,8 @@ xi.dynamis.normalDynamicSpawn = function(oMob, oMobIndex, target)
                     -- Hydra mobs in Dynamis Beaucedine are immune to sleep
                     if
                         mobArg:getFamily() == 359 and
-                        mobArg:getZoneID() == xi.zone.DYNAMIS_BEAUCEDINE
+                        (mobArg:getZoneID() == xi.zone.DYNAMIS_BEAUCEDINE or
+                        mobArg:getZoneID() == xi.zone.DYNAMIS_TAVNAZIA)
                     then
                         mobArg:addImmunity(xi.immunity.SLEEP)
                     end
