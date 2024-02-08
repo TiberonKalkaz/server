@@ -1456,7 +1456,10 @@ xi.conquest.overseerOnEventFinish = function(player, csid, option, guardNation, 
             end
 
             player:delCP(price)
-            if stock.rank ~= nil then
+            if
+                stock.rank ~= nil and
+                guardNation < 3 -- xi.nation.BEASTMEN and xi.nation.OTHER have no known title mappings
+            then
                 player:setTitle(titlesGranted[guardNation][stock.rank])
             end
         end
